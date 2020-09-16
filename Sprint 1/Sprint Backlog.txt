@@ -1,0 +1,11 @@
+Sprint Backlog:
+
+9. Must be implemented as a client-server based web application
+7. Users must be able to create an account in the system
+2. Ability to add or remove stocks from the portfolio
+
+
+The reason we picked number 9 to add to this sprint backlog is because we want to set up the entire front end and back end architecture in terms of databases on the back end and Bootstrap on the front end. We added number 7 because we want to build the site systematically in terms of how the user journey is laid out. So, first comes the login page flow and then the main page layout. We added 2 because we want to test out the basic functionality of the application in relationship with the main page UI. And again, this follows the user journey.
+
+
+List of Meeting Participants: Harshil Shah, Dariya Khojasteh, Richard Hernandez, Tianhua Lyu, John Marshall
