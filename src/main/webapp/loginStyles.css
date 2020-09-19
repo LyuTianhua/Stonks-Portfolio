@@ -1,5 +1,5 @@
 body{
-	background-color: #467878;
+	background-color: #333333;
 }
 
 .my-nav{
@@ -11,31 +11,94 @@ body{
 	float:left;
 	margin-left: 40%;
 	margin-top:10%;
+	width: 100%;
 }
 
-.login-form{
-	background-color: black;
-	width:750px;
-	height:750px;
-	margin-left: 25%;
-	margin-top:-8%;
-	opacity: 50%;
-
+.form-outer{
+	position: fixed;
+	left:50%;
+	top:50%;
+	transform: translate(-50%,-50%);
+	height: auto;
+	padding: 40px 60px;
+	background-color: #0C71E0;
+	border-radius: 25px;
 }
 
-.form-container{
-	background-color: green;
-	margin-left: 60%;
-	margin-top:10%;
-
-	width:400px;
-	height:400px;
-
-
+#register-button{
+	margin-left: 100px;
 }
-#me{
+
+#login-fields{
 	margin-top: 50%;
 	justify-content: center;
-	background-color: black;
 	
 }
+
+#email {
+	color: white;
+	font-size: 20px;
+}
+
+#password {
+	color: white;
+	font-size: 20px;
+}
+
+.form-input {
+	width: 230px;
+	padding-top: 9px 0px;
+	padding-left: 5px;
+	border: none;
+	background-color: lightgrey;
+	border-radius: 5px;
+}
+
+.form-group {
+	width: 350px;
+}
+
+button {
+	color: white;
+	width: 130px;
+}
+
+.btn-primary {
+	background-color: #152238;
+	border: none;
+	margin-top: 10%;
+	margin-left: 31%;
+}
+
+a {
+	color: white;
+	font-size: 20px;
+	text-decoration: none;
+}
+
+a:hover, a:focus, a:active {
+	color: lightgrey;
+}
+
+#login-fields {
+	margin-top: 10%;
+}
+
+.link {
+	margin-left: 20%;
+}
+
+#link1 {
+	padding-right: 20%;
+}
+
+
+.btn-primary:hover{
+	background-color: #23395d;
+}
+
+#flexStuff {
+	display: flex;
+}
+
+
