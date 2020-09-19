@@ -9,6 +9,9 @@ import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * Servlet implementation class Login
@@ -63,8 +66,14 @@ public class Login extends HttpServlet {
     }
 
     // leave Connection parameter its for testing purposes
-    public static boolean validate(Connection con, String email, String hashPass) {
-        return true;
+    public static boolean validate(Connection connection, String username, String hashPass) {
+        try {
+            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Users WHERE username='" + username + "'");
+            ResultSet rs = ps.executeQuery();
+            return (rs.next() && hashPass.equals(rs.getString("password")));
+        } catch (SQLException sql) {
+            return false;
+        }
     }
 
 }
