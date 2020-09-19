@@ -10,7 +10,7 @@ public class AddStockTest {
     Connection con;
 
     @BeforeClass
-    public void setUp() throws Exception {
+    public static void setUp() throws Exception {
         /*
         Todo: init connection to database
         * */

@@ -9,7 +9,7 @@ import static org.junit.Assert.assertFalse;
 public class SignupTest {
 
     @BeforeClass
-    public void setUp() throws Exception {
+    public static void setUp() throws Exception {
     }
 
     @Test
