@@ -9,6 +9,35 @@
 </head>
 
 <body>
-	<h1>fjoiew</h1>
+
+<div class = "my-nav">
+			<nav class="navbar navbar-expand-lg navbar-light bg-custom">
+				<a class="navbar-brand" href="#">CSCI 310: Stock Portfolio Tracker Team 10</a>	 
+			</nav>
+		</div>
+	<div class = "container">
+		
+
+
+			<div class =  "col-12 col-sm-6 col-md-3">
+				<form id = "me">
+				  <div class="form-group">
+				    <label for="exampleInputEmail1">Email address</label>
+				    <input type="email" class="form-control" id="exampleInputEmail1">
+				  </div>
+				  <div class="form-group">
+				    <label for="exampleInputPassword1">Password</label>
+				    <input type="password" class="form-control" id="exampleInputPassword1">
+				  </div id = "">
+				  <button type="submit" class="btn btn-primary">Sign In</button>
+				  <button type="submit" class="btn btn-primary">Register</button>
+				</form>
+			</div>
+		</div>
+
+
+	
 </body>
 </html>
+
+	
