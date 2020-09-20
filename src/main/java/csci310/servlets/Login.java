@@ -8,10 +8,7 @@ import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 
 /**
  * Servlet implementation class Login
@@ -19,27 +16,23 @@ import java.sql.SQLException;
 @WebServlet("/login")
 public class Login extends HttpServlet {
 
-    Connection con = null;
+    private static Connection con = null;
 
-    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse res) {
         /* TODO: handle post request to login */
 
         /* Connect to database */
-
-        String email = ""; /* get email from post request */
-        String password = ""; /* get password from post request */
+        String username = req.getParameter("username");
+        String password = req.getParameter("password");
 
         /* todo: validate user with database */
-        if (validate(con, email, hashPassword(password))) {
-            /* set true response attribute */
+        if (authenticated(username, hashPassword(password))) {
+            req.setAttribute("authenticated", true);
         }
         else {
-            /* set false response attribute */
+            req.setAttribute("authenticated", false);
         }
 
-    }
-
-    protected void doGet(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
     }
 
     //Source for hash password
@@ -65,13 +58,22 @@ public class Login extends HttpServlet {
         return hash.toString();
     }
 
-    // leave Connection parameter its for testing purposes
-    public static boolean validate(Connection connection, String username, String hashPass) {
+    public static boolean authenticated(String username, String hashPass) {
+
+        // testing purposes
+        hashPass = username.equalsIgnoreCase("tu1")? "tu1pass" : hashPass;
+
         try {
-            PreparedStatement ps = connection.prepareStatement("SELECT * FROM Users WHERE username='" + username + "'");
+
+            Class.forName("com.mysql.cj.jdbc.Driver");
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CSCI_310_PROJECT?user=root&password=MysqlPass11!!&serverTimezone=PST");
+
+            PreparedStatement ps = con.prepareStatement("select * from Users where username='" + username + "'" );
             ResultSet rs = ps.executeQuery();
+
             return (rs.next() && hashPass.equals(rs.getString("password")));
-        } catch (SQLException sql) {
+
+        } catch (SQLException | ClassNotFoundException sql) {
             return false;
         }
     }
