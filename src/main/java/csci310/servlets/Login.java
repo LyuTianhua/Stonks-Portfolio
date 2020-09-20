@@ -21,7 +21,7 @@ public class Login extends HttpServlet {
 
     Connection con = null;
 
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
         /* TODO: handle post request to login */
 
         /* Connect to database */
