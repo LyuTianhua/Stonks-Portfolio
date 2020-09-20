@@ -7,22 +7,15 @@ body{
 	width:100%;
 }
 
-.container{
-	float:left;
-	margin-left: 40%;
-	margin-top:10%;
-	width: 100%;
-}
-
-.form-outer{
-	position: fixed;
-	left:50%;
-	top:50%;
-	transform: translate(-50%,-50%);
+#form-outer{
+	max-width: 576px;
+	margin-top: 50px;
 	height: auto;
 	padding: 40px 60px;
 	background-color: #0C71E0;
-	border-radius: 25px;
+	border-radius: 0px;
+	margin-left: auto;
+	margin-right: auto;
 }
 
 #register-button{
@@ -54,10 +47,6 @@ body{
 	border-radius: 5px;
 }
 
-.form-group {
-	width: 350px;
-}
-
 button {
 	color: white;
 	width: 130px;
@@ -66,8 +55,9 @@ button {
 .btn-primary {
 	background-color: #152238;
 	border: none;
-	margin-top: 10%;
-	margin-left: 31%;
+	margin-top: 30px;
+	margin-left: auto;
+	margin-left: auto;
 }
 
 a {
@@ -84,21 +74,16 @@ a:hover, a:focus, a:active {
 	margin-top: 10%;
 }
 
-.link {
-	margin-left: 20%;
-}
-
-#link1 {
-	padding-right: 20%;
-}
-
-
 .btn-primary:hover{
 	background-color: #23395d;
 }
 
-#flexStuff {
-	display: flex;
+@media (min-width: 576px) {
+	#form-outer{
+		max-width: 350px;
+		margin-top: 150px;
+		border-radius: 25px;
+	}
 }
 
 
