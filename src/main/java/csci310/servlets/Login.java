@@ -27,10 +27,10 @@ public class Login extends HttpServlet {
 
         /* todo: validate user with database */
         if (authenticated(username, hashPassword(password))) {
-            req.setAttribute("authenticated", true);
+            req.setAttribute("authenticated", "1");
         }
         else {
-            req.setAttribute("authenticated", false);
+            req.setAttribute("authenticated", "0");
         }
 
     }

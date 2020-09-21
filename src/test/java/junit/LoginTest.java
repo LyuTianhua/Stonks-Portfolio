@@ -25,7 +25,7 @@ public class LoginTest {
   }
 
     @Test
-    public void testPost() {
+    public void testDoPost() {
 
         mocReq.addParameter("username", "tu1");
         mocReq.addParameter("password", "tu1pass");
@@ -33,7 +33,11 @@ public class LoginTest {
         Login login = new Login();
         login.doPost(mocReq, mocRes);
 
-        assertTrue((boolean)mocReq.getAttribute("authenticated"));
+        /*
+        *  0 fail 1 works 2 user not found
+        * */
+        String auth = (String) mocReq.getAttribute("authenticated");
+        assertTrue(auth.equalsIgnoreCase("1"));
 
     }
 
