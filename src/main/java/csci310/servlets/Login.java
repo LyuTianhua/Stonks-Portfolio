@@ -17,8 +17,6 @@ public class Login extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse res) {
         /* TODO: handle post request to login */
 
-        System.out.println("\n\n\nhere\n\n\n");
-
         /* Connect to database */
         String email = req.getParameter("email");
         String password = req.getParameter("password");
