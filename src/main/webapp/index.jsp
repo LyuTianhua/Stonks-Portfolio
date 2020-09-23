@@ -77,26 +77,3 @@
 	
 </body>
 </html>
-
-
-<dependency>
-	<groupId>org.springframework</groupId>
-	<artifactId>spring-test</artifactId>
-	<version>5.1.8.RELEASE</version>
-	<scope>test</scope>
-</dependency>
-
-<dependency>
-	<groupId>org.mockito</groupId>
-	<artifactId>mockito-core</artifactId>
-	<version>2.23.4</version>
-	<scope>test</scope>
-</dependency>
-
-<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
-<dependency>
-	<groupId>org.mockito</groupId>
-	<artifactId>mockito-all</artifactId>
-	<version>1.9.5-rc1</version>
-	<scope>test</scope>
-</dependency>
