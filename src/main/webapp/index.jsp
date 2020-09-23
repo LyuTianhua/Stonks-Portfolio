@@ -32,6 +32,7 @@
 					<button id="signin" type="submit" class="btn btn-primary">Sign In</button>
 				</div>
 			</form>
+			<div id="ErrorMessage"></div>
 		</div>
 		<div class="col-0 col-sm-3 col-md-3 col-lg-3"></div>
 	</div>
@@ -39,11 +40,22 @@
 
 
 <script>
-	function login() {
-		window.location.replace("Login.jsp");
-	}
-	function register() {
-		window.location.replace("Register.jsp");
+	document.querySelector("#login-fields").onsubmit = function(event) {
+		event.preventDefault();
+		let email = document.querySelector("#exampleInputEmail1").value.trim();
+		let password = document.querySelector("#exampleInputPassword1").value.trim();
+
+		let httpRequest = new XMLHttpRequest();
+		httpRequest.open("GET", "login?" + "email=" + email + "&password=" + password, false);
+		httpRequest.send();
+		var msg = xhttp.responseText.trim()
+		if (msg == "1") {
+			document.querySelector("ErrorMessage").innerHTML = "";
+			window.location.href("home.jsp");
+		} else if (msg == "0") {
+			// set error message div
+			document.querySelector("ErrorMessage").innerHTML = "Password and Email don't match";
+		}
 	}
 </script>
 	
