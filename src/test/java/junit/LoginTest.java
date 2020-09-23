@@ -3,6 +3,7 @@ package junit;
 import csci310.servlets.Login;
 import org.junit.BeforeClass;
 import org.junit.Test;
+import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
@@ -13,7 +14,7 @@ import java.sql.Connection;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
-public class LoginTest {
+public class LoginTest extends Mockito {
 
     private static MockHttpServletRequest mocReq;
     private static MockHttpServletResponse mocRes;
