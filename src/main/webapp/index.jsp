@@ -76,4 +76,8 @@
 </script>
 	
 </body>
+<<<<<<< HEAD
 </html>
+=======
+</html>
+>>>>>>> 1e0b8f27b6c3a75c8f89f50c3762f742d84303c8
