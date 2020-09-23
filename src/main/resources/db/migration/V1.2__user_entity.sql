@@ -1,21 +1,22 @@
-drop database if exists CSCI_310_PROJECT_V_2;
-create database CSCI_310_PROJECT_V_2;
+create database cs310;
 
-use CSCI_310_PROJECT_V_2;
-
+drop table if exists Users;
 create table Users (
-    id int not null auto_increment unique primary key ,
-    email varchar(50) not null unique key ,
+    id int not null  unique primary key ,
+    email varchar(50) not null unique ,
     password varchar(100) not null
 );
 
+drop table if exists Company;
 create table Company (
-    id int not null auto_increment  unique primary key,
+    id int not null  unique primary key,
     name varchar(50) not null unique
 );
 
+
+drop table if exists Stock;
 create table Stock (
-    id int not null auto_increment primary key ,
+    id int not null primary key ,
     company_id int not null ,
     user_id int not null ,
     shares float,

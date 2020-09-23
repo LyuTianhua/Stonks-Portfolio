@@ -7,10 +7,6 @@ import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.ServletException;
-import java.io.IOException;
-import java.sql.Connection;
-
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -28,7 +24,7 @@ public class LoginTest extends Mockito {
     @Test
     public void testDoPost() {
 
-        mocReq.addParameter("username", "tu1");
+        mocReq.addParameter("email", "tu1");
         mocReq.addParameter("password", "tu1pass");
 
         Login login = new Login();
