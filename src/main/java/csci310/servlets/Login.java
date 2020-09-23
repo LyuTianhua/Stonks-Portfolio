@@ -1,11 +1,9 @@
 package csci310.servlets;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
@@ -16,17 +14,15 @@ import java.sql.*;
 @WebServlet("/login")
 public class Login extends HttpServlet {
 
-    private static Connection con = null;
-
     public void doPost(HttpServletRequest req, HttpServletResponse res) {
         /* TODO: handle post request to login */
 
         /* Connect to database */
-        String username = req.getParameter("username");
+        String email = req.getParameter("email");
         String password = req.getParameter("password");
 
         /* todo: validate user with database */
-        if (authenticated(username, hashPassword(password))) {
+        if (authenticated(email, hashPassword(password))) {
             req.setAttribute("authenticated", "1");
         }
         else {
@@ -46,8 +42,7 @@ public class Login extends HttpServlet {
             byte[] hashedBytes = sha.digest(input.getBytes());
             char[] digits = { '0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
                     'a', 'b', 'c', 'd', 'e', 'f' };
-            for (int idx = 0; idx < hashedBytes.length; ++idx) {
-                byte b = hashedBytes[idx];
+            for (byte b : hashedBytes) {
                 hash.append(digits[(b & 0xf0) >> 4]);
                 hash.append(digits[b & 0x0f]);
             }
@@ -58,22 +53,18 @@ public class Login extends HttpServlet {
         return hash.toString();
     }
 
-    public static boolean authenticated(String username, String hashPass) {
+    public static boolean authenticated(String email, String hashPass) {
 
         // testing purposes
-        hashPass = username.equalsIgnoreCase("tu1")? "tu1pass" : hashPass;
+        hashPass = email.equalsIgnoreCase("tu1")? "tu1pass" : hashPass;
 
         try {
-
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/CSCI_310_PROJECT?user=root&password=MysqlPass11!!&serverTimezone=PST");
-
-            PreparedStatement ps = con.prepareStatement("select * from Users where username='" + username + "'" );
+            Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
+            PreparedStatement ps = con.prepareStatement("select * from users where email='" + email + "'" );
             ResultSet rs = ps.executeQuery();
-
             return (rs.next() && hashPass.equals(rs.getString("password")));
 
-        } catch (SQLException | ClassNotFoundException sql) {
+        } catch (SQLException sql) {
             return false;
         }
     }

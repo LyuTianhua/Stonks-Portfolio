@@ -28,6 +28,7 @@
           <element id="library" level="project" name="Maven: com.squareup.okhttp3:okhttp:3.11.0" />
           <element id="library" level="project" name="Maven: com.squareup.okio:okio:1.14.0" />
           <element id="library" level="project" name="Maven: org.seleniumhq.selenium:selenium-chrome-driver:3.141.59" />
+          <element id="library" level="project" name="Maven: org.flywaydb:flyway-core:6.0.0" />
         </element>
       </element>
       <element id="directory" name="META-INF">
