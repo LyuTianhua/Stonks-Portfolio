@@ -140,13 +140,13 @@
             <version>5.1.8.RELEASE</version>
             <scope>test</scope>
         </dependency>
+	<!-- Flyway for migrations -->
+	<dependency>
+		<groupId>org.flywaydb</groupId>
+		<artifactId>flyway-core</artifactId>
+		<version>${flyway.version}</version>
+	</dependency>
     </dependencies>
-		<!-- Flyway for migrations -->
-		<dependency>
-			<groupId>org.flywaydb</groupId>
-			<artifactId>flyway-core</artifactId>
-			<version>${flyway.version}</version>
-		</dependency>
 	<build>
 		<finalName>project2</finalName>
 		<pluginManagement>
