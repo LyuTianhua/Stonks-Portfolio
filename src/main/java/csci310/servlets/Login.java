@@ -4,6 +4,9 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
@@ -11,23 +14,29 @@ import java.sql.*;
 /**
  * Servlet implementation class Login
  */
-@WebServlet("/login")
+@WebServlet("/Login")
 public class Login extends HttpServlet {
+	private static final long serialVersionUID = 1L;
 
-    public void doPost(HttpServletRequest req, HttpServletResponse res) {
+    public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         /* TODO: handle post request to login */
 
         /* Connect to database */
         String email = req.getParameter("email");
         String password = req.getParameter("password");
+        
+        PrintWriter pw = res.getWriter();
 
         /* todo: validate user with database */
         if (authenticated(email, hashPassword(password))) {
             req.setAttribute("authenticated", "1");
+    		pw.println(1);
         }
         else {
             req.setAttribute("authenticated", "0");
+    		pw.println(0);
         }
+		pw.close();
 
     }
 

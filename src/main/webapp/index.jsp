@@ -29,12 +29,10 @@
 				<label class="text-left" id="password" for="exampleInputPassword1">Password</label>
 				<input type="password" class="form-control" id="exampleInputPassword1">
 				<div class="text-center">
+					<div id="Error-Message"></div> 
 					<button id="signin" type="submit" class="btn btn-primary">Sign In</button>
 				</div>
 			</form>
-			
-			<div id="Error-Message"></div> 
-			
 		</div>
 		<div class="col-0 col-sm-3 col-md-3 col-lg-3"></div>
 	</div>
@@ -43,21 +41,23 @@
 
 <script>
 	document.querySelector("#login-fields").onsubmit = function(event) {
+		document.querySelector("#Error-Message").innerHTML = "";
 		event.preventDefault();
 		let email = document.querySelector("#exampleInputEmail1").value.trim();
 		let password = document.querySelector("#exampleInputPassword1").value.trim();
 
 		let httpRequest = new XMLHttpRequest();
-		httpRequest.open("POST", "login?" + "email=" + email + "&password=" + password, false);
+		httpRequest.open("POST", "/Login?" + "email=" + email + "&password=" + password, true);
 		httpRequest.send();
-		var msg = xhttp.responseText.trim()
-		if (msg == "1") {
-			//document.querySelector("Error-Message").innerHTML = "";
-			window.location.href("home.jsp");
-		} else if (msg == "0") {
-			// set error message div
-			// document.querySelector("Error-Message").innerHTML = "Password and Email don't match";
-		}
+		httpRequest.onreadystatechange = function() {
+			var msg = httpRequest.responseText.trim();
+			if (msg == "1") {
+				window.location.href = "home.jsp";
+			} else if (msg == "0") {
+				// set error message div
+				document.querySelector("#Error-Message").innerHTML = "Password and Email don't match";
+			}
+		}			
 	}
 </script>
 	
