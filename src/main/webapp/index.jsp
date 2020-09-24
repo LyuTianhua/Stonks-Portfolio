@@ -32,6 +32,9 @@
 					<button id="signin" type="submit" class="btn btn-primary">Sign In</button>
 				</div>
 			</form>
+			
+			<div id="Error-Message"></div> 
+			
 		</div>
 		<div class="col-0 col-sm-3 col-md-3 col-lg-3"></div>
 	</div>
