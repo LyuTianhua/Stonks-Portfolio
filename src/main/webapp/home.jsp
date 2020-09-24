@@ -10,7 +10,7 @@
 </head>
 <body>
 	<nav class="navbar navbar-expand-lg navbar-light my-nav">
-		<a class="navbar-brand text-wrap" href="#">CSCI 310: Stock Portfolio Tracker Team 10</a>	 
+		<a class="navbar-brand text-wrap" href="#">USC CS 310 Stock Portfolio Management</a>	 
 	</nav>
 </body>
 </html>
