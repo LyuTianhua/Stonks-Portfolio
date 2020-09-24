@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+		 xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+		 xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
 
 	<groupId>csci310</groupId>
@@ -16,6 +16,13 @@
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<maven.compiler.source>1.7</maven.compiler.source>
 		<maven.compiler.target>1.7</maven.compiler.target>
+
+		<!-- Flyway for migrations -->
+		<flyway.version>6.0.0</flyway.version>
+		<postgres.driver.version>9.2-1002.jdbc4</postgres.driver.version>
+		<database.url>jdbc:postgresql://localhost:5433/cs310</database.url>
+		<database.user>cs310user</database.user>
+		<database.password>cs310password</database.password>
 	</properties>
 
 	<profiles>
@@ -75,10 +82,10 @@
 			<scope>test</scope>
 		</dependency>
 		<dependency>
-		    <groupId>org.slf4j</groupId>
-		    <artifactId>slf4j-simple</artifactId>
-		    <version>1.7.30</version>
-		    <scope>test</scope>
+			<groupId>org.slf4j</groupId>
+			<artifactId>slf4j-simple</artifactId>
+			<version>1.7.30</version>
+			<scope>test</scope>
 		</dependency>
 		<dependency>
 			<groupId>io.cucumber</groupId>
@@ -113,6 +120,35 @@
 			<artifactId>webdrivermanager</artifactId>
 			<version>3.8.1</version>
 			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-core</artifactId>
+			<version>2.23.4</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- https://mvnrepository.com/artifact/org.mockito/mockito-all -->
+		<dependency>
+			<groupId>org.mockito</groupId>
+			<artifactId>mockito-all</artifactId>
+			<version>1.9.5-rc1</version>
+			<scope>test</scope>
+		</dependency>
+
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-test</artifactId>
+			<version>5.1.8.RELEASE</version>
+			<scope>test</scope>
+		</dependency>
+
+		<!-- Flyway for migrations -->
+		<dependency>
+			<groupId>org.flywaydb</groupId>
+			<artifactId>flyway-core</artifactId>
+			<version>${flyway.version}</version>
 		</dependency>
 	</dependencies>
 
@@ -149,7 +185,7 @@
 					<artifactId>cobertura-maven-plugin</artifactId>
 					<version>2.7</version>
 				</plugin>
-				
+
 				<plugin>
 					<groupId>org.eclipse.jetty</groupId>
 					<artifactId>jetty-maven-plugin</artifactId>
@@ -158,6 +194,27 @@
 						<scanIntervalSeconds>5</scanIntervalSeconds>
 						<jettyXml>src/main/resources/jetty.xml</jettyXml>
 					</configuration>
+				</plugin>
+				<!-- Flyway for migrations -->
+				<plugin>
+					<groupId>org.flywaydb</groupId>
+					<artifactId>flyway-maven-plugin</artifactId>
+					<version>${flyway.version}</version>
+					<configuration>
+						<locations>
+							<location>filesystem:src/main/resources/db/migration</location>
+						</locations>
+						<url>${database.url}</url>
+						<user>${database.user}</user>
+						<password>${database.password}</password>
+					</configuration>
+					<dependencies>
+						<dependency>
+							<groupId>postgresql</groupId>
+							<artifactId>postgresql</artifactId>
+							<version>${postgres.driver.version}</version>
+						</dependency>
+					</dependencies>
 				</plugin>
 			</plugins>
 		</pluginManagement>
