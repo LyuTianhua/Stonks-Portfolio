@@ -45,15 +45,15 @@
 		let password = document.querySelector("#exampleInputPassword1").value.trim();
 
 		let httpRequest = new XMLHttpRequest();
-		httpRequest.open("GET", "login?" + "email=" + email + "&password=" + password, false);
+		httpRequest.open("POST", "login?" + "email=" + email + "&password=" + password, false);
 		httpRequest.send();
 		var msg = xhttp.responseText.trim()
 		if (msg == "1") {
-			document.querySelector("ErrorMessage").innerHTML = "";
+			//document.querySelector("Error-Message").innerHTML = "";
 			window.location.href("home.jsp");
 		} else if (msg == "0") {
 			// set error message div
-			document.querySelector("ErrorMessage").innerHTML = "Password and Email don't match";
+			// document.querySelector("Error-Message").innerHTML = "Password and Email don't match";
 		}
 	}
 </script>
