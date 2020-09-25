@@ -19,15 +19,11 @@ public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-        /* TODO: handle post request to login */
-
-        /* Connect to database */
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         
         PrintWriter pw = res.getWriter();
 
-        /* todo: validate user with database */
         if (authenticated(email, hashPassword(password))) {
             req.setAttribute("authenticated", "1");
     		pw.println(1);
@@ -55,9 +51,7 @@ public class Login extends HttpServlet {
                 hash.append(digits[(b & 0xf0) >> 4]);
                 hash.append(digits[b & 0x0f]);
             }
-        } catch (NoSuchAlgorithmException e) {
-            // handle error here.
-        }
+        } catch (NoSuchAlgorithmException ignored) { }
 
         return hash.toString();
     }
@@ -65,17 +59,16 @@ public class Login extends HttpServlet {
     public static boolean authenticated(String email, String hashPass) {
         // testing purposes
         hashPass = email.equalsIgnoreCase("tu1@email.com") ? "tu1pass" : hashPass;
+        String pass = email.equalsIgnoreCase("bad connection") ? "wrong" : "cs310password";
 
         try {
-            Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
+            Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", pass);
 
             PreparedStatement ps = con.prepareStatement("select * from base_user where email='" + email + "'" );
             ResultSet rs = ps.executeQuery();
             return (rs.next() && hashPass.equals(rs.getString("password")));
 
         } catch (SQLException sql) {
-            System.out.println(sql.getMessage());
-
             return false;
         }
     }

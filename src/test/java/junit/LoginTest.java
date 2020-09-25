@@ -37,7 +37,7 @@ public class LoginTest extends Mockito {
         login.doPost(mocReq, mocRes);
         String auth = (String) mocReq.getAttribute("authenticated");
 
-        mocReq2.addParameter("email", "tu1@email.com");
+        mocReq2.addParameter("email", "wrong");
         mocReq2.addParameter("password", "wrong");
         Login loginFail = new Login();
         loginFail.doPost(mocReq2, mocRes2);
@@ -45,7 +45,7 @@ public class LoginTest extends Mockito {
 
         boolean passed = false;
 
-        if (auth.equals("1") && auth2.equals("1"))
+        if (auth.equals("1") && auth2.equals("0"))
             passed = true;
 
         /*
@@ -67,7 +67,11 @@ public class LoginTest extends Mockito {
 
     @Test
     public void testValidate() {
-        assertTrue(Login.authenticated("tu1@email.com", "tu1pass"));
+
+        boolean valid = Login.authenticated("tu1@email.com", "tu1pass");
+        boolean invalid = Login.authenticated("bad connection", "bad connection");
+
+        assertTrue(valid && !invalid);
     }
 
 }
