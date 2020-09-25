@@ -13,3 +13,4 @@ before_install:
 
 scripts:
         - mvn flyway:migrate
+        - mvn test

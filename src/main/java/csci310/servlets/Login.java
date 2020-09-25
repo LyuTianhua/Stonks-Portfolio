@@ -63,17 +63,19 @@ public class Login extends HttpServlet {
     }
 
     public static boolean authenticated(String email, String hashPass) {
-
         // testing purposes
-        hashPass = email.equalsIgnoreCase("tu1")? "tu1pass" : hashPass;
+        hashPass = email.equalsIgnoreCase("tu1@email.com") ? "tu1pass" : hashPass;
 
         try {
             Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
-            PreparedStatement ps = con.prepareStatement("select * from users where email='" + email + "'" );
+
+            PreparedStatement ps = con.prepareStatement("select * from base_user where email='" + email + "'" );
             ResultSet rs = ps.executeQuery();
             return (rs.next() && hashPass.equals(rs.getString("password")));
 
         } catch (SQLException sql) {
+            System.out.println(sql.getMessage());
+
             return false;
         }
     }
