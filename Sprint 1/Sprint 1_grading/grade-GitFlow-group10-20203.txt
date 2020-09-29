@@ -1,0 +1,20 @@
+Best Practice GitFlow Report
+Owner: group10-20203
+Grade: 7.5/10
+Comments: 
+	Bad pull (-1) [develop<-feeature-loginpage]: https://github.com/CSCI310/project-20203-group10-20203/pull/19
+	Bad pull (-1) [develop<-feeature-loginpage]: https://github.com/CSCI310/project-20203-group10-20203/pull/18
+	Bad pull (-1) [develop<-feeature-loginpage]: https://github.com/CSCI310/project-20203-group10-20203/pull/17
+	Bad pull (-1) [develop<-feeature-loginpage]: https://github.com/CSCI310/project-20203-group10-20203/pull/2
+
+	Bad pull (-1) [master<-feature-userauth]: https://github.com/CSCI310/project-20203-group10-20203/pull/7
+
+
+
+
+
+
+
+
+
+
