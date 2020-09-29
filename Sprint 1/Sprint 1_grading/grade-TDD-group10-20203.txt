@@ -1,0 +1,11 @@
+Best Practice TDD Report
+Owner: group10-20203
+Grade: 7.1/10
+Comments: 
+	Test method was not created before method : login.dopost
+	No test method found for: login.authenticated
+	No test method found for: signup.getuserid
+	No test method found for: login.doget
+Correct TDD methods: 10
+Incorrect TDD methods: 4
+Total methods created: 14
