@@ -1,0 +1,9 @@
+Sprint Retrospective:
+
+List of Meeting Participants: Harshil Shah, Dariya Khojasteh, Richard Hernandez, Tianhua Lyu, John Marshall
+
+The process aspects that will be changed are that we will make sure everyone's tasks are updated on the Trello board for each scrum meeting and that if we add some smaller tasks, we will break it down. This is because we missed points on the previous sprint because we forgot to do that.
+
+We will also make sure to follow TDD standards more closely and ensure that all methods have a test case written for them.
+
+In terms of tasks, we will add due to the review are: that we will build out the feature where the user will be logged out after they have been active for 120 seconds and also that the password will timeout after 3 tries.
