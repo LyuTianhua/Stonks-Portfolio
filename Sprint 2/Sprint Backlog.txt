@@ -1,0 +1,15 @@
+Sprint Backlog:
+
+
+2. Ability to add or remove stocks from the portfolio
+6. The application must be secure and protect confidentiality of users’ data.
+7. Users must be able to create an account in the system
+9. Must be implemented as a client-server based web application
+10. Logout after user has been inactive for 120 seconds.
+12. Timeout Passwords after 3 tries
+
+We added 2 because we want to test out the basic functionality of the application in relationship with the main page UI and we also did not get to this in our previous sprint. 
+We added 6,10, and12 because of the feedback received from our sprint review to implement SSL security, and other security measures. The reason we picked 7 is because we need to finish the registration flow and we got feedback from our CP's that we needed to fix some functionality. So this is from our previous sprint. The reason we picked number 9 to add to this sprint backlog is because although we setup the architecture, we still have to resolve some Docker issues for members on our team.
+
+
+List of Meeting Participants: Harshil Shah, Dariya Khojasteh, Richard Hernandez, Tianhua Lyu, John Marshall
