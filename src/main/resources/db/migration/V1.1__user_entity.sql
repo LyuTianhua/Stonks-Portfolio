@@ -1,6 +1,9 @@
 drop table if exists Base_User CASCADE;
+
+CREATE SEQUENCE table_name_id_seq;
+
 create table Base_User (
-   id int not null  unique primary key ,
+   id int not null  unique primary key DEFAULT nextval('table_name_id_seq'),
    email varchar(50) not null unique ,
    password varchar(100) not null
 );

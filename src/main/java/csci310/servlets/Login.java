@@ -68,7 +68,7 @@ public class Login extends HttpServlet {
             ResultSet rs = ps.executeQuery();
             return (rs.next() && hashPass.equals(rs.getString("password")));
 
-        } catch (SQLException sql) {
+        } catch (SQLException ignored) {
             return false;
         }
     }

@@ -7,7 +7,6 @@ import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.ServletException;
 import java.io.IOException;
 
 import static org.junit.Assert.assertFalse;
@@ -29,7 +28,7 @@ public class LoginTest extends Mockito {
     }
 
     @Test
-    public void testDoPost() throws IOException, ServletException {
+    public void testDoPost() throws IOException {
         mocReq.addParameter("email", "tu1@email.com");
         mocReq.addParameter("password", "tu1pass");
 
@@ -47,10 +46,6 @@ public class LoginTest extends Mockito {
 
         if (auth.equals("1") && auth2.equals("0"))
             passed = true;
-
-        /*
-        *  0 fail 1 works 2 user not found
-        * */
 
         assertTrue(passed);
     }

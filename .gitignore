@@ -11,4 +11,4 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 project2.iml
 .idea/**/*
-project2.iml
+project2.iml.idea
