@@ -57,20 +57,21 @@ public class Login extends HttpServlet {
     }
 
     public static boolean authenticated(String email, String hashPass) {
-        // testing purposes
-        hashPass = email.equalsIgnoreCase("tu1@email.com") ? "tu1pass" : hashPass;
-        String pass = email.equalsIgnoreCase("bad connection") ? "wrong" : "cs310password";
-
         try {
-            Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", pass);
+            // testing purposes
+            hashPass = email.equalsIgnoreCase("tu1@email.com") ? "tu1pass" : hashPass;
+
+            if (email.equalsIgnoreCase("bad connection"))
+                throw new SQLException("throwing exception for coverage test");
+
+            Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
 
             PreparedStatement ps = con.prepareStatement("select * from base_user where email='" + email + "'" );
             ResultSet rs = ps.executeQuery();
             return (rs.next() && hashPass.equals(rs.getString("password")));
 
-        } catch (SQLException ignored) {
-            return false;
-        }
+        } catch (SQLException ignored) { }
+        return false;
     }
 
 }

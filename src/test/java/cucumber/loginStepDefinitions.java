@@ -26,8 +26,8 @@ public class loginStepDefinitions {
 		driver.get(ROOT_URL + "index.jsp");
 	}
 
-	@When("I click the Register link")
-	public void iClickTheRegisterLink() {
+	@When("I click the Register tab")
+	public void iClickTheRegisterTab() {
 		driver.findElement(By.linkText("Register")).click();
 	}
 

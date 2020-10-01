@@ -8,6 +8,8 @@ import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 
+import static org.junit.Assert.assertTrue;
+
 public class registerStepDefenitions {
 
     private static final String ROOT_URL = "http://localhost:8080/";
@@ -40,6 +42,7 @@ public class registerStepDefenitions {
     }
 
     @Then("I should be on {string}")
-    public void iShouldBeOnIndexJsp() {
+    public void iShouldBeOnIndexJsp(String url) {
+        assertTrue(driver.getCurrentUrl().contains(url));
     }
 }
