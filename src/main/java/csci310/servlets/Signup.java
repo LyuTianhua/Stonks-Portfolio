@@ -20,7 +20,6 @@ public class Signup extends HttpServlet {
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
-        System.out.println("\n\n\n\n\n\n--------------------");
 
         try {
 
@@ -30,13 +29,10 @@ public class Signup extends HttpServlet {
             String password = req.getParameter("password");
             String confirm = req.getParameter("confirm");
 
-            System.out.println(email + " " + password + " " + confirm);
-
             if (email.isEmpty() | password.isEmpty() | confirm.isEmpty() | !password.equalsIgnoreCase(confirm)) {
                 req.setAttribute("authenticated", false);
                 res.getWriter().write(0);
 
-                System.out.println("failed first if statement");
                 return;
             }
 
@@ -44,7 +40,6 @@ public class Signup extends HttpServlet {
                 newUserInserted(email, hashPassword(password));
                 req.setAttribute("authenticated", true);
                 res.getWriter().write(1);
-                System.out.println("success");
                 return;
             }
         } catch (SQLException ignored) { }

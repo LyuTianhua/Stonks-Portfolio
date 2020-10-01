@@ -16,6 +16,7 @@ import static org.junit.Assert.assertTrue;
  * Step definitions for Cucumber tests.
  */
 public class loginStepDefinitions {
+
 	private static final String ROOT_URL = "http://localhost:8080/";
 
 	private final WebDriver driver = new ChromeDriver();
@@ -62,6 +63,5 @@ public class loginStepDefinitions {
 	public void after() {
 		driver.quit();
 	}
-
 
 }

@@ -23,13 +23,13 @@
 			</div>
 			<form id="login-fields">
 				<label class="text-left" id="email" for="exampleInputEmail1">Email Address</label>
-				<input class="form-control" id="exampleInputEmail1" type="email">
+				<input class="form-control" id="exampleInputEmail1" type="email" name="email">
 				<label class="text-left" id="password" for="exampleInputPassword1">Password</label>
-				<input class="form-control" id="exampleInputPassword1" type="password">
-				<label class="text-left" id="password" for="exampleInputPassword2">Verify Password</label>
-				<input class="form-control" id="exampleInputPassword2" type="password">
+				<input class="form-control" id="exampleInputPassword1" type="password" name="password">
+				<label class="text-left" id="VerifyPassword" for="exampleInputPassword2">Verify Password</label>
+				<input class="form-control" id="exampleInputPassword2" type="password" name="verifyPassword">
 				<div class="text-center">
-					<button class="btn btn-primary" id="register" type="submit">Register</button>
+					<button class="btn btn-primary" id="register" type="submit" name="registerButton">Register</button>
 				</div>
 			</form>
 		</div>
