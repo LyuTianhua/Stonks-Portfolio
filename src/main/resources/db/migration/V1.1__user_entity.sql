@@ -1,9 +1,7 @@
 drop table if exists Base_User CASCADE;
 
-CREATE SEQUENCE table_name_id_seq;
-
-create table Base_User (
-   id int not null  unique primary key DEFAULT nextval('table_name_id_seq'),
+create table base_user (
+   id serial primary key unique not null ,
    email varchar(50) not null unique ,
    password varchar(100) not null
 );
@@ -25,4 +23,4 @@ create table Stock (
    foreign key (user_id) references Base_User(id)
 );
 
-insert into Base_User values (1, 'tu1@email.com', 'tu1pass');
+insert into base_user (email, password) values ('tu1@email.com', 'tu1pass');
