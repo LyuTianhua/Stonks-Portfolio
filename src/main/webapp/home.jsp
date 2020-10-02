@@ -9,9 +9,11 @@
 	<title>USC CS 310 Stock Portfolio Management</title>
 </head>
 <body>
-	<nav class="navbar navbar-expand-lg navbar-light my-nav">
+	<nav class="navbar navbar-light my-nav">
 		<a class="navbar-brand text-wrap" href="#">USC CS 310 Stock Portfolio Management</a>	 
+		<button id="logout" type="button" class="btn btn-dark pull-right">Log Out</button>
 	</nav>
+
 	<div class="container">
 		<div class="row justify-content-center">
 			<div class="col-md-6">
@@ -91,5 +93,12 @@
 			</div>
 		</div>
 	</div>
+
+	<script type="text/javascript">
+		document.querySelector("#logout").onclick = function(event) {
+			window.location.href = "index.jsp";
+		}
+
+	</script>
 </body>
 </html>

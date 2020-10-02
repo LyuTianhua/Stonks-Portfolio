@@ -75,6 +75,11 @@ a:hover, a:focus, a:active {
     background-color: #23395d;
 }
 
+.btn-link{
+    background-color: white;
+    color:black;
+}
+
 @media (min-width: 576px) {
     #form-outer{
         max-width: 350px;
