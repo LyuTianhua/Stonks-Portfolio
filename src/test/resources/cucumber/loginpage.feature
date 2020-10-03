@@ -1,7 +1,7 @@
 Feature: Hello
   Scenario: Open register page from login page
     Given I am on the login page
-    When I click the Register link
+    When I click the Register tab
     Then I should be on page 'register.jsp'
 
   Scenario: Open home page from login page after successful login

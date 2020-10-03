@@ -6,7 +6,7 @@ import org.junit.Test;
 import java.sql.Connection;
 
 public class AddStockTest {
-
+  
     Connection con;
 
     @BeforeClass
