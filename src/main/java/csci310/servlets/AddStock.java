@@ -7,31 +7,43 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.SQLException;
 
 @WebServlet("/add_stock")
 public class AddStock  extends HttpServlet {
 
-    Connection con = null;
+    public static Connection con = null;
 
-    protected void doPost(HttpServletRequest req, HttpServletResponse res) throws ServletException, IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse res) {
 
-        String email = ""; /* get email from request */
-        String stock = ""; /* get stock from request */
-        double quantity = 0.0; /* get quantity from request */
+        try {
+            con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
 
-        int userId = getUserId(email);
+            String email = ""; /* get email from request */
+            String stock = ""; /* get stock from request */
+            double quantity = 0.0; /* get quantity from request */
 
-        addStockToPortfolio(userId, stock, quantity);
+            int userId = getUserId(email);
 
-        return;
+            addStockToPortfolio(userId, stock, quantity);
+
+            return;
+
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+
+
 
     }
 
-    private int getUserId(String email) {
+    public static int getUserId(String email) {
         return 0;
     }
 
-    private void addStockToPortfolio(int userId, String stock, double quantity) {
+    public static void addStockToPortfolio(int userId, int companyId, double quantity) {
     }
 
 }
