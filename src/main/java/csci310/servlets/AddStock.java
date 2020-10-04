@@ -1,13 +1,8 @@
 package csci310.servlets;
-
-import com.sun.org.apache.regexp.internal.RE;
-
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import java.sql.*;
 
 @WebServlet("/addStock")
@@ -15,7 +10,7 @@ public class AddStock  extends HttpServlet {
 
     public static Connection con = null;
 
-    public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
+    public void doGet(HttpServletRequest req, HttpServletResponse res) {
 
         try {
             con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");

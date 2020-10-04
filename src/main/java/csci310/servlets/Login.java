@@ -22,9 +22,6 @@ public class Login extends HttpServlet {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
 
-        System.out.println(email);
-        System.out.println(password);
-        
         PrintWriter pw = res.getWriter();
 
         if (authenticated(email, hashPassword(password))) {

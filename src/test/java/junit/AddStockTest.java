@@ -6,13 +6,10 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.ServletOutputStream;
 import java.io.IOException;
-import java.io.UnsupportedEncodingException;
 import java.sql.*;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 public class AddStockTest {
   
@@ -30,7 +27,7 @@ public class AddStockTest {
     }
 
     @Test
-    public void TestDoGet() throws SQLException, IOException {
+    public void TestDoGet() throws SQLException {
         MockHttpServletRequest mocReq = new MockHttpServletRequest();
         MockHttpServletResponse mocRes = new MockHttpServletResponse();
 
