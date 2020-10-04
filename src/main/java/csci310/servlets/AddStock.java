@@ -25,7 +25,7 @@ public class AddStock  extends HttpServlet {
             int userId = getUserId(email);
             int companyId = getCompanyId(company);
 
-            addStockToPortfolio(userId, stock, quantity);
+            addStockToPortfolio(userId, companyId, shares);
 
             return;
 
