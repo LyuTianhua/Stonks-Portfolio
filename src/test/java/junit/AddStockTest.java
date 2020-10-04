@@ -45,6 +45,15 @@ public class AddStockTest {
     }
 
     @Test
+    public void TestGetCompanyId() {
+        //testing existing company should get id from db
+        assertEquals(AddStock.getCompanyId("TSLA"), 1);
+
+        //testing adding company not in db, adds company returns id
+        assertEquals(AddStock.getCompanyId("LULU"), 2);
+    }
+
+    @Test
     public void TestAddStockToPortfolio() throws SQLException {
 
         AddStock.addStockToPortfolio(1, 1, 10);
