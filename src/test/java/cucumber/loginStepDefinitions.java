@@ -53,17 +53,22 @@ public class loginStepDefinitions {
 
 	@And("I click the Sign In button")
 	public void iClickTheSignInButton() {
-		WebElement result = driver.findElement(By.name("signin"));
+		WebElement result = driver.findElement(By.id("signin"));
 		result.click();
 	}
 
 	@Then("an error message {string} should show up")
 	public void anErrorMessageShouldShowUp(String errMsg) {
-		assertTrue(driver.findElement(By.name("Error-Message")).getAttribute("innerHTML").contains(errMsg));
+		assertTrue(driver.findElement(By.id("Error-Message")).getAttribute("innerHTML").contains(errMsg));
 	}
 
 	@After()
-	public void after() {
+	public void cleanup() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		driver.quit();
 	}
 
