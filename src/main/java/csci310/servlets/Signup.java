@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.io.PrintWriter;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.sql.*;
@@ -13,13 +14,13 @@ import java.sql.*;
 /**
  * Servlet implementation class Signup
  */
-@WebServlet("/signup")
+@WebServlet("/Signup")
 public class Signup extends HttpServlet {
 
     public static Connection con;
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-
+    	PrintWriter pw = res.getWriter();
         try {
 
             con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
@@ -27,10 +28,12 @@ public class Signup extends HttpServlet {
             String email = req.getParameter("email");
             String password = req.getParameter("password");
             String confirm = req.getParameter("confirm");
+            
+            
 
             if (email.isEmpty() | password.isEmpty() | confirm.isEmpty() | !password.equalsIgnoreCase(confirm)) {
                 req.setAttribute("authenticated", false);
-                res.getWriter().write(0);
+                pw.println(0);
 
                 return;
             }
@@ -38,13 +41,14 @@ public class Signup extends HttpServlet {
             if (validEmail(email)) {
                 newUserInserted(email, hashPassword(password));
                 req.setAttribute("authenticated", true);
-                res.getWriter().write(1);
+                pw.println(0);
                 return;
             }
         } catch (SQLException ignored) { }
 
         req.setAttribute("authenticated", false);
-        res.getWriter().write(0);
+        pw.println(0);
+        pw.close();
     }
 
     private static String hashPassword(String input) {
