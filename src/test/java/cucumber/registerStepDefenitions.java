@@ -1,5 +1,6 @@
 package cucumber;
 
+import io.cucumber.java.After;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
@@ -43,6 +44,21 @@ public class registerStepDefenitions {
 
     @Then("I should be on {string}")
     public void iShouldBeOnIndexJsp(String url) {
+        try {
+            Thread.sleep(3000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
         assertTrue(driver.getCurrentUrl().contains(url));
+    }
+
+    @After()
+    public void cleanup() {
+        try {
+            Thread.sleep(2000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+        driver.quit();
     }
 }
