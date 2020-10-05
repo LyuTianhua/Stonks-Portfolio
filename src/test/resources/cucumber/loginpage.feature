@@ -1,4 +1,4 @@
-Feature: Hello
+Feature: login functionality
   Scenario: Open register page from login page
     Given I am on the login page
     When I click the Register tab
@@ -10,7 +10,7 @@ Feature: Hello
     And I enter 'tu1pass' in Password input field
     And I click the Sign In button
     Then I should be on page 'home.jsp'
-    
+
   Scenario: Remain on login page after unsuccessful login
     Given I am on the login page
     When I enter 'wrong@usc.edu' in Email Address input field

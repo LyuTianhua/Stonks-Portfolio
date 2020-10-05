@@ -21,7 +21,7 @@ public class Login extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
         String email = req.getParameter("email");
         String password = req.getParameter("password");
-        
+
         PrintWriter pw = res.getWriter();
 
         if (authenticated(email, hashPassword(password))) {

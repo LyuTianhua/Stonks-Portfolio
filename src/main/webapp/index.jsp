@@ -25,12 +25,12 @@
 			</div>
 			<form id="login-fields">
 				<label class="text-left" id="email" for="exampleInputEmail1">Email Address</label>
-				<input type="email" class="form-control" id="exampleInputEmail1">
+				<input type="email" class="form-control" id="exampleInputEmail1" name="email">
 				<label class="text-left" id="password" for="exampleInputPassword1">Password</label>
-				<input type="password" class="form-control" id="exampleInputPassword1">
+				<input type="password" class="form-control" id="exampleInputPassword1" name="password">
 				<div class="text-center">
 					<div id="Error-Message"></div> 
-					<button id="signin" type="submit" class="btn btn-primary">Sign In</button>
+					<button id="signin" type="submit" class="btn btn-primary" name="signin">Sign In</button>
 				</div>
 			</form>
 		</div>
@@ -46,18 +46,34 @@
 		let email = document.querySelector("#exampleInputEmail1").value.trim();
 		let password = document.querySelector("#exampleInputPassword1").value.trim();
 
-		let httpRequest = new XMLHttpRequest();
-		httpRequest.open("POST", "/Login?" + "email=" + email + "&password=" + password, true);
-		httpRequest.send();
-		httpRequest.onreadystatechange = function() {
-			var msg = httpRequest.responseText.trim();
-			if (msg == "1") {
-				window.location.href = "home.jsp";
-			} else if (msg == "0") {
-				// set error message div
-				document.querySelector("#Error-Message").innerHTML = "Password and Email don't match";
-			}
-		}			
+		// let httpRequest = new XMLHttpRequest();
+		// httpRequest.open("POST", "/Login?" + "email=" + email + "&password=" + password, true);
+		// httpRequest.send();
+		// httpRequest.onreadystatechange = function() {
+		// 	var msg = httpRequest.responseText.trim();
+		// 	if (msg === "1") {
+		// 		window.location.href = "home.jsp";
+		// 	} else if (msg === "0") {
+		// 		// set error message div
+		// 		document.querySelector("#Error-Message").innerHTML = "Password and Email don't match";
+		// 	}
+		// }
+
+		$.ajax({
+			method: "post",
+			url: "/Login",
+			data: {
+				email,
+				password
+			},
+			success: ((response) => {
+				if (response === 1)
+					window.location.href = "http://localhost:8080/home.jsp"
+				else
+					document.querySelector("#Error-Message").innerHTML = "Password and Email don't match";
+			})
+		})
+
 	}
 </script>
 	

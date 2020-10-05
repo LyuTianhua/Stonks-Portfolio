@@ -33,18 +33,21 @@ public class loginStepDefinitions {
 
 	@Then("I should be on page {string}")
 	public void iShouldBeOnPageRegisterJsp(String url) {
-		assertTrue(driver.getCurrentUrl().contains(url));
+		System.out.println(driver.getCurrentUrl().trim());
+		System.out.println(driver.getCurrentUrl());
+		System.out.println(url);
+		assertTrue(driver.getCurrentUrl().endsWith(url));
 	}
 
 	@When("I enter {string} in Email Address input field")
 	public void iEnterTuEmailComInEmailAddressInputField(String email) {
-		WebElement queryBox = driver.findElement(By.id("exampleInputEmail1"));
+		WebElement queryBox = driver.findElement(By.name("email"));
 		queryBox.sendKeys(email);
 	}
 
 	@And("I enter {string} in Password input field")
 	public void iEnterTuPassInPasswordInputField(String password) {
-		WebElement queryBox = driver.findElement(By.id("exampleInputPassword1"));
+		WebElement queryBox = driver.findElement(By.name("password"));
 		queryBox.sendKeys(password);
 	}
 
