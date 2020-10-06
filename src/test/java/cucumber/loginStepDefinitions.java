@@ -33,10 +33,14 @@ public class loginStepDefinitions {
 
 	@Then("I should be on page {string}")
 	public void iShouldBeOnPageRegisterJsp(String url) {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		System.out.println(driver.getCurrentUrl().trim());
 		System.out.println(driver.getCurrentUrl());
-		System.out.println(url);
-		assertTrue(driver.getCurrentUrl().endsWith(url));
+		assertTrue(driver.getCurrentUrl().contains(url));
 	}
 
 	@When("I enter {string} in Email Address input field")
