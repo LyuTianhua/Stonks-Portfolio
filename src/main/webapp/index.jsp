@@ -46,34 +46,18 @@
 		let email = document.querySelector("#exampleInputEmail1").value.trim();
 		let password = document.querySelector("#exampleInputPassword1").value.trim();
 
-		// let httpRequest = new XMLHttpRequest();
-		// httpRequest.open("POST", "/Login?" + "email=" + email + "&password=" + password, true);
-		// httpRequest.send();
-		// httpRequest.onreadystatechange = function() {
-		// 	var msg = httpRequest.responseText.trim();
-		// 	if (msg === "1") {
-		// 		window.location.href = "home.jsp";
-		// 	} else if (msg === "0") {
-		// 		// set error message div
-		// 		document.querySelector("#Error-Message").innerHTML = "Password and Email don't match";
-		// 	}
-		// }
-
-		$.ajax({
-			method: "post",
-			url: "/Login",
-			data: {
-				email,
-				password
-			},
-			success: ((response) => {
-				if (response === 1)
-					window.location.href = "http://localhost:8080/home.jsp"
-				else
-					document.querySelector("#Error-Message").innerHTML = "Password and Email don't match";
-			})
-		})
-
+		let httpRequest = new XMLHttpRequest();
+		httpRequest.open("POST", "/Login?" + "email=" + email + "&password=" + password, true);
+		httpRequest.send();
+		httpRequest.onreadystatechange = function() {
+			var msg = httpRequest.responseText.trim();
+		 	if (msg === "1") {
+		 		window.location.href = "home.jsp";
+		 	} else if (msg === "0") {
+		 		// set error message div
+		 		document.querySelector("#Error-Message").innerHTML = "Password and Email don't match";
+		 	}
+		}
 	}
 </script>
 	

@@ -60,7 +60,6 @@
 		httpRequest.onreadystatechange = function() {
 			var msg = httpRequest.responseText.trim();
 			if (msg == "1") {
-				alert("Registered Successfully");
 				window.location.href = "index.jsp";
 			} else if (msg == "0") {
 				// set error message div

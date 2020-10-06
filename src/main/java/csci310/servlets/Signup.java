@@ -41,7 +41,7 @@ public class Signup extends HttpServlet {
             if (validEmail(email)) {
                 newUserInserted(email, hashPassword(password));
                 req.setAttribute("authenticated", true);
-                pw.println(0);
+                pw.println(1);
                 return;
             }
         } catch (SQLException ignored) { }
