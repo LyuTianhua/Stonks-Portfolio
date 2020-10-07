@@ -5,14 +5,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" href="styles.css">
-	<title>Document</title>
+	<title>Login</title>
 </head>
 
 <body>
 
 <div class = "my-nav">
 	<nav class="navbar navbar-expand-lg navbar-light bg-custom">
-		<a class="navbar-brand text-wrap" href="#">CSCI 310: Stock Portfolio Tracker Team 10</a>	 
+		<a class="navbar-brand text-wrap" href="#">USC CS 310 Stock Portfolio Management</a>
 	</nav>
 </div>
 <div class="container-fluid">

@@ -1,5 +1,13 @@
+body {
+    background-color: lightcyan;
+}
+
 h3 {
 	font-weight: 700;
+}
+
+.form-control {
+    background-color: white;
 }
 
 #register,#cancel{
