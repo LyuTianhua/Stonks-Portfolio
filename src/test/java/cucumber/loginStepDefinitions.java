@@ -63,6 +63,12 @@ public class loginStepDefinitions {
 
 	@Then("an error message {string} should show up")
 	public void anErrorMessageShouldShowUp(String errMsg) {
+		// Fixed not recognizing error message (Assertion error)
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 		assertTrue(driver.findElement(By.id("Error-Message")).getAttribute("innerHTML").contains(errMsg));
 	}
 
