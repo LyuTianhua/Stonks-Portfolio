@@ -38,7 +38,7 @@
 //
 //    @Then("I should see {double} TSLA stock on the portfolio")
 //    public void i_should_see(double quantity) {
-//        WebElement we = driver.findElement(By.name("TSLA"));
+//        WebElement we = driver.findElement(By.name("quantity"));
 //        assertEquals(quantity, Double.parseDouble(we.getText()), 0.0);
 //    }
 //

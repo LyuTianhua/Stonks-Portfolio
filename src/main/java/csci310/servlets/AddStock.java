@@ -3,6 +3,8 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
+import java.io.PrintWriter;
 import java.sql.*;
 
 @WebServlet("/AddStock")
@@ -28,8 +30,12 @@ public class AddStock  extends HttpServlet {
 
             addStockToPortfolio(userId, companyId, quantity);
 
-            res.getWriter().println(1);
-
+            PrintWriter pw = res.getWriter();
+            
+            pw.println(1);
+            
+            pw.close();
+            
             req.setAttribute("resTicker", ticker);
             req.setAttribute("resQuantity", quantity);
 

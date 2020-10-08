@@ -10,13 +10,6 @@
 	<title>Home</title>
 </head>
 <body>
-
-
-	<%
-		String ticker =  (request.getAttribute("resTicker") == null) ? "" : (String) request.getAttribute("resTicker");
-		String quantity = (request.getAttribute("resQuantity") == null) ? "" : (String) request.getAttribute("resQuantity");
-	%>
-
 	<nav class="navbar navbar-light my-nav">
 		<a class="navbar-brand text-wrap" href="#">USC CS 310 Stock Portfolio Management</a>	 
 		<button id="logout" type="button" class="btn btn-dark float-right">Log Out</button>
@@ -39,7 +32,7 @@
 				</div>
 				<div class="row mt-3">
 					<h3>Portfolio Stocks</h3>
-					<table class="table table-hover">
+					<table id="portfolio-stocks" class="table table-hover">
 						<tr>
 							<th>Stonk</th>
 							<th>Price</th>
@@ -47,16 +40,6 @@
 							<th>Remove Stock</th>
 						</tr>
 
-						<tr>
-							<th	id="testTicker">
-								<%= ticker %>
-							</th>
-
-
-							<th	id="TestQuantity">
-								<%= quantity %>
-							</th>
-						</tr>
 
 <%--						<tr>--%>
 <%--							<td>AAPL</td>--%>
@@ -275,9 +258,8 @@
 		// }
 		// idleTimer();
 
-		document.getElementById('add-stock-modal-form').onsubmit = function(event) {
-			document.querySelector("#Error-Message").innerHTML = "";
-			event.preventDefault();
+		document.querySelector("#add-stock-modal-form").onsubmit = function(event) {
+			event.preventDefault();	
 			// let email = document.querySelector("#exampleInputEmail1").value.trim();
 			let ticker = document.querySelector("#ticker").value.trim();
 			let company = document.querySelector("#company-name").value.trim();
@@ -287,12 +269,30 @@
 			// httpRequest.open("GET", "/AddStock?" + "email=" + email + "&ticker=" + ticker + "&company=" + company + "&quantity=" + quantity, true);
 			httpRequest.open("GET", "/AddStock?" + "ticker=" + ticker + "&company=" + company + "&quantity=" + quantity, true);
 			httpRequest.send();
-			httpRequest.onreadystatechange = function() {
+			httpRequest.onreadystatechange = function() {			
 				const msg = httpRequest.responseText.trim();
 				if (msg === "1") {
-					window.location.href = "home.jsp";
 					// document.querySelector("#testTicker").innerHTML.value = ticker.toString()
 					// document.querySelector("#testQuantity").innerHTML.value = quantity.toString()
+					// window.location.href = "home.jsp";
+					let stockRow = document.createElement("tr");
+					let tickerCell = document.createElement("td");
+					let priceCell = document.createElement("td");
+					let qualityCell = document.createElement("td");
+					let removeCell = document.createElement("td");
+					
+					tickerCell.setAttribute("name", "ticker");
+					qualityCell.setAttribute("name", "quantity");
+					
+					tickerCell.innerHTML = ticker;
+					qualityCell.innerHTML = quantity;
+					removeCell.innerHTML = "<button type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>";
+					stockRow.appendChild(tickerCell);
+					stockRow.appendChild(priceCell);
+					stockRow.appendChild(qualityCell);
+					stockRow.appendChild(removeCell);
+					
+					document.querySelector("#portfolio-stocks").appendChild(stockRow);
 				} else if (msg === "0") {
 					// set error message div
 					document.querySelector("#Error-Message").innerHTML = "Password and Email don't match";
