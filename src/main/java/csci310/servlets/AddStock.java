@@ -13,17 +13,25 @@ public class AddStock  extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
 
         try {
+
+            System.out.println("\n\n\n\n\nADD STOCK\n\n\n\n");
+
             con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
 
-            String email = req.getParameter("email");
-            String abbreviation = req.getParameter("abbreviation");
+            String email = "tu1@email.com";        //   req.getParameter("email");
+            String ticker = req.getParameter("ticker");
             String company = req.getParameter("company");
-            double shares = Double.parseDouble(req.getParameter("shares"));
+            double quantity = Double.parseDouble(req.getParameter("quantity"));
 
             int userId = getUserId(email);
-            int companyId = getCompanyId(abbreviation, company);
+            int companyId = getCompanyId(ticker, company);
 
-            addStockToPortfolio(userId, companyId, shares);
+            addStockToPortfolio(userId, companyId, quantity);
+
+            res.getWriter().println(1);
+
+            req.setAttribute("resTicker", ticker);
+            req.setAttribute("resQuantity", quantity);
 
         } catch (Exception ignored) { }
 

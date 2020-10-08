@@ -32,16 +32,14 @@ public class AddStockTest {
         MockHttpServletResponse mocRes = new MockHttpServletResponse();
 
         mocReq.addParameter("email", "tu1@email.com");
-        mocReq.addParameter("abbreviation", "TSLA");
+        mocReq.addParameter("ticker", "TSLA");
         mocReq.addParameter("company", "Tesla");
-        mocReq.addParameter("shares", "10");
+        mocReq.addParameter("quantity", "10");
 
         addStock.doGet(mocReq, mocRes);
 
 
-        PreparedStatement ps = AddStock.con.prepareStatement("select * from stock where user_id=? and company_id=?");
-        ps.setInt(1, 1);
-        ps.setInt(2, 1);
+        PreparedStatement ps = AddStock.con.prepareStatement("select shares from stock where user_id=1 and company_id=1");
         ResultSet rs = ps.executeQuery();
         rs.next();
 

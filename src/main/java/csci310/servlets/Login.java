@@ -19,6 +19,10 @@ public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
+
+
+        System.out.println("\n\n\n\n\n\nLOGIN\n\n\n\n\n");
+
         String email = req.getParameter("email");
         String password = req.getParameter("password");
 
