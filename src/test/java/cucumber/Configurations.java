@@ -19,7 +19,7 @@ public class Configurations {
             if(props.getProperty("DEV") == "True") {
                 this.url = props.getProperty("NGROK_URL");
             } else {
-                this.url = "http://localhost:8080";
+                this.url = "http://localhost:8080/";
             }
 
             reader.close();
