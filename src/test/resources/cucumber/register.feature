@@ -30,3 +30,8 @@ Feature: Register for site
     And I enter 'tu1pass' in the Verify Password field
     And I click the Register link
     Then I should be on 'register.jsp'
+
+  Scenario: Pressing cancel button takes you to login page
+    Given I am on the register page
+    When I press the cancel button
+    Then I should be on 'index.jsp'

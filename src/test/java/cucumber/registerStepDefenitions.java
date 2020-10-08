@@ -26,6 +26,11 @@ public class registerStepDefenitions {
     public void iEnterTuEmailComInTheEmailAddressField(String email) {
         driver.findElement(By.name("email")).sendKeys(email);
     }
+    
+    @When("I press the cancel button")
+    public void i_press_the_cancel_button() {
+    	driver.findElement(By.id("cancel")).click();
+    }
 
     @And("I enter {string} in the Password field")
     public void iEnterTuPassInThePasswordField(String password) {
