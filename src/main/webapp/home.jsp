@@ -142,15 +142,15 @@
 	<form id="add-stock-modal-form">
 		<div class="form-group">
 			<label for="ticker">Ticker</label>
-			<input type="text" class="form-control" id="ticker" placeholder="ex. AAPL">
+			<input type="text" class="form-control" id="tickerIn" placeholder="ex. AAPL">
 		</div>
 		<div class="form-group">
 			<label for="quantity">Quantity</label>
-			<input type="text" class="form-control" id="quantity" placeholder="ex. 50129">
+			<input type="text" class="form-control" id="quantityIn" placeholder="ex. 50129">
 		</div>
 		<div class="form-group">
 			<label for="company-name">Company Name</label>
-			<input type="text" class="form-control" id="company-name" placeholder="ex. Apple">
+			<input type="text" class="form-control" id="companyNameIn" placeholder="ex. Apple">
 		</div>
 		<div class="form-group">
 			<label for="date-purchased">Date Purchased</label>
@@ -238,32 +238,32 @@
 			window.location.href = "index.jsp";
 		}
                                         
-		// function idleTimer() {
-		// 	let t;
-		// 	window.onload = resetTimer;
-		// 	window.onmousemove = resetTimer; // catches mouse movements
-		// 	window.onmousedown = resetTimer; // catches mouse movements
-		// 	window.onclick = resetTimer;     // catches mouse clicks
-		// 	window.onscroll = resetTimer;    // catches scrolling
-		// 	window.onkeypress = resetTimer;  //catches keyboard actions
-		//
-		// 	function logout() {
-		// 		window.location.href = '/index.jsp';  //Adapt to actual logout script
-		// 	}
-		//
-		// 	function resetTimer() {
-		// 		clearTimeout(t);
-		// 		t = setTimeout(logout, 3000);  // time is in milliseconds (1000 is 1 second)
-		// 	}
-		// }
-		// idleTimer();
+		function idleTimer() {
+		 	let t;
+		 	window.onload = resetTimer;
+		 	window.onmousemove = resetTimer; // catches mouse movements
+		 	window.onmousedown = resetTimer; // catches mouse movements
+		 	window.onclick = resetTimer;     // catches mouse clicks
+		 	window.onscroll = resetTimer;    // catches scrolling
+		 	window.onkeypress = resetTimer;  //catches keyboard actions
+		
+		 	function logout() {
+		 		window.location.href = '/index.jsp';  //Adapt to actual logout script
+		 	}
+		
+		 	function resetTimer() {
+		 		clearTimeout(t);
+		 		t = setTimeout(logout, 3000);  // time is in milliseconds (1000 is 1 second)
+		 	}
+		}
+		idleTimer();
 
 		document.querySelector("#add-stock-modal-form").onsubmit = function(event) {
 			event.preventDefault();	
 			// let email = document.querySelector("#exampleInputEmail1").value.trim();
-			let ticker = document.querySelector("#ticker").value.trim();
-			let company = document.querySelector("#company-name").value.trim();
-			let quantity = document.querySelector("#quantity").value.trim();
+			let ticker = document.querySelector("#tickerIn").value.trim();
+			let company = document.querySelector("#companyNameIn").value.trim();
+			let quantity = document.querySelector("#quantityIn").value.trim();
 
 			let httpRequest = new XMLHttpRequest();
 			// httpRequest.open("GET", "/AddStock?" + "email=" + email + "&ticker=" + ticker + "&company=" + company + "&quantity=" + quantity, true);
@@ -282,7 +282,7 @@
 					let removeCell = document.createElement("td");
 					
 					tickerCell.setAttribute("name", "ticker");
-					qualityCell.setAttribute("name", "quantity1");
+					qualityCell.setAttribute("name", "quantityOut");
 					
 					tickerCell.innerHTML = ticker;
 					qualityCell.innerHTML = quantity;

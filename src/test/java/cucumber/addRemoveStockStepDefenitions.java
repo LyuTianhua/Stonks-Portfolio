@@ -31,25 +31,30 @@ public class addRemoveStockStepDefenitions {
 		queryBox = driver.findElement(By.name("password"));
 		queryBox.sendKeys("tu1pass");
 		driver.findElement(By.name("signin")).click();
+		try {
+			Thread.sleep(500);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	
 	@Given("I enter {string} into ticker")
 	public void i_enter_into_ticker(String string) {
-		WebElement queryBox = driver.findElement(By.id("ticker"));
+		WebElement queryBox = driver.findElement(By.id("tickerIn"));
 		queryBox.sendKeys(string);
 	}
 	
 	
 	@Given("I enter {string} into quantity")
 	public void i_enter_into_quantity(String string) {
-		WebElement queryBox = driver.findElement(By.id("quantity"));
+		WebElement queryBox = driver.findElement(By.id("quantityIn"));
 		queryBox.sendKeys(string);
 	}
 	
 	@Given("I enter {string} into company")
 	public void i_enter_into_company(String string) {
-		WebElement queryBox = driver.findElement(By.id("company-name"));
+		WebElement queryBox = driver.findElement(By.id("companyNameIn"));
 		queryBox.sendKeys(string);
 	}
 	
@@ -60,17 +65,21 @@ public class addRemoveStockStepDefenitions {
 	
 	@Then("I should see 10 TSLA stock on the portfolio")
 	public void i_should_see_TSLA_stock_on_the_portfolio() {
-	   
-		List<WebElement> elements = driver.findElements(By.cssSelector("#portfolio-stocks td:nth-child(3)"));
-	      assert(elements.size() > 0);
+	    try {
+	        Thread.sleep(500);
+	    } catch (InterruptedException ignored) {}
+	    assertTrue(driver.findElement(By.name("quantityOut")).getAttribute("innerHTML").contains("10"));
 	}
-
-
 	
-	
-	
-	
-
+	@After()
+	public void cleanup() {
+		try {
+			Thread.sleep(2000);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
+		driver.quit();
+	}
 }
 
 	
