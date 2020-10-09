@@ -59,9 +59,9 @@
 		httpRequest.send();
 		httpRequest.onreadystatechange = function() {
 			var msg = httpRequest.responseText.trim();
-			if (msg == "1") {
+			if (msg === "1") {
 				window.location.href = "index.jsp";
-			} else if (msg == "0") {
+			} else if (msg === "0") {
 				// set error message div
 				document.querySelector("#Error-Message").innerHTML = "Invalid email or password";
 			}
@@ -71,7 +71,7 @@
 	document.querySelector("#exampleInputPassword2").onchange = function() {
 		let password = document.querySelector("#exampleInputPassword1").value.trim();
 		let confirm = document.querySelector("#exampleInputPassword2").value.trim();
-		if (password != confirm) {
+		if (password !== confirm) {
 			document.querySelector("#Error-Message").innerHTML = "Two password doesn't match";
 			return false;
 		} else {
