@@ -23,13 +23,15 @@
 			</div>
 			<form id="login-fields">
 				<label class="text-left" id="email" for="exampleInputEmail1">Email Address</label>
-				<input class="form-control" id="exampleInputEmail1" type="email">
+				<input class="form-control" id="exampleInputEmail1" type="email" name="email">
 				<label class="text-left" id="password" for="exampleInputPassword1">Password</label>
-				<input class="form-control" id="exampleInputPassword1" type="password">
-				<label class="text-left" id="password" for="exampleInputPassword2">Verify Password</label>
-				<input class="form-control" id="exampleInputPassword2" type="password">
-				<div class="text-center">
-					<button class="btn btn-primary" id="register" type="submit">Register</button>
+				<input class="form-control" id="exampleInputPassword1" type="password" name="password">
+				<label class="text-left" id="VerifyPassword" for="exampleInputPassword2">Verify Password</label>
+				<input class="form-control" id="exampleInputPassword2" type="password" name="verifyPassword">
+				<div class="text-center" id="Error-Message"></div> 
+				<div class="row">
+					<button id="register" class="btn btn-primary" type="submit" name="registerButton">Create User</button>
+					<button id="cancel" class="btn btn-primary" type="button" name="cancelButton">Cancel</button>
 				</div>
 			</form>
 		</div>
@@ -40,12 +42,46 @@
 <!-- Not sure if this is necessary since I have it linking to index.jsp
  -->
 <script> 
-	function login() {
-		window.location.replace("Login.jsp");
+	// When I hit cancel, go back to login page
+	document.querySelector("#cancel").onclick = function() {
+		window.location.href = "index.jsp";
 	}
-	function register() {
-		window.location.replace("Register.jsp");
+
+	document.querySelector("#login-fields").onsubmit = function(event) {
+		document.querySelector("#Error-Message").innerHTML = "";
+		event.preventDefault();
+		let email = document.querySelector("#exampleInputEmail1").value.trim();
+		let password = document.querySelector("#exampleInputPassword1").value.trim();
+		let confirm = document.querySelector("#exampleInputPassword2").value.trim();
+
+		let httpRequest = new XMLHttpRequest();
+		httpRequest.open("POST", "/Signup?" + "email=" + email + "&password=" + password + "&confirm=" + confirm, true);
+		httpRequest.send();
+		httpRequest.onreadystatechange = function() {
+			var msg = httpRequest.responseText.trim();
+			if (msg === "1") {
+				window.location.href = "index.jsp";
+			} else if (msg === "0") {
+				// set error message div
+				document.querySelector("#Error-Message").innerHTML = "Invalid email or password";
+			}
+		}			
 	}
+	
+	document.querySelector("#exampleInputPassword2").onchange = function() {
+		let password = document.querySelector("#exampleInputPassword1").value.trim();
+		let confirm = document.querySelector("#exampleInputPassword2").value.trim();
+		if (password !== confirm) {
+			document.querySelector("#Error-Message").innerHTML = "Two password doesn't match";
+			return false;
+		} else {
+			document.querySelector("#Error-Message").innerHTML = "";
+			return true;
+		}
+		return true;
+	}
+	
+
 </script>
 	
 </body>

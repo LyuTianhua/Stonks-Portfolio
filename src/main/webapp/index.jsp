@@ -5,14 +5,14 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" href="styles.css">
-	<title>Document</title>
+	<title>Login</title>
 </head>
 
 <body>
 
 <div class = "my-nav">
 	<nav class="navbar navbar-expand-lg navbar-light bg-custom">
-		<a class="navbar-brand text-wrap" href="#">CSCI 310: Stock Portfolio Tracker Team 10</a>	 
+		<a class="navbar-brand text-wrap" href="#">USC CS 310 Stock Portfolio Management</a>
 	</nav>
 </div>
 <div class="container-fluid">
@@ -25,12 +25,12 @@
 			</div>
 			<form id="login-fields">
 				<label class="text-left" id="email" for="exampleInputEmail1">Email Address</label>
-				<input type="email" class="form-control" id="exampleInputEmail1">
+				<input type="email" class="form-control" id="exampleInputEmail1" name="email">
 				<label class="text-left" id="password" for="exampleInputPassword1">Password</label>
-				<input type="password" class="form-control" id="exampleInputPassword1">
+				<input type="password" class="form-control" id="exampleInputPassword1" name="password">
 				<div class="text-center">
 					<div id="Error-Message"></div> 
-					<button id="signin" type="submit" class="btn btn-primary">Sign In</button>
+					<button id="signin" type="submit" class="btn btn-primary" name="signin">Sign In</button>
 				</div>
 			</form>
 		</div>
@@ -51,13 +51,13 @@
 		httpRequest.send();
 		httpRequest.onreadystatechange = function() {
 			var msg = httpRequest.responseText.trim();
-			if (msg == "1") {
-				window.location.href = "home.jsp";
-			} else if (msg == "0") {
-				// set error message div
-				document.querySelector("#Error-Message").innerHTML = "Password and Email don't match";
-			}
-		}			
+		 	if (msg === "1") {
+		 		window.location.href = "home.jsp";
+		 	} else if (msg === "0") {
+		 		// set error message div
+		 		document.querySelector("#Error-Message").innerHTML = "Password and Email don't match";
+		 	}
+		}
 	}
 </script>
 	

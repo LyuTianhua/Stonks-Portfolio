@@ -12,6 +12,14 @@
   	<servlet-name>Login</servlet-name>
   	<servlet-class>csci310.servlets.Login</servlet-class>
   </servlet>
+    <servlet>
+  	<servlet-name>Signup</servlet-name>
+  	<servlet-class>csci310.servlets.Signup</servlet-class>
+  </servlet>
+    <servlet>
+        <servlet-name>AddStock</servlet-name>
+        <servlet-class>csci310.servlets.AddStock</servlet-class>
+    </servlet>
   <servlet-mapping>
   	<servlet-name>GreetingServlet</servlet-name>
   	<url-pattern>/greeting</url-pattern>
@@ -20,4 +28,12 @@
   	<servlet-name>Login</servlet-name>
   	<url-pattern>/Login</url-pattern>
   </servlet-mapping>
+  <servlet-mapping>
+  	<servlet-name>Signup</servlet-name>
+  	<url-pattern>/Signup</url-pattern>
+  </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddStock</servlet-name>
+        <url-pattern>/AddStock</url-pattern>
+    </servlet-mapping>
 </web-app>
