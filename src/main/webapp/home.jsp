@@ -161,7 +161,7 @@
 			<input type="text" class="form-control" id="date-sold" placeholder="ex. 1/1/2020">
 		</div>
 
-		<button type="submit" form="add-stock-modal-form" value="submit" class="btn btn-primary">Add Stock</button>
+		<button type="submit" form="add-stock-modal-form" id = "add-btn"value="submit" class="btn btn-primary">Add Stock</button>
 		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 
 	</form>
@@ -282,7 +282,7 @@
 					let removeCell = document.createElement("td");
 					
 					tickerCell.setAttribute("name", "ticker");
-					qualityCell.setAttribute("name", "quantity");
+					qualityCell.setAttribute("name", "quantity1");
 					
 					tickerCell.innerHTML = ticker;
 					qualityCell.innerHTML = quantity;
