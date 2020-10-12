@@ -1,0 +1,14 @@
+Best Practice Refactor Report
+Owner: group10-20203
+Grade: 10.0/10
+Comments: 
+Issue 67
+	LyuTianhua satisfied 7 of 7 requirements for this issue.
+Issue 63
+	harshilshah1499 satisfied 7 of 7 requirements for this issue.
+Issue 59
+	hern784 satisfied 7 of 7 requirements for this issue.
+Issue 57
+	dkhojasteh satisfied 7 of 7 requirements for this issue.
+Issue 55
+	jjmarsha satisfied 7 of 7 requirements for this issue.
