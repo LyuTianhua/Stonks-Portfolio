@@ -1,0 +1,21 @@
+			Grading Table - Team10
+
+| Section                  | Grade               | Note                                                                                                                                                                        |
+|--------------------------|---------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| Sprint Planning          | 9.0/9               | Good job !                                                                                                                                                                  |
+| Scrums                   | 24.5/25             | Scrum 1:                                                                                                                                                                    |
+|                          |                     | Scrum 2:Good job                                                                                                                                                            |
+|                          |                     | Scrum 3:Suggestion : Try to submit files as soon as possible after the scrum meeting                                                                                        |
+|                          |                     | Scrum 4:Try to explain why the task "logout after inactive session 120 sec" got assigned to John instead of Dariya in the scrum itself [inconsistency in Scrum chart 3 & 4] |
+|                          |                     | Scrum 5:                                                                                                                                                                    |
+| Retrospective            | TBD                 |                                                                                                                                                                             |
+| TDD                      | 6.7/10              |                                                                                                                                                                             |
+| Sustainable Pace         | 10/10               |                                                                                                                                                                             |
+| GitFlow                  | 9.5/10              |                                                                                                                                                                             |
+| Continuous Integration   | 10/10               |                                                                                                                                                                             |
+| Refactor                 | 10/10               |                                                                                                                                                                             |
+| Coverage                 | 2.3/10              |                                                                                                                                                                             |
+| ------------------------ | ------------------- |                                                                                                                                                                             |
+| Total                    | 82.0                |                                                                                                                                                                             |
+| ------------------------ | ------------------- |                                                                                                                                                                             |
+| Implementation Score     | 67/250              |                                                                                                                                                                             |
