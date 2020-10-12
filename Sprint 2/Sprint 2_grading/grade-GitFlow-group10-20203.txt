@@ -1,0 +1,6 @@
+Best Practice GitFlow Report
+Owner: group10-20203
+Grade: 9.5/10
+Comments: 
+
+	Pull did not follow base/head branch rules (-1) [master<-hotfix-project-file]: https://github.com/CSCI310/project-20203-group10-20203/pull/36
