@@ -1,0 +1,11 @@
+Best Practice TDD Report
+Owner: group10-20203
+Grade: 6.7/10
+Comments: 
+	No test method found for: mavenwrapperdownloader.main
+		Commit: https://github.com/CSCI310/project-20203-group10-20203/commit/63e3aad2c4d4b79954bc2316d56b161479ed1da0
+	No test method found for: mavenwrapperdownloader.downloadfilefromurl
+		Commit: https://github.com/CSCI310/project-20203-group10-20203/commit/63e3aad2c4d4b79954bc2316d56b161479ed1da0
+Correct TDD methods: 4
+Incorrect TDD methods: 2
+Total methods evaluated for TDD: 6
