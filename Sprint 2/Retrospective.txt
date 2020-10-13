@@ -1,0 +1,13 @@
+Sprint Retrospective:
+
+List of Meeting Participants: Harshil Shah, Dariya Khojasteh, Richard Hernandez, Tianhua Lyu, John Marshall
+
+The process aspects that will be changed are that we will make sure to upload the scrum files ASAP following the scrum meeting and we will try to explain why tasks got assigned to different people if we end up changing them from one scrum to another.
+
+We will also make sure to follow TDD standards more closely and ensure that all methods have a test case written for them before pushing our code and ensure that no random files get added pushed to GitHub.
+
+For GitFlow, we will make sure we learn the proper way to do a hotfix to ensure we don't get marked off for fixing our master branch.
+
+For coverage, we will make sure to run Corbetura before submitting our code to ensure that we still have full statement and branch coverage because we realized we never deleted one of the starter files and also we had an extra Configuration file that we forgot to delete, which impacted our coverage score.
+
+In terms of tasks, we will add following the sprint review are: that we will start to build out the graph functionality in order to stay on track with the implementation portion of the project, we will also make sure to refactor our SSL to ensure that it works on localhost:8080 (not ngrok which we previously used), we will also need to add the "add/remove stock" functionality to a modal on the FE, as well as add a bulk upload option for adding stocks as a CSV. We will also implement checks for adding and removing stocks to make sure all additions and deletions are valid, and if they are invalid we will add an appropriate error message. The reason for these changes is due to feedback from CP's during our sprint review and our sprint 2 grading report.
