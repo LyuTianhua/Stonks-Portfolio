@@ -1,0 +1,19 @@
+Sprint Backlog:
+
+
+1. Prediction of future values of the portfolio
+2. Ability to add or remove stocks from the portfolio
+3. Track and visualize changes in value over time of user’s portfolio
+4. View and compare the historical performance of a stock
+6. The application must be secure and protect confidentiality of users’ data.
+7. Users must be able to create an account in the system
+9. Must be implemented as a client-server based web application
+10. Logout after user has been inactive for 120 seconds.
+12. Timeout Passwords after 3 tries
+13. Error messages for add and removing stocks
+14. Bulk import of stocks via a CSV file
+
+We added 1 because we want to submit a feasibility report because we don't think it is possible to build out such functionality. We added 2 because we got feedback from the CPs to add some error checking for that feature. We added 3 because the CPs said we should start the graphing portion to stay on track with our project. We added 6,10, and 12 because of the feedback received from our sprint review to implement SSL security without ngrok and to do it on localhost instead. The reason we picked 7 is because we need to finish the registration flow and we got feedback from our CP's that we needed to fix error checking issues. The reason we picked number 9 to add to this sprint backlog is because although we setup the architecture, we have to now change our DB to SQLite because of the CP's not being able to run our DB on their machine. We added 13,14 because of CP feedback from sprint review.
+
+
+List of Meeting Participants: Harshil Shah, Dariya Khojasteh, Richard Hernandez, Tianhua Lyu, John Marshall
