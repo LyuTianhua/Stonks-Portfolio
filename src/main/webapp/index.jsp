@@ -10,11 +10,8 @@
 
 <body>
 
-<div class = "my-nav">
-	<nav class="navbar navbar-expand-lg navbar-light bg-custom">
-		<a class="navbar-brand text-wrap" href="#">USC CS 310 Stock Portfolio Management</a>
-	</nav>
-</div>
+<%@include file="partials/nav.jsp"%>
+
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-0 col-sm-3 col-md-3 col-lg-3"></div>
@@ -23,43 +20,19 @@
 				<a id="link1" class="col-6" href="index.jsp">Sign In</a>
 				<a id="link2" class="col-6" href="register.jsp">Register</a>
 			</div>
-			<form id="login-fields">
-				<label class="text-left" id="email" for="exampleInputEmail1">Email Address</label>
-				<input type="email" class="form-control" id="exampleInputEmail1" name="email">
-				<label class="text-left" id="password" for="exampleInputPassword1">Password</label>
-				<input type="password" class="form-control" id="exampleInputPassword1" name="password">
-				<div class="text-center">
-					<div id="Error-Message"></div> 
-					<button id="signin" type="submit" class="btn btn-primary" name="signin">Sign In</button>
-				</div>
-			</form>
+
+
+			<%@include file="partials/loginForm.jsp"%>
+
 		</div>
 		<div class="col-0 col-sm-3 col-md-3 col-lg-3"></div>
 	</div>
 </div>
 
 
-<script>
-	document.querySelector("#login-fields").onsubmit = function(event) {
-		document.querySelector("#Error-Message").innerHTML = "";
-		event.preventDefault();
-		let email = document.querySelector("#exampleInputEmail1").value.trim();
-		let password = document.querySelector("#exampleInputPassword1").value.trim();
-
-		let httpRequest = new XMLHttpRequest();
-		httpRequest.open("POST", "/Login?" + "email=" + email + "&password=" + password, true);
-		httpRequest.send();
-		httpRequest.onreadystatechange = function() {
-			var msg = httpRequest.responseText.trim();
-		 	if (msg === "1") {
-		 		window.location.href = "home.jsp";
-		 	} else if (msg === "0") {
-		 		// set error message div
-		 		document.querySelector("#Error-Message").innerHTML = "Password and Email don't match";
-		 	}
-		}
-	}
-</script>
-	
+<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+<script src="https://code.jquery.com/jquery-3.5.0.js" integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 </html>
