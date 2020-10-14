@@ -1,4 +1,5 @@
 Feature: login functionality
+
   Scenario: Open register page from login page
     Given I am on the login page
     When I click the Register tab
