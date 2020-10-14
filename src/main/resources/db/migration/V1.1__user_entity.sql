@@ -1,22 +1,22 @@
-drop table if exists Base_User CASCADE;
+drop table if exists Base_User;
 
 create table base_user (
-   id serial primary key unique not null ,
+   id integer primary key not null,
    email varchar(50) not null unique ,
    password varchar(100) not null
 );
 
-drop table if exists Company CASCADE;
+drop table if exists Company;
 create table Company (
-     id serial primary key unique not null,
+     id integer primary key not null,
      abbreviation varchar(10) not null unique ,
      name varchar(50)
 );
 
 
-drop table if exists Stock CASCADE;
+drop table if exists Stock;
 create table Stock (
-   id serial primary key unique not null ,
+   id integer primary key not null ,
    company_id int not null ,
    user_id int not null ,
    shares float,

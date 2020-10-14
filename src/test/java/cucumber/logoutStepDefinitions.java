@@ -16,7 +16,7 @@ import io.cucumber.java.en.When;
  */
 public class logoutStepDefinitions {
 
-	private static final String ROOT_URL = new Configurations().url;
+	private static final String ROOT_URL = "http://localhost:8080/";
 
 	private final WebDriver driver = new ChromeDriver();
 

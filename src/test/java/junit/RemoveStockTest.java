@@ -20,8 +20,7 @@ public class RemoveStockTest {
     @Before
     public void setUp() throws Exception {
         removeStock = new RemoveStock();
-        RemoveStock.con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
-        con = RemoveStock.con;
+        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
 
         PreparedStatement ps = con.prepareStatement("delete from stock where user_id=?");
         ps.setInt(1, 1);
@@ -32,6 +31,7 @@ public class RemoveStockTest {
         ps.setInt(2, 1);
         ps.setDouble(3, 10);
         ps.execute();
+        con.close();
     }
 
     @Test
@@ -45,14 +45,14 @@ public class RemoveStockTest {
 
         removeStock.doGet(mocReq, mocRes);
 
-
-        PreparedStatement ps = RemoveStock.con.prepareStatement("select * from stock where user_id=? and company_id=?");
+        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
+        PreparedStatement ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
         ps.setInt(1, 1);
         ps.setInt(2, 1);
         ResultSet rs = ps.executeQuery();
         rs.next();
-
         assertEquals(5, rs.getDouble("shares"), 0.0);
+        con.close();
     }
 
     @Test
@@ -70,13 +70,13 @@ public class RemoveStockTest {
 
         RemoveStock.updateStock(1, 1, 5);
 
-        PreparedStatement ps = RemoveStock.con.prepareStatement("select * from stock where user_id=? and company_id=?");
+        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
+        PreparedStatement ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
         ps.setInt(1, 1);
         ps.setInt(2, 1);
         ResultSet rs = ps.executeQuery();
         rs.next();
         assertEquals(5, rs.getDouble("shares"), 0.0);
+        con.close();
     }
-
-
 }

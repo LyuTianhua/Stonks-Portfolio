@@ -10,15 +10,10 @@ import java.sql.*;
 @WebServlet("/AddStock")
 public class AddStock  extends HttpServlet {
 
-    public static Connection con = null;
-
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
 
         try {
-
             System.out.println("\n\n\n\n\nADD STOCK\n\n\n\n");
-
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
 
             String email = "tu1@email.com";        //   req.getParameter("email");
             String ticker = req.getParameter("ticker");
@@ -38,7 +33,6 @@ public class AddStock  extends HttpServlet {
             
             req.setAttribute("resTicker", ticker);
             req.setAttribute("resQuantity", quantity);
-
         } catch (Exception ignored) { }
 
 
@@ -46,15 +40,20 @@ public class AddStock  extends HttpServlet {
     }
 
     public static int getUserId(String email) throws SQLException {
+        Database db = new Database();
+        Connection con = db.getConn();
         PreparedStatement ps = con.prepareStatement("SELECT id FROM base_user WHERE email=?");
         ps.setString(1, email);
         ResultSet rs = ps.executeQuery();
         rs.next();
-        return rs.getInt("id");
+        Integer id = rs.getInt("id");
+        db.closeCon();
+        return id;
     }
 
     public static int getCompanyId(String abbreviation, String name) throws SQLException {
-
+        Database db = new Database();
+        Connection con = db.getConn();
         PreparedStatement ps = con.prepareStatement(
                 "with i as (INSERT INTO company (abbreviation, name) VALUES (?, ?) ON CONFLICT (abbreviation) DO NOTHING RETURNING id) select id from i union all select id from company where abbreviation = ? limit 1;");
         ps.setString(1, abbreviation);
@@ -63,12 +62,14 @@ public class AddStock  extends HttpServlet {
 
         ResultSet rs = ps.executeQuery();
         rs.next();
-
-        return rs.getInt("id");
+        Integer id = rs.getInt("id");
+        db.closeCon();
+        return id;
     }
 
     public static void addStockToPortfolio(int userId, int companyId, double shares) throws SQLException {
-
+        Database db = new Database();
+        Connection con = db.getConn();
         PreparedStatement ps = con.prepareStatement("select * from stock where company_id=? and user_id=?");
         ps.setInt(1, userId);
         ps.setInt(2, companyId);
@@ -89,7 +90,7 @@ public class AddStock  extends HttpServlet {
             ps.setDouble(3, shares);
             ps.execute();
         }
-
+        db.closeCon();
     }
 
 }

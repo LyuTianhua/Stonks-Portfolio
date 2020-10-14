@@ -19,7 +19,8 @@ public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-
+        Database db = new Database();
+        Connection con = db.getConn();
 
         System.out.println("\n\n\n\n\n\nLOGIN\n\n\n\n\n");
 
@@ -37,7 +38,7 @@ public class Login extends HttpServlet {
     		pw.println(0);
         }
 		pw.close();
-
+        db.closeCon();
     }
 
     //Source for hash password
@@ -45,6 +46,8 @@ public class Login extends HttpServlet {
     public static String hashPassword(String input) {
 
         StringBuilder hash = new StringBuilder();
+        Database db = new Database();
+        Connection con = db.getConn();
 
         try {
             MessageDigest sha = MessageDigest.getInstance("SHA-1");
@@ -56,23 +59,25 @@ public class Login extends HttpServlet {
                 hash.append(digits[b & 0x0f]);
             }
         } catch (NoSuchAlgorithmException ignored) { }
-
+        db.closeCon();
         return hash.toString();
     }
 
     public static boolean authenticated(String email, String hashPass) {
         try {
+            Database db = new Database();
+            Connection con = db.getConn();
             // testing purposes
             hashPass = email.equalsIgnoreCase("tu1@email.com") ? "tu1pass" : hashPass;
 
             if (email.equalsIgnoreCase("bad connection"))
                 throw new SQLException("throwing exception for coverage test");
 
-            Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
-
             PreparedStatement ps = con.prepareStatement("select * from base_user where email='" + email + "'" );
             ResultSet rs = ps.executeQuery();
-            return (rs.next() && hashPass.equals(rs.getString("password")));
+            boolean valid = rs.next() && hashPass.equals(rs.getString("password"));
+            db.closeCon();
+            return valid;
 
         } catch (SQLException sql) {
             return false;
