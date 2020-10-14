@@ -16,7 +16,7 @@ public class Configurations {
             FileReader reader = new FileReader(configFile);
             Properties props = new Properties();
             props.load(reader);
-            if(props.getProperty("DEV") == "True") {
+            if(props.getProperty("DEV").equals("True")) {
                 this.url = props.getProperty("NGROK_URL");
             } else {
                 this.url = "http://localhost:8080/";
