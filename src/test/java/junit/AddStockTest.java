@@ -6,13 +6,13 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import java.io.IOException;
+import javax.servlet.http.HttpSession;
 import java.sql.*;
 
 import static org.junit.Assert.assertEquals;
 
 public class AddStockTest {
-  
+
     public static AddStock addStock;
     public static Connection con;
 
@@ -30,11 +30,14 @@ public class AddStockTest {
     public void TestDoGet() throws SQLException {
         MockHttpServletRequest mocReq = new MockHttpServletRequest();
         MockHttpServletResponse mocRes = new MockHttpServletResponse();
+        HttpSession session = mocReq.getSession(true);
 
-        mocReq.addParameter("email", "tu1@email.com");
+        assert session != null;
+        session.setAttribute("id", 1);
+
         mocReq.addParameter("ticker", "TSLA");
-        mocReq.addParameter("company", "Tesla");
         mocReq.addParameter("quantity", "10");
+        mocReq.addParameter("date", "2020-10-10");
 
         addStock.doGet(mocReq, mocRes);
 
@@ -47,22 +50,17 @@ public class AddStockTest {
     }
 
     @Test
-    public void TestGetUserId() throws SQLException {
-        assertEquals(AddStock.getUserId("tu1@email.com"), 1);
-    }
-
-    @Test
     public void TestGetCompanyId() throws SQLException {
         //testing existing company should get id from db
-        assertEquals(AddStock.getCompanyId("TSLA", "Tesla"), 1);
+        assertEquals(AddStock.getCompanyId("TSLA"), 1);
 
         //testing adding company not in db, adds company returns id
-        assertEquals(AddStock.getCompanyId("LULU", "Lululemon"), 3);
+        assertEquals(AddStock.getCompanyId("LULU"), 3);
     }
 
     @Test
     public void TestAddStockToPortfolio() throws SQLException {
-        AddStock.addStockToPortfolio(1, 1, 10);
+        AddStock.addStockToPortfolio(1, 1, 10, new Date(2010, 10, 10));
 
         PreparedStatement ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
         ps.setInt(1, 1);
@@ -72,7 +70,7 @@ public class AddStockTest {
 
         assertEquals(10, rs.getDouble("shares"), 0.0);
 
-        AddStock.addStockToPortfolio(1, 1, 10);
+        AddStock.addStockToPortfolio(1, 1, 10, new Date(2020, 10, 11));
 
         ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
         ps.setInt(1, 1);

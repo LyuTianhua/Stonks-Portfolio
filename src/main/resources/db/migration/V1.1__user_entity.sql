@@ -9,8 +9,7 @@ create table base_user (
 drop table if exists Company CASCADE;
 create table Company (
      id serial primary key unique not null,
-     abbreviation varchar(10) not null unique ,
-     name varchar(50)
+     ticker varchar(10) not null unique
 );
 
 
@@ -19,10 +18,12 @@ create table Stock (
    id serial primary key unique not null ,
    company_id int not null ,
    user_id int not null ,
-   shares float,
+   shares int,
+   purchased date not null ,
+   sold date ,
    foreign key (company_id) references Company(id) ,
    foreign key (user_id) references Base_User(id)
 );
 
 insert into base_user (email, password) values ('tu1@email.com', 'tu1pass');
-insert into company (abbreviation, name) values ('TSLA', 'Tesla');
+insert into company (ticker) values ('TSLA');
