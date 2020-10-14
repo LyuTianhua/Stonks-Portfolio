@@ -1,6 +1,5 @@
 package csci310.servlets;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -21,7 +20,7 @@ public class Signup extends HttpServlet {
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
-    	PrintWriter pw = res.getWriter();
+        PrintWriter pw = res.getWriter();
         try {
 
             con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
@@ -29,8 +28,8 @@ public class Signup extends HttpServlet {
             String email = req.getParameter("email");
             String password = req.getParameter("password");
             String confirm = req.getParameter("confirm");
-            
-            
+
+
 
             if (email.isEmpty() | password.isEmpty() | confirm.isEmpty() | !password.equalsIgnoreCase(confirm)) {
                 req.setAttribute("authenticated", false);
