@@ -6,13 +6,13 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import java.io.IOException;
+import javax.servlet.http.HttpSession;
 import java.sql.*;
 
 import static org.junit.Assert.assertEquals;
 
 public class AddStockTest {
-  
+
     public static AddStock addStock;
 
     @Before
@@ -61,7 +61,7 @@ public class AddStockTest {
 
     @Test
     public void TestAddStockToPortfolio() throws SQLException {
-        AddStock.addStockToPortfolio(1, 1, 10);
+        AddStock.addStockToPortfolio(1, 1, 10, new Date(2010, 10, 10));
         Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
 
         PreparedStatement ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
@@ -70,11 +70,9 @@ public class AddStockTest {
         ResultSet rs = ps.executeQuery();
         rs.next();
         assertEquals(10, rs.getDouble("shares"), 0.0);
-
         con.close();
 
-        AddStock.addStockToPortfolio(1, 1, 10);
-
+        AddStock.addStockToPortfolio(1, 1, 10, new Date(2020, 10, 11));
         con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
 
         ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");

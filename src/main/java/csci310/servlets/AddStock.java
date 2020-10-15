@@ -9,34 +9,35 @@ import java.sql.*;
 
 @WebServlet("/AddStock")
 public class AddStock  extends HttpServlet {
+    public static PrintWriter pw;
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
-
+        Database db = new Database();
+        Connection con = db.getConn();
         try {
-            System.out.println("\n\n\n\n\nADD STOCK\n\n\n\n");
-
-            String email = "tu1@email.com";        //   req.getParameter("email");
-            String ticker = req.getParameter("ticker");
-            String company = req.getParameter("company");
+            int userId = (int) req.getSession().getAttribute("id");
+            String ticker = req.getParameter("ticker").toUpperCase();
             double quantity = Double.parseDouble(req.getParameter("quantity"));
+            String fullDate = req.getParameter("date");
 
-            int userId = getUserId(email);
-            int companyId = getCompanyId(ticker, company);
+            if (fullDate.length() == 0)
+                fullDate = "1970-01-01";
 
-            addStockToPortfolio(userId, companyId, quantity);
+            String[] dateParts = fullDate.split("-", 3);
+            int year = Integer.parseInt(dateParts[0]);
+            int month = Integer.parseInt(dateParts[1]);
+            int day = Integer.parseInt(dateParts[2]);
+            int companyId = getCompanyId(ticker);
 
-            PrintWriter pw = res.getWriter();
-            
+            addStockToPortfolio(userId, companyId, quantity, new Date(year, month, day));
+
+
+            pw = res.getWriter();
+
             pw.println(1);
-            
             pw.close();
-            
-            req.setAttribute("resTicker", ticker);
-            req.setAttribute("resQuantity", quantity);
         } catch (Exception ignored) { }
-
-
-
+        db.closeCon();
     }
 
     public static int getUserId(String email) throws SQLException {
@@ -51,14 +52,13 @@ public class AddStock  extends HttpServlet {
         return id;
     }
 
-    public static int getCompanyId(String abbreviation, String name) throws SQLException {
+    public static int getCompanyId(String ticker) throws SQLException {
         Database db = new Database();
         Connection con = db.getConn();
         PreparedStatement ps = con.prepareStatement(
-                "with i as (INSERT INTO company (abbreviation, name) VALUES (?, ?) ON CONFLICT (abbreviation) DO NOTHING RETURNING id) select id from i union all select id from company where abbreviation = ? limit 1;");
-        ps.setString(1, abbreviation);
-        ps.setString(2, name);
-        ps.setString(3, abbreviation);
+                "with i as (INSERT INTO company (ticker) VALUES (?) ON CONFLICT (ticker) DO NOTHING RETURNING id) select id from i union all select id from company where ticker = ? limit 1;");
+        ps.setString(1, ticker);
+        ps.setString(2, ticker);
 
         ResultSet rs = ps.executeQuery();
         rs.next();
@@ -67,7 +67,8 @@ public class AddStock  extends HttpServlet {
         return id;
     }
 
-    public static void addStockToPortfolio(int userId, int companyId, double shares) throws SQLException {
+
+    public static void addStockToPortfolio(int userId, int companyId, double shares, Date date) throws SQLException {
         Database db = new Database();
         Connection con = db.getConn();
         PreparedStatement ps = con.prepareStatement("select * from stock where company_id=? and user_id=?");
@@ -77,17 +78,22 @@ public class AddStock  extends HttpServlet {
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
-            ps = con.prepareStatement("update stock set shares = shares + ? where user_id = ? and company_id = ?");
+
+
+
+            ps = con.prepareStatement("update stock set shares = shares + ?, purchased = ? where user_id = ? and company_id = ?");
             ps.setDouble(1, shares);
-            ps.setInt(2, userId);
-            ps.setInt(3, companyId);
+            ps.setDate(2, date);
+            ps.setInt(3, userId);
+            ps.setInt(4, companyId);
             ps.executeUpdate();
         }
         else {
-            ps = con.prepareStatement("insert into stock (company_id, user_id, shares) values (?, ?, ?)");
+            ps = con.prepareStatement("insert into stock (company_id, user_id, shares, purchased) values (?, ?, ?, ?)");
             ps.setInt(1, companyId);
             ps.setInt(2, userId);
             ps.setDouble(3, shares);
+            ps.setDate(4, date);
             ps.execute();
         }
         db.closeCon();

@@ -16,10 +16,8 @@ public class Database {
     public Connection getConn() {
         try {
             con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
-            return con;
-        } catch (SQLException e) {
-            return null;
-        }
+        } catch (SQLException e) { con = null; }
+        return con;
     }
 
     public void closeCon() {

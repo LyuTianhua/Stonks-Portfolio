@@ -1,6 +1,5 @@
 package csci310.servlets;
 
-import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
@@ -17,25 +16,29 @@ import java.sql.*;
 @WebServlet("/Signup")
 public class Signup extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-    	PrintWriter pw = res.getWriter();
+
+        PrintWriter pw = res.getWriter();
         try {
             String email = req.getParameter("email");
             String password = req.getParameter("password");
             String confirm = req.getParameter("confirm");
-            
-            
+
+
 
             if (email.isEmpty() | password.isEmpty() | confirm.isEmpty() | !password.equalsIgnoreCase(confirm)) {
                 req.setAttribute("authenticated", false);
-                pw.println(0);
-
+                pw.write("0");
+                pw.flush();
+                pw.close();
                 return;
             }
 
             if (validEmail(email)) {
                 newUserInserted(email, hashPassword(password));
                 req.setAttribute("authenticated", true);
-                pw.println(1);
+                pw.write("1");
+                pw.flush();
+                pw.close();
                 return;
             }
         } catch (SQLException ignored) { }
