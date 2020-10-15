@@ -29,9 +29,6 @@
 			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#view-stock-modal" id="view-stock-btn">
 				View Stock
 			</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="upload-modal" id="upload-btn">
-				View Stock
-			</button>
 		</div>
 	</div>
 	<div class="row justify-content-center">
