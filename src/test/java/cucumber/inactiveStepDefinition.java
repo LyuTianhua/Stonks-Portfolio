@@ -16,7 +16,8 @@ import java.util.concurrent.TimeUnit;
 import static org.junit.Assert.assertTrue;
 
 public class inactiveStepDefinition {
-	private static final String ROOT_URL = "http://localhost:8080/";
+
+	private static final String ROOT_URL = new Configurations().url;
 	private final WebDriver driver = new ChromeDriver(RunCucumberTests.options);
 	private final WebDriverWait wait = new WebDriverWait(driver, 3);
 

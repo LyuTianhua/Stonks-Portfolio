@@ -17,7 +17,8 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 public class addRemoveStockStepDefenitions {
-	private static final String ROOT_URL = "http://localhost:8080/";
+
+    private static final String ROOT_URL = new Configurations().url;
     private final WebDriver driver = new ChromeDriver(RunCucumberTests.options);
     private final WebDriverWait wait = new WebDriverWait(driver, 3);
 
@@ -47,6 +48,7 @@ public class addRemoveStockStepDefenitions {
 
     @And("I click on add stock modal")
     public void i_click_on_add_stock_modal() {
+
         wait.until(
                 ExpectedConditions.presenceOfElementLocated(By.id("add-stock-btn"))
         ).click();

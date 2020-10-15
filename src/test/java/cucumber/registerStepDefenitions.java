@@ -4,7 +4,6 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.After;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -24,15 +23,24 @@ public class registerStepDefenitions {
         driver.get(ROOT_URL + "register.jsp");
     }
 
-
-    @And("I enter {string} in the {string} field")
-    public void iEnterStringInField(String value, String key) {
-        wait.until(ExpectedConditions.elementToBeClickable(By.id("r" + key))).sendKeys(value);
+    @When("I enter {string} in the Email Address field")
+    public void iEnterTuEmailComInTheEmailAddressField(String email) {
+        driver.findElement(By.id("exampleInputEmail1")).sendKeys(email);
     }
 
     @When("I press the cancel button")
     public void i_press_the_cancel_button() {
     	driver.findElement(By.id("cancel")).click();
+    }
+
+    @And("I enter {string} in the Password field")
+    public void iEnterTuPassInThePasswordField(String password) {
+        driver.findElement(By.id("exampleInputPassword1")).sendKeys(password);
+    }
+
+    @And("I enter {string} in the Verify Password field")
+    public void iEnterTuPassInTheVerifyPasswordField(String verify) {
+        driver.findElement(By.id("exampleInputPassword2")).sendKeys(verify);
     }
 
     @And("I click the Register link")
@@ -46,6 +54,4 @@ public class registerStepDefenitions {
         assertTrue(driver.getCurrentUrl().contains(url));
     }
 
-    @After
-    public void tearDown() { driver.quit(); }
 }
