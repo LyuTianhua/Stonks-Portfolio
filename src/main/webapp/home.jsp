@@ -16,7 +16,6 @@
 
 	int id = sesh.getAttribute("id") == null ? 0 : (int)sesh.getAttribute("id");
 	if (id == 0) response.sendRedirect("index.jsp");
-
 %>
 
 <%@include file="partials/nav.jsp"%>
@@ -30,6 +29,9 @@
 			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#view-stock-modal" id="view-stock-btn">
 				View Stock
 			</button>
+			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="upload-modal" id="upload-btn">
+				View Stock
+			</button>
 		</div>
 	</div>
 	<div class="row justify-content-center">
@@ -39,9 +41,8 @@
 			</div>
 			<div class="row mt-3">
 				<h3>Portfolio Stocks</h3>
-
 				<table id="portfolio-stocks" class="table table-hover">
-					<%--						filled dynamically--%>
+					<%--filled dynamically--%>
 				</table>
 			</div>
 		</div>
@@ -53,6 +54,9 @@
 
 <!-- View Stock Modal -->
 <%@include file="partials/viewStockModal.jsp"%>
+
+<!-- Upload CSV Modal -->
+<%@include file="partials/uploadForm.jsp" %>
 
 <script>
 
@@ -113,6 +117,45 @@
 			})
 	)
 
+</script>
+<script>
+	// Check for valid NYSE or NASDAQ ticker
+	function checkTicker() {
+		return true;
+	}
+	
+	// Check valid quantity
+	function checkQuantity() {
+		 var quantity = document.getElementById("quantity");
+		    if(isNaN(quantity.value) || quantity.value.length == 0) {
+		    	document.getElementById("invalid-quantity").style.visibility = "visible";
+		    	return false;
+		    } else {
+		    	return true;
+		    }
+	}
+	
+	// Check date sold before date purchased
+	// Need to add check for date only 1 year in the past
+	function checkDates() {
+	    var datePurchased = document.getElementById("date-purchased").value;
+	    var dateSold = document.getElementById("date-sold").value;
+	   
+	    if(dateSold.length != 0){
+	    	if(dateSold - datePurchased < 0){
+	    		document.getElementById("invalid-date-sold").style.visibility = "visible";
+	    		return false;
+	    	}
+	    	return true;
+	    }
+	}
+	
+	// Checks valid form inputs before submitting
+	function checkAddStockForm() {
+		if(checkTicker() && checkQuantity() && checkDates()) {
+			document.getElementById("add-stock-form").submit();
+		}
+	}
 </script>
 <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 <script src="https://code.jquery.com/jquery-3.5.0.js" integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc=" crossorigin="anonymous"></script>
