@@ -153,6 +153,20 @@
 			add();
 		}
 	}
+	
+	// Checks if portfolio is up or down for the day and changes
+	// portfolio value color and up/down arrow based on each
+	function checkUpOrDown() {
+		var isUp = <%= session.getAttribute("isUp") %>
+		if(isUp){
+			document.getElementById("portfolio-value").style.color = "green";
+			document.getElementById("up-arrow").style.visibility = "visible";
+		} else {
+			document.getElementById("portfolio-value").style.color = "red";
+			document.getElementById("down-arrow").style.visibility = "visible";
+		}
+	}
+
 </script>
 <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 <script src="https://code.jquery.com/jquery-3.5.0.js" integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc=" crossorigin="anonymous"></script>
