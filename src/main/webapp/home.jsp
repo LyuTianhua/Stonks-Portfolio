@@ -150,7 +150,7 @@
 	// Checks valid form inputs before submitting
 	function checkAddStockForm() {
 		if(checkTicker() && checkQuantity() && checkDates()) {
-			document.getElementById("add-stock-form").submit();
+			add();
 		}
 	}
 </script>
