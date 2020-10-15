@@ -65,9 +65,6 @@ public class LoginTest extends Mockito {
 
     @Test
     public void testValidate() throws SQLException {
-
-        Login.con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
-
         boolean valid = Login.authenticated("tu1@email.com", "tu1pass");
         boolean invalid = Login.authenticated("bad connection", "bad connection");
 

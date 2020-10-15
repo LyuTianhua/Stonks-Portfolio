@@ -155,6 +155,11 @@
 			<artifactId>postgresql</artifactId>
 			<version>42.2.1</version>
 		</dependency>
+		<dependency>
+			<groupId>org.xerial</groupId>
+			<artifactId>sqlite-jdbc</artifactId>
+			<version>3.32.3</version>
+		</dependency>
 	</dependencies>
 
 	<build>
@@ -209,15 +214,13 @@
 						<locations>
 							<location>filesystem:src/main/resources/db/migration</location>
 						</locations>
-						<url>${database.url}</url>
-						<user>${database.user}</user>
-						<password>${database.password}</password>
+						<url>jdbc:sqlite:csci310.db</url>
 					</configuration>
 					<dependencies>
 						<dependency>
-							<groupId>postgresql</groupId>
-							<artifactId>postgresql</artifactId>
-							<version>${postgres.driver.version}</version>
+							<groupId>org.xerial</groupId>
+							<artifactId>sqlite-jdbc</artifactId>
+							<version>3.32.3</version>
 						</dependency>
 					</dependencies>
 				</plugin>

@@ -18,7 +18,7 @@ import static org.junit.Assert.assertTrue;
 
 public class addRemoveStockStepDefenitions {
 
-    private static final String ROOT_URL = new Configurations().url;
+    private static final String ROOT_URL = "http://localhost:8080/";
     private final WebDriver driver = new ChromeDriver(RunCucumberTests.options);
     private final WebDriverWait wait = new WebDriverWait(driver, 3);
 
@@ -100,5 +100,3 @@ public class addRemoveStockStepDefenitions {
     public void tearDown() { driver.quit(); }
 
 }
-
-

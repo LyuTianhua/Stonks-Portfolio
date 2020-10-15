@@ -9,33 +9,35 @@ import java.sql.*;
 @WebServlet("/RemoveStock")
 public class RemoveStock extends HttpServlet {
 
-    public static Connection con = null;
-
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
+        Database db = new Database();
+        Connection con = db.getConn();
         try {
-
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
-
             String ticker = req.getParameter("ticker");
             int companyId = getCompanyId(ticker);
             int userId = (int) req.getSession().getAttribute("id");
             double quantity = Double.parseDouble(req.getParameter("quantity"));
-
             updateStock(userId, companyId, quantity);
 
         } catch (Exception ignored) {}
+        db.closeCon();
     }
 
     public static int getCompanyId(String ticker) throws SQLException {
+        Database db = new Database();
+        Connection con = db.getConn();
         PreparedStatement ps = con.prepareStatement("select * from company where ticker=?");
         ps.setString(1, ticker);
         ResultSet rs = ps.executeQuery();
         rs.next();
-        return rs.getInt("id");
+        Integer id = rs.getInt("id");
+        db.closeCon();
+        return id;
     }
 
     public static void updateStock(int userId, int companyId, double shares) throws SQLException {
-
+        Database db = new Database();
+        Connection con = db.getConn();
         PreparedStatement ps = con.prepareStatement("select shares from stock where user_id=? and company_id=?");
         ps.setInt(1, userId);
         ps.setInt(2, companyId);
@@ -50,7 +52,7 @@ public class RemoveStock extends HttpServlet {
         }
         ps = con.prepareStatement("delete from stock where shares <= 0");
         ps.execute();
-
+        db.closeCon();
     }
 
 }

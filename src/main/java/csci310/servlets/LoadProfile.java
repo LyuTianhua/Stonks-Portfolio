@@ -29,10 +29,11 @@ public class LoadProfile  extends HttpServlet {
             rs = ps.executeQuery();
 
             res.setContentType("text/html");
-            String ticker, shares, rm, btn;
+            String ticker, shares, rm, btn, radio;
 
 
             pw.println("<tr>\n" +
+                    "<th>Graph</th>\n" +
                     "<th>Stonk</th>\n" +
                     "<th>Shares</th>\n" +
                     "<th>Purchased</th>\n" +
@@ -45,12 +46,14 @@ public class LoadProfile  extends HttpServlet {
                 shares = ticker + "Shares";
                 rm = ticker + "Rm";
                 btn = ticker + "Btn";
+                radio = ticker + "Radio";
 
                 pw.println("<tr>");
+                pw.println("<th> <input id='" + radio + "' type='checkbox' value='" + ticker + "' onclick='graphStock(0)' class='tableBox'></th>");
                 pw.println("<th id=\"" + ticker + "\">" + ticker + "</th>");
                 pw.println("<th id=\"" + shares + "\">" + rs.getInt("shares") + "</th>");
                 pw.println("<th>" + rs.getDate("purchased") + "</th>");
-                pw.println("<th> <input id=\"" + rm + "\" type =\"test\" </th>");
+                pw.println("<th> <input id=\"" + rm + "\" type =\"test\" ></th>");
                 pw.println("<th> " +
                         "<button id=\"" + btn + "\" " +
                         "type=\"button\" " +

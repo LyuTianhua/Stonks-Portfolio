@@ -9,21 +9,18 @@ import java.sql.*;
 
 @WebServlet("/AddStock")
 public class AddStock  extends HttpServlet {
-
-    public static Connection con;
     public static PrintWriter pw;
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
-
+        Database db = new Database();
+        Connection con = db.getConn();
         try {
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
-
             int userId = (int) req.getSession().getAttribute("id");
             String ticker = req.getParameter("ticker").toUpperCase();
             double quantity = Double.parseDouble(req.getParameter("quantity"));
             String fullDate = req.getParameter("date");
 
-            if (fullDate.length() == 0)
+            if (fullDate == null)
                 fullDate = "1970-01-01";
 
             String[] dateParts = fullDate.split("-", 3);
@@ -34,33 +31,74 @@ public class AddStock  extends HttpServlet {
 
             addStockToPortfolio(userId, companyId, quantity, new Date(year, month, day));
 
-
             pw = res.getWriter();
-
             pw.println(1);
             pw.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        db.closeCon();
+    }
 
-        } catch (Exception ignored) { }
-
-
-
+    public static int getUserId(String email) throws SQLException {
+        Database db = new Database();
+        Connection con = db.getConn();
+        PreparedStatement ps = con.prepareStatement("SELECT id FROM base_user WHERE email=?");
+        ps.setString(1, email);
+        ResultSet rs = ps.executeQuery();
+        rs.next();
+        Integer id = rs.getInt("id");
+        db.closeCon();
+        return id;
     }
 
     public static int getCompanyId(String ticker) throws SQLException {
+        Database db = new Database();
+        Connection con = db.getConn();
 
+        //Statement to check if the company exists
         PreparedStatement ps = con.prepareStatement(
-                "with i as (INSERT INTO company (ticker) VALUES (?) ON CONFLICT (ticker) DO NOTHING RETURNING id) select id from i union all select id from company where ticker = ? limit 1;");
+                "select id from company where ticker=?"
+        );
         ps.setString(1, ticker);
-        ps.setString(2, ticker);
-
         ResultSet rs = ps.executeQuery();
-        rs.next();
 
-        return rs.getInt("id");
+        //If does not exists, Get company id
+        if(rs.next()) {
+            Integer id = rs.getInt("id");
+            db.closeCon();
+            return id;
+        } else {
+            ps = con.prepareStatement(
+                    "INSERT INTO company (ticker) VALUES (?)"
+            );
+            ps.setString(1, ticker);
+            ps.execute();
+            ps = con.prepareStatement(
+                    "select id from company where ticker=?"
+            );
+            ps.setString(1, ticker);
+            rs = ps.executeQuery();
+            rs.next();
+            Integer id = rs.getInt("id");
+            db.closeCon();
+            return id;
+        }
+
+
+//        PreparedStatement ps = con.prepareStatement(
+//                "with i as (INSERT INTO company (ticker) VALUES (?) ON CONFLICT (ticker) DO NOTHING RETURNING id) select id from i union all select id from company where ticker = ? limit 1;");
+//        ps.setString(1, ticker);
+//        ps.setString(2, ticker);
+//
+//        ResultSet rs = ps.executeQuery();
+//        rs.next();
     }
 
-    public static void addStockToPortfolio(int userId, int companyId, double shares, Date date) throws SQLException {
 
+    public static void addStockToPortfolio(int userId, int companyId, double shares, Date date) throws SQLException {
+        Database db = new Database();
+        Connection con = db.getConn();
         PreparedStatement ps = con.prepareStatement("select * from stock where company_id=? and user_id=?");
         ps.setInt(1, userId);
         ps.setInt(2, companyId);
@@ -86,7 +124,7 @@ public class AddStock  extends HttpServlet {
             ps.setDate(4, date);
             ps.execute();
         }
-
+        db.closeCon();
     }
 
 }

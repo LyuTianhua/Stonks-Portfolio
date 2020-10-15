@@ -15,7 +15,7 @@ import static org.junit.Assert.assertTrue;
 
 public class registerStepDefenitions {
 
-    private static final String ROOT_URL = new Configurations().url;
+    private static final String ROOT_URL = "http://localhost:8080/";
     private final WebDriver driver = new ChromeDriver(RunCucumberTests.options);
     private final WebDriverWait wait = new WebDriverWait(driver, 3);
 
@@ -32,7 +32,7 @@ public class registerStepDefenitions {
 
     @When("I press the cancel button")
     public void i_press_the_cancel_button() {
-    	driver.findElement(By.id("cancel")).click();
+        driver.findElement(By.id("cancel")).click();
     }
 
     @And("I click the Register link")
