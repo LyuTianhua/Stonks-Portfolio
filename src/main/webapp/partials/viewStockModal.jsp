@@ -8,7 +8,7 @@
                 </button>
             </div>
             <div class="modal-body">
-                <form method="GET">
+                <form id="view-stock-form" method="GET">
                     <div class="form-group">
                         <label for="ticker1">Ticker</label>
                         <input type="text" class="form-control" id="ticker1" placeholder="ex. AAPL">
@@ -17,7 +17,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-                <button type="button" class="btn btn-primary">View stock</button>
+                <button type="submit" id="view-stock-in-modal" form="view-stock-form" value="submit" class="btn btn-primary">View stock</button>
             </div>
         </div>
     </div>

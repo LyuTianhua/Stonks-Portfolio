@@ -31,9 +31,9 @@ Feature: add stock to portfolio
    	
    Scenario: View a stock with an invalid ticker (not on NYSE or NASDAQ)
    	Given I am signed in
-   	And I click on 'View Stock'
+   	And I click on view stock modal
    	And I enter 'RLFTF' into 'ticker'
-   	And I click 'View Stock'
+   	And I click on view stock
    	Then I should see an error message that lets me know it's an invalid ticker
    	
    	Scenario: Add a stock with an invalid quantity
