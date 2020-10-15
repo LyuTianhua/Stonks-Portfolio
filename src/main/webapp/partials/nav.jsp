@@ -7,7 +7,7 @@
 
     <%  if (email.length() > 0) {   %>
         <h3 ><%=email%></h3>
-        <button name="logout" id="logout" type="button" class="btn btn-dark float-right" onclick="logout()">Log Out</button>
+        <button id="logout" type="button" class="btn btn-dark float-right" onclick="logout()">Log Out</button>
     <%  }   %>
 
 </nav>

@@ -29,7 +29,23 @@
 	</div>
 </div>
 
+<script type="text/javascript">
 
+  const signIn = () => $.ajax({
+							url : "Login",
+							type : "Post",
+							data : {
+								email 	 : $("#iEmail").val(),
+								password : $("#iPassword").val()
+							},
+							success : (res) => {
+								if (res === "1") $("#Error-Message").html("Password and Email don't match")
+								else
+									window.location.href = "home.jsp"
+							}
+						})
+
+</script>
 <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 <script src="https://code.jquery.com/jquery-3.5.0.js" integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>

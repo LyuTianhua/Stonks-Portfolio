@@ -21,7 +21,7 @@
 				<a class="col-6" id="link2" href="register.jsp">Register</a>
 			</div>
 
-			<%@include file="partials/registerForm.jsp"%>
+			<%@include file="partials/registerFrom.jsp"%>
 
 		</div>
 		<div class="col-0 col-sm-3 col-md-3 col-lg-3"></div>
@@ -29,6 +29,31 @@
 </div>
 
 
+<script type="text/javascript">
+
+	// When I hit cancel, go back to login page
+	const cancl= () => window.location.href = "index.jsp"
+
+	const registr = () => $.ajax({
+							url: "Signup",
+							type: "Post",
+							data: {
+								email: $("#rEmail").val(),
+								password: $("#rPassword").val(),
+								confirm: $("#rConfirm").val()
+							},
+							success: (res) => {
+								if (res === "1") window.location.href = "index.jsp"
+								else $("#Error-Message").innerHTML("Invalid email or password")
+							}
+						})
+
+	const match = () => $("#Error-Message").html(
+							$("#rPassword").val() !== $("#rConfirm").val() ?
+							"Two password doesn't match" : ""
+						)
+
+</script>
 <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 <script src="https://code.jquery.com/jquery-3.5.0.js" integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
@@ -36,4 +61,3 @@
 </body>
 </html>
 
-	
