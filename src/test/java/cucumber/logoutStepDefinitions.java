@@ -1,34 +1,32 @@
 package cucumber;
 
-import static org.junit.Assert.assertTrue;
-
-import org.junit.After;
-import org.junit.AfterClass;
-import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
-
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.After;
+import org.openqa.selenium.By;
+import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * Step definitions for Cucumber tests.
  */
 public class logoutStepDefinitions {
 
-	private static final String ROOT_URL = "http://localhost:8080/";
+	private static final String ROOT_URL = new Configurations().url;
 	private final WebDriver driver = new ChromeDriver(RunCucumberTests.options);
 	private final WebDriverWait wait = new WebDriverWait(driver, 3);
 
 	@Given("I am on signed in")
 	public void i_am_on_signed_in() {
 		driver.get(ROOT_URL + "index.jsp");
-		driver.findElement(By.id("exampleInputEmail1")).sendKeys("tu1@email.com");
+		driver.findElement(By.id("iEmail")).sendKeys("tu1@email.com");
 
-		driver.findElement(By.id("exampleInputPassword1")).sendKeys("tu1pass");
+		driver.findElement(By.id("iPassword")).sendKeys("tu1pass");
 
 		driver.findElement(By.id("signin")).click();
 	}
@@ -44,4 +42,6 @@ public class logoutStepDefinitions {
 		assertTrue(driver.getCurrentUrl().contains(url));
 	}
 
+	@After
+	public void tearDown() { driver.quit(); }
 }

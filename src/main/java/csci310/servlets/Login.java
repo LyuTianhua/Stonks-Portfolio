@@ -36,14 +36,15 @@ public class Login extends HttpServlet {
                 HttpSession session = req.getSession(true);
                 session.setAttribute("id", id);
                 session.setAttribute("email", email);
-
+                pw.write("1");
             } else {
                 req.setAttribute("authenticated", "0");
-                pw.write("1");
+                pw.write("0");
                 throw new Exception("fail");
             }
             pw.close();
         } catch (Exception ignored) { }
+        db.closeCon();
     }
 
     public static int getUserId(String email) throws SQLException {

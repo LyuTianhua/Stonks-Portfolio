@@ -1,12 +1,9 @@
 package cucumber;
 
-import io.cucumber.java.en.*;
+import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
-
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
+import io.cucumber.java.en.Then;
+import org.junit.After;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -14,10 +11,14 @@ import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class addRemoveStockStepDefenitions {
-	private static final String ROOT_URL = "http://localhost:8080/";
+
+    private static final String ROOT_URL = new Configurations().url;
     private final WebDriver driver = new ChromeDriver(RunCucumberTests.options);
     private final WebDriverWait wait = new WebDriverWait(driver, 3);
 
@@ -25,13 +26,12 @@ public class addRemoveStockStepDefenitions {
     public void i_am_signed_in() {
 
         driver.get(ROOT_URL + "index.jsp");
-        WebElement queryBox = driver.findElement(By.id("exampleInputEmail1"));
-        queryBox.sendKeys("tu1@email.com");
 
-        queryBox = driver.findElement(By.id("exampleInputPassword1"));
-        queryBox.sendKeys("tu1pass");
+        driver.findElement(By.id("iEmail")).sendKeys("tu1@email.com");
 
-        driver.findElement(By.name("signin")).click();
+        driver.findElement(By.id("iPassword")).sendKeys("tu1pass");
+
+        driver.findElement(By.id("signin")).click();
 
     }
 
@@ -48,6 +48,7 @@ public class addRemoveStockStepDefenitions {
 
     @And("I click on add stock modal")
     public void i_click_on_add_stock_modal() {
+
         wait.until(
                 ExpectedConditions.presenceOfElementLocated(By.id("add-stock-btn"))
         ).click();
@@ -94,6 +95,9 @@ public class addRemoveStockStepDefenitions {
     public void i_click_on_the_(String company) {
         driver.findElement(By.id(company + "Btn")).click();
     }
+
+    @After
+    public void tearDown() { driver.quit(); }
 
 }
 
