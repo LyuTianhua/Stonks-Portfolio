@@ -10,9 +10,8 @@
 
 <body>
 
-<nav class="navbar navbar-expand-lg navbar-light bg-custom my-nav">
-	<a class="navbar-brand text-wrap" href="#" id="nav-text">USC CS 310 Stock Portfolio Management</a>	 
-</nav>
+<%@include file="partials/nav.jsp"%>
+
 <div class="container-fluid">
 	<div class="row">
 		<div class="col-0 col-sm-3 col-md-3 col-lg-3"></div>
@@ -21,19 +20,9 @@
 				<a class="col-6" id="link1" href="index.jsp">Sign In</a>
 				<a class="col-6" id="link2" href="register.jsp">Register</a>
 			</div>
-			<form id="login-fields">
-				<label class="text-left" id="email" for="exampleInputEmail1">Email Address</label>
-				<input class="form-control" id="exampleInputEmail1" type="email" name="email">
-				<label class="text-left" id="password" for="exampleInputPassword1">Password</label>
-				<input class="form-control" id="exampleInputPassword1" type="password" name="password">
-				<label class="text-left" id="VerifyPassword" for="exampleInputPassword2">Verify Password</label>
-				<input class="form-control" id="exampleInputPassword2" type="password" name="verifyPassword">
-				<div class="text-center" id="Error-Message"></div> 
-				<div class="row">
-					<button id="register" class="btn btn-primary" type="submit" name="registerButton">Create User</button>
-					<button id="cancel" class="btn btn-primary" type="button" name="cancelButton">Cancel</button>
-				</div>
-			</form>
+
+			<%@include file="partials/registerFrom.jsp"%>
+
 		</div>
 		<div class="col-0 col-sm-3 col-md-3 col-lg-3"></div>
 	</div>
@@ -41,50 +30,35 @@
 
 <!-- Not sure if this is necessary since I have it linking to index.jsp
  -->
-<script> 
+<script type="text/javascript">
+
 	// When I hit cancel, go back to login page
-	document.querySelector("#cancel").onclick = function() {
-		window.location.href = "index.jsp";
-	}
+	const cancl= () => window.location.href = "index.jsp"
 
-	document.querySelector("#login-fields").onsubmit = function(event) {
-		document.querySelector("#Error-Message").innerHTML = "";
-		event.preventDefault();
-		let email = document.querySelector("#exampleInputEmail1").value.trim();
-		let password = document.querySelector("#exampleInputPassword1").value.trim();
-		let confirm = document.querySelector("#exampleInputPassword2").value.trim();
+	const registr = () => $.ajax({
+							url: "Signup",
+							type: "Post",
+							data: {
+								email: $("#rEmail").val(),
+								password: $("#rPassword").val(),
+								confirm: $("#rConfirm").val()
+							},
+							success: (res) => {
+								if (res === "1") window.location.href = "index.jsp"
+								else $("#Error-Message").innerHTML("Invalid email or password")
+							}
+						})
 
-		let httpRequest = new XMLHttpRequest();
-		httpRequest.open("POST", "/Signup?" + "email=" + email + "&password=" + password + "&confirm=" + confirm, true);
-		httpRequest.send();
-		httpRequest.onreadystatechange = function() {
-			var msg = httpRequest.responseText.trim();
-			if (msg === "1") {
-				window.location.href = "index.jsp";
-			} else if (msg === "0") {
-				// set error message div
-				document.querySelector("#Error-Message").innerHTML = "Invalid email or password";
-			}
-		}			
-	}
-	
-	document.querySelector("#exampleInputPassword2").onchange = function() {
-		let password = document.querySelector("#exampleInputPassword1").value.trim();
-		let confirm = document.querySelector("#exampleInputPassword2").value.trim();
-		if (password !== confirm) {
-			document.querySelector("#Error-Message").innerHTML = "Two password doesn't match";
-			return false;
-		} else {
-			document.querySelector("#Error-Message").innerHTML = "";
-			return true;
-		}
-		return true;
-	}
-	
+	const match = () => $("#Error-Message").html(
+							$("#rPassword").val() !== $("#rConfirm").val() ?
+							"Two password doesn't match" : ""
+						)
 
 </script>
-	
+<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+<script src="https://code.jquery.com/jquery-3.5.0.js" integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 </html>
 
-	

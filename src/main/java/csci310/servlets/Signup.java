@@ -29,8 +29,6 @@ public class Signup extends HttpServlet {
             String password = req.getParameter("password");
             String confirm = req.getParameter("confirm");
 
-
-
             if (email.isEmpty() | password.isEmpty() | confirm.isEmpty() | !password.equalsIgnoreCase(confirm)) {
                 req.setAttribute("authenticated", false);
                 pw.write("0");

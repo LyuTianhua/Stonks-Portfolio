@@ -2,9 +2,9 @@ Feature: Register for site
 
   Scenario Outline: Trying to register for site
     Given I am on the register page
-    When I enter <email> in the Email Address field
-    And I enter <password> in the Password field
-    And I enter <confirm> in the Verify Password field
+    And I enter <email> in the 'Email' field
+    And I enter <password> in the 'Password' field
+    And I enter <confirm> in the 'Confirm' field
     And I click the Register link
     Then I should be on <url>
     Examples:
