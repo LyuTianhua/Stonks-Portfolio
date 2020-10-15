@@ -23,10 +23,12 @@
 <div class="container">
 	<div class="row justify-content-center">
 		<div class="btn-groups" role="group">
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-stock-modal" id="add-stock-btn" name="add-stock-btn">
+			<button type="button" class="btn btn-primary" data-toggle="modal"
+				data-target="#add-stock-modal" id="add-stock-btn" name="add-stock-btn">
 				Add Stock
 			</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#view-stock-modal" id="view-stock-btn">
+			<button type="button" class="btn btn-primary" data-toggle="modal"
+				data-target="#view-stock-modal" id="view-stock-btn">
 				View Stock
 			</button>
 		</div>
@@ -34,7 +36,8 @@
 	<div class="row justify-content-center">
 		<div class="col-md-6">
 			<div class="row mt-3">
-				<img src="https://ak.picdn.net/shutterstock/videos/16504675/thumb/4.jpg" class="img-fluid rounded shadow" alt="">
+				<img src="https://ak.picdn.net/shutterstock/videos/16504675/thumb/4.jpg"
+					class="img-fluid rounded shadow" alt="">
 			</div>
 			<div class="row mt-3">
 				<h3>Portfolio Stocks</h3>
@@ -117,10 +120,11 @@
 </script>
 <script>
 	// Check for valid NYSE or NASDAQ ticker
+	// Todo: Accept API data to actually check valid ticker
 	function checkTicker() {
 		return true;
 	}
-	
+
 	// Check valid quantity
 	function checkQuantity() {
 		 var quantity = document.getElementById("quantity");
@@ -131,13 +135,13 @@
 		    	return true;
 		    }
 	}
-	
+
 	// Check date sold before date purchased
-	// Need to add check for date only 1 year in the past
+	// Todo: add check for date only 1 year in the past
 	function checkDates() {
 	    var datePurchased = document.getElementById("date-purchased").value;
 	    var dateSold = document.getElementById("date-sold").value;
-	   
+
 	    if(dateSold.length != 0){
 	    	if(dateSold - datePurchased < 0){
 	    		document.getElementById("invalid-date-sold").style.visibility = "visible";
@@ -146,14 +150,14 @@
 	    	return true;
 	    }
 	}
-	
-	// Checks valid form inputs before submitting
+
+	// Checks valid form inputs before submitting add-stock-form
 	function checkAddStockForm() {
 		if(checkTicker() && checkQuantity() && checkDates()) {
 			add();
 		}
 	}
-	
+
 	// Checks if portfolio is up or down for the day and changes
 	// portfolio value color and up/down arrow based on each
 	function checkUpOrDown() {
@@ -174,4 +178,3 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 </html>
-
