@@ -36,10 +36,10 @@ public class Login extends HttpServlet {
                 HttpSession session = req.getSession(true);
                 session.setAttribute("id", id);
                 session.setAttribute("email", email);
-                pw.write("1");
+                pw.write("0");
             } else {
                 req.setAttribute("authenticated", "0");
-                pw.write("0");
+                pw.write("1");
                 throw new Exception("fail");
             }
             pw.close();
@@ -94,8 +94,11 @@ public class Login extends HttpServlet {
             ps = con.prepareStatement("select * from base_user where email='" + email + "'" );
             rs = ps.executeQuery();
             boolean auth = rs.next() && hashPass.equals(rs.getString("password"));
+            System.out.println("=" + hashPass + "=");
+            System.out.println("="+ rs.getString("password") + "=");
             db.closeCon();
             return auth;
-        } catch (SQLException sql) { return false; }
+        } catch (SQLException sql) { sql.printStackTrace(); }
+        return false;
     }
 }
