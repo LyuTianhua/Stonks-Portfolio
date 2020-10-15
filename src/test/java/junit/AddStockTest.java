@@ -25,39 +25,40 @@ public class AddStockTest {
         con.close();
     }
 
-//    @Test
-//    public void TestDoGet() throws SQLException {
-//        MockHttpServletRequest mocReq = new MockHttpServletRequest();
-//        MockHttpServletResponse mocRes = new MockHttpServletResponse();
-//
-//        mocReq.addParameter("email", "tu1@email.com");
-//        mocReq.addParameter("ticker", "TSLA");
-//        mocReq.addParameter("company", "Tesla");
-//        mocReq.addParameter("quantity", "10");
-//
-//        addStock.doGet(mocReq, mocRes);
-//
-//        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
-//        PreparedStatement ps = con.createStatement("select * from Stock where user_id=1 and company_id=1");
-//        ResultSet rs = ps.executeQuery();
-//
-//        assertEquals(10, rs.getDouble("shares"), 0.0);
-//        con.close();
-//    }
+    @Test
+    public void TestDoGet() throws SQLException {
+        MockHttpServletRequest mocReq = new MockHttpServletRequest();
+        MockHttpServletResponse mocRes = new MockHttpServletResponse();
+
+        HttpSession reqSession = mocReq.getSession(true);
+        reqSession.setAttribute("id", 1);
+        mocReq.addParameter("ticker", "TSLA");
+        mocReq.addParameter("company", "Tesla");
+        mocReq.addParameter("quantity", "10");
+
+        addStock.doGet(mocReq, mocRes);
+
+        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
+        PreparedStatement ps = con.prepareStatement("select * from Stock where user_id=1 and company_id=1");
+        ResultSet rs = ps.executeQuery();
+
+        assertEquals(10, rs.getDouble("shares"), 0.0);
+        con.close();
+    }
 
     @Test
     public void TestGetUserId() throws SQLException {
         assertEquals(AddStock.getUserId("tu1@email.com"), 1);
     }
 
-//    @Test
-//    public void TestGetCompanyId() throws SQLException {
-//        //testing existing company should get id from db
-//        assertEquals(AddStock.getCompanyId("TSLA", "Tesla"), 1);
-//
-//        //testing adding company not in db, adds company returns id
-//        assertEquals(AddStock.getCompanyId("LULU", "Lululemon"), 3);
-//    }
+    @Test
+    public void TestGetCompanyId() throws SQLException {
+        //testing existing company should get id from db
+        assertEquals(AddStock.getCompanyId("TSLA"), 1);
+
+        //testing adding company not in db, adds company returns id
+        assertEquals(AddStock.getCompanyId("LULU"), 2);
+    }
 
     @Test
     public void TestAddStockToPortfolio() throws SQLException {

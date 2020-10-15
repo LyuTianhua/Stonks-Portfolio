@@ -20,7 +20,7 @@ public class AddStock  extends HttpServlet {
             double quantity = Double.parseDouble(req.getParameter("quantity"));
             String fullDate = req.getParameter("date");
 
-            if (fullDate.length() == 0)
+            if (fullDate == null)
                 fullDate = "1970-01-01";
 
             String[] dateParts = fullDate.split("-", 3);
@@ -31,12 +31,12 @@ public class AddStock  extends HttpServlet {
 
             addStockToPortfolio(userId, companyId, quantity, new Date(year, month, day));
 
-
             pw = res.getWriter();
-
             pw.println(1);
             pw.close();
-        } catch (Exception ignored) { }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         db.closeCon();
     }
 
@@ -55,16 +55,44 @@ public class AddStock  extends HttpServlet {
     public static int getCompanyId(String ticker) throws SQLException {
         Database db = new Database();
         Connection con = db.getConn();
-        PreparedStatement ps = con.prepareStatement(
-                "with i as (INSERT INTO company (ticker) VALUES (?) ON CONFLICT (ticker) DO NOTHING RETURNING id) select id from i union all select id from company where ticker = ? limit 1;");
-        ps.setString(1, ticker);
-        ps.setString(2, ticker);
 
+        //Statement to check if the company exists
+        PreparedStatement ps = con.prepareStatement(
+                "select id from company where ticker=?"
+        );
+        ps.setString(1, ticker);
         ResultSet rs = ps.executeQuery();
-        rs.next();
-        Integer id = rs.getInt("id");
-        db.closeCon();
-        return id;
+
+        //If does not exists, Get company id
+        if(rs.next()) {
+            Integer id = rs.getInt("id");
+            db.closeCon();
+            return id;
+        } else {
+            ps = con.prepareStatement(
+                    "INSERT INTO company (ticker) VALUES (?)"
+            );
+            ps.setString(1, ticker);
+            ps.execute();
+            ps = con.prepareStatement(
+                    "select id from company where ticker=?"
+            );
+            ps.setString(1, ticker);
+            rs = ps.executeQuery();
+            rs.next();
+            Integer id = rs.getInt("id");
+            db.closeCon();
+            return id;
+        }
+
+
+//        PreparedStatement ps = con.prepareStatement(
+//                "with i as (INSERT INTO company (ticker) VALUES (?) ON CONFLICT (ticker) DO NOTHING RETURNING id) select id from i union all select id from company where ticker = ? limit 1;");
+//        ps.setString(1, ticker);
+//        ps.setString(2, ticker);
+//
+//        ResultSet rs = ps.executeQuery();
+//        rs.next();
     }
 
 

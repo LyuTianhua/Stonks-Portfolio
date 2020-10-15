@@ -1,14 +1,21 @@
+drop table if exists base_user;
+
 create table base_user (
    id integer primary key not null,
    email varchar(50) not null unique ,
    password varchar(100) not null
 );
 
+
+drop table if exists Company;
+
 create table Company (
      id integer primary key not null,
      name varchar(50),
      ticker varchar(10) not null unique
 );
+
+drop table if exists Stock;
 
 create table Stock (
    id integer primary key not null ,

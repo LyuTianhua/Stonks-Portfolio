@@ -1,0 +1,1 @@
+rm csci310.db
