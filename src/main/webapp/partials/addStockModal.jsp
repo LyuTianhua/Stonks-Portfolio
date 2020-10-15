@@ -30,7 +30,7 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
-        <button id="add-stock-in-modal" type="submit" class="btn btn-primary" form="add-stock-modal-form" value="submit" onclick="add()">Add Stock</button>
+        <button id="add-stock-in-modal" type="submit" class="btn btn-primary" form="add-stock-modal-form" value="submit" onclick="checkAddStockForm()">Add Stock</button>
       </div>
     </div>
   </div>
