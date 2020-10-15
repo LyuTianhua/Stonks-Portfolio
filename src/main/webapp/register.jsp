@@ -28,8 +28,7 @@
 	</div>
 </div>
 
-<!-- Not sure if this is necessary since I have it linking to index.jsp
- -->
+
 <script type="text/javascript">
 
 	// When I hit cancel, go back to login page

@@ -9,8 +9,7 @@
 	<title>Home</title>
 
 </head>
-<body >
-
+<body>
 
 <%
 	HttpSession sesh = request.getSession(false);
@@ -44,7 +43,6 @@
 				<table id="portfolio-stocks" class="table table-hover">
 					<%--						filled dynamically--%>
 				</table>
-
 			</div>
 		</div>
 	</div>

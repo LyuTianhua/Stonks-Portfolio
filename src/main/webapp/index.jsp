@@ -31,7 +31,7 @@
 
 <script type="text/javascript">
 
-	const signIn = () => $.ajax({
+  const signIn = () => $.ajax({
 							url : "Login",
 							type : "Post",
 							data : {
