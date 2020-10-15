@@ -4,6 +4,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.After;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -40,14 +41,14 @@ public class loginStepDefinitions {
 	@When("I enter {string} in Email Address input field")
 	public void iEnterTuEmailComInEmailAddressInputField(String email) {
 		wait.until(
-				ExpectedConditions.elementToBeClickable(By.id("exampleInputEmail1"))
+				ExpectedConditions.elementToBeClickable(By.id("iEmail"))
 		).sendKeys(email);
 
 	}
 
 	@And("I enter {string} in Password input field")
 	public void iEnterTuPassInPasswordInputField(String password) {
-		driver.findElement(By.id("exampleInputPassword1")).sendKeys(password);
+		driver.findElement(By.id("iPassword")).sendKeys(password);
 	}
 
 	@And("I click the Sign In button")
@@ -61,4 +62,6 @@ public class loginStepDefinitions {
 		assertTrue(driver.findElement(By.id("Error-Message")).getAttribute("innerHTML").contains(errMsg));
 	}
 
+	@After
+	public void tearDown() { driver.quit(); }
 }

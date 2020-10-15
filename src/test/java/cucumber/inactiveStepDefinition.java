@@ -3,6 +3,7 @@ package cucumber;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.After;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -23,10 +24,10 @@ public class inactiveStepDefinition {
 	public void i_am_on_the_home_page() {
 
 		driver.get(ROOT_URL + "index.jsp");
-		WebElement queryBox = driver.findElement(By.id("exampleInputEmail1"));
+		WebElement queryBox = driver.findElement(By.id("iEmail"));
 		queryBox.sendKeys("tu1@email.com");
 
-		queryBox = driver.findElement(By.id("exampleInputPassword1"));
+		queryBox = driver.findElement(By.id("iPassword"));
 		queryBox.sendKeys("tu1pass");
 
 		driver.findElement(By.id("signin")).click();
@@ -43,5 +44,8 @@ public class inactiveStepDefinition {
 		wait.until(ExpectedConditions.urlContains(url));
 		assertTrue(driver.getCurrentUrl().contains(url));
 	}
+
+	@After
+	public void tearDown() { driver.quit(); }
 
 }
