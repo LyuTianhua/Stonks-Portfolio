@@ -4,9 +4,10 @@ branches:
   - develop 
 
 scripts:
-        - rm csci310.db
         - mvn flyway:migrate
         - mvn test
+        - rm csci310.db
+        - mvn flyway:migrate
         - mvn jetty:run &
         - sleep 30
         - mvn -DrunCucumberTests test
