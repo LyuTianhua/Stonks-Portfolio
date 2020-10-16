@@ -5,6 +5,7 @@ Feature: add stock to portfolio
     And I click on add stock modal
     And I enter 'TSLA' into 'ticker'
     And I enter <quantity> into 'quantity'
+    And I enter '10/11/2020' into 'date-purchased'
     And I click on add stock
     Then I should see <shares> 'TSLA' stock on the portfolio
     Examples:
