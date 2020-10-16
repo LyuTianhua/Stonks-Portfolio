@@ -19,6 +19,7 @@ public class inactiveStepDefinition {
 
 	private static final String ROOT_URL = "http://localhost:8080/";
 	private final WebDriver driver = new ChromeDriver(RunCucumberTests.options);
+
 	private final WebDriverWait wait = new WebDriverWait(driver, 3);
 
 	@Given("I am on the home page")
@@ -37,7 +38,10 @@ public class inactiveStepDefinition {
 
 	@When("I do nothing for 120 seconds")
 	public void iDoNothingForSeconds() {
-		driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
+		try {
+			Thread.sleep(120000);
+			driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
+		} catch (InterruptedException ignored) {}
 	}
 
 	@Then("I should be at page {string}")

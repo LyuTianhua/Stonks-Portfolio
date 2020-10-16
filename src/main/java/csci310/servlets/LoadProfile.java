@@ -18,12 +18,12 @@ public class LoadProfile  extends HttpServlet {
     public static PrintWriter pw = null;
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
-
+        Database db = new Database();
+        Connection con = db.getConn();
         try {
             pw = res.getWriter();
             int id = (int) req.getSession().getAttribute("id");
 
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
             ps = con.prepareStatement("select company.id as compId, company.ticker, shares, purchased from stock left join company on stock.company_id = company.id where user_id=?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
@@ -67,6 +67,7 @@ public class LoadProfile  extends HttpServlet {
             pw.close();
 
         } catch (SQLException | IOException ignored) { }
+        db.closeCon();
     }
 
 }
