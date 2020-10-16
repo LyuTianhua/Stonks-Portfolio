@@ -19,6 +19,15 @@ h3 {
     width:100%;
 }
 
+.value {
+	font-size: 40px;
+	font-weight: 700;
+}
+
+#invalid-ticker, #invalid-quantity, #invalid-date-sold {
+	visibility: hidden;
+}
+
 #form-outer {
     height: auto;
     padding: 40px 60px;
