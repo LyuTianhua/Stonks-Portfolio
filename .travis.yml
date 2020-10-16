@@ -7,4 +7,5 @@ scripts:
         - mvn flyway:migrate
         - mvn test
         - mvn jetty:run &
+        - sleep 30
         - mvn -DrunCucumberTests test
