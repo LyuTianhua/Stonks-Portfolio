@@ -19,6 +19,11 @@ h3 {
     width:100%;
 }
 
+.value {
+	font-size: 40px;
+	font-weight: 700;
+}
+
 #form-outer {
     height: auto;
     padding: 40px 60px;
