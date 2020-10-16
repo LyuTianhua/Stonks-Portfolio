@@ -140,15 +140,15 @@
 	    var datePurchased = new Date(document.getElementById("date-purchased").value);
 	    var dateSold = new Date(document.getElementById("date-sold").value);
 
-	    if(true){
+	    if(document.getElementById("date-sold").value.length > 0){
 	    	if((dateSold - datePurchased) < 0){
 	    		document.getElementById("invalid-date-sold").style.visibility = "visible";
 	    		return false;
 	    	} else {
 	    		document.getElementById("invalid-date-sold").style.visibility = "hidden";
 	    	}
-	    	return true;
 	    }
+		return true;
 	}
 
 	// Checks valid form inputs before submitting add-stock-form
