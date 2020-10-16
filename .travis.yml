@@ -4,6 +4,7 @@ branches:
   - develop 
 
 scripts:
+        - rm csci310.db
         - mvn flyway:migrate
         - mvn test
         - mvn jetty:run &
