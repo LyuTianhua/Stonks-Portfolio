@@ -6,4 +6,5 @@ branches:
 scripts:
         - mvn flyway:migrate
         - mvn test
+        - mvn jetty:run
         - mvn -DrunCucumberTests test
