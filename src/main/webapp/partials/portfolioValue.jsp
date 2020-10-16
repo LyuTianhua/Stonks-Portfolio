@@ -1,0 +1,1 @@
+<p class="value" id="portfolio-value"><span class="invisible" id="up-arrow">&#9650;</span><span class="invisible" id="down-arrow">&#9660;</span><span class="value" id="portfolio-value">$1,000,000</span></p>
