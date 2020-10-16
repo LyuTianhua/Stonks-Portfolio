@@ -13,10 +13,8 @@
 
 <%
 	HttpSession sesh = request.getSession(false);
-
 	int id = sesh.getAttribute("id") == null ? 0 : (int)sesh.getAttribute("id");
 	if (id == 0) response.sendRedirect("index.jsp");
-
 %>
 
 <%@include file="partials/nav.jsp"%>
@@ -55,15 +53,12 @@
 <%@include file="partials/viewStockModal.jsp"%>
 
 <script>
-
 	const logout = () =>
 			$.ajax({
 				url : "Logout",
 				type : "Get",
 				success : () => window.location.href = "index.jsp"
 			})
-
-
 	const add = () =>
 			$.ajax({
 				url : "AddStock",
@@ -75,8 +70,6 @@
 				},
 				success : () => location.reload()
 			})
-
-
 	const remove = (t, q) =>
 			$.ajax({
 				url : "RemoveStock",
@@ -87,8 +80,6 @@
 				},
 				success : () => location.reload()
 			})
-
-
 	const idleTimer = () => {
 		let t;
 		window.onload = resetTimer;
@@ -97,14 +88,12 @@
 		window.onclick = resetTimer;     // catches mouse clicks
 		window.onscroll = resetTimer;    // catches scrolling
 		window.onkeypress = resetTimer;  //catches keyboard actions
-
 		function resetTimer() {
 			clearTimeout(t);
 			t = setTimeout(logout, 120000);  // time is in milliseconds (1000 is 1 second)
 		}
 	}
 	idleTimer();
-
 	window.addEventListener( "load", () =>
 			$.ajax( {
 				url : "LoadProfile",
@@ -112,7 +101,6 @@
 				success : (res) => $("#portfolio-stocks").html(res)
 			})
 	)
-
 </script>
 <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
 <script src="https://code.jquery.com/jquery-3.5.0.js" integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc=" crossorigin="anonymous"></script>
@@ -120,4 +108,3 @@
 <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 </html>
-

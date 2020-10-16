@@ -17,10 +17,10 @@ public class SignupTest {
 
     @Before
     public void setUp() throws SQLException {
-        Signup.con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
-        Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
+        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
         PreparedStatement ps = con.prepareStatement("DELETE FROM base_user WHERE email <> 'tu1@email.com'" );
         ps.execute();
+        con.close();
     }
 
     @Test

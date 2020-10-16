@@ -18,29 +18,25 @@ import java.sql.*;
 @WebServlet("/Login")
 public class Login extends HttpServlet {
     private static final long serialVersionUID = 1L;
-    public static Connection con;
     public static PreparedStatement ps;
     public static ResultSet rs;
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
-        try {
-            con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
+        Database db = new Database();
+        Connection con = db.getConn();
 
+        try {
             String email = req.getParameter("email");
             String password = req.getParameter("password");
-
             PrintWriter pw = res.getWriter();
-
             if (authenticated(email, hashPassword(password))) {
-
                 req.setAttribute("authenticated", "1");
-
                 int id = getUserId(email);
                 HttpSession session = req.getSession(true);
                 session.setAttribute("id", id);
                 session.setAttribute("email", email);
-
+                pw.write("0");
             } else {
                 req.setAttribute("authenticated", "0");
                 pw.write("1");
@@ -48,16 +44,19 @@ public class Login extends HttpServlet {
             }
             pw.close();
         } catch (Exception ignored) { }
-
+        db.closeCon();
     }
 
     public static int getUserId(String email) throws SQLException {
-        Connection con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
+        Database db = new Database();
+        Connection con = db.getConn();
         PreparedStatement ps = con.prepareStatement("SELECT id FROM base_user WHERE email=?");
         ps.setString(1, email);
         ResultSet rs = ps.executeQuery();
         rs.next();
-        return rs.getInt("id");
+        Integer id = rs.getInt("id");
+        db.closeCon();
+        return id;
     }
 
     //Source for hash password
@@ -65,6 +64,8 @@ public class Login extends HttpServlet {
     public static String hashPassword(String input) {
 
         StringBuilder hash = new StringBuilder();
+        Database db = new Database();
+        Connection con = db.getConn();
 
         try {
             MessageDigest sha = MessageDigest.getInstance("SHA-1");
@@ -76,12 +77,14 @@ public class Login extends HttpServlet {
                 hash.append(digits[b & 0x0f]);
             }
         } catch (NoSuchAlgorithmException ignored) { }
-
+        db.closeCon();
         return hash.toString();
     }
 
     public static boolean authenticated(String email, String hashPass) {
         try {
+            Database db = new Database();
+            Connection con = db.getConn();
             // testing purposes
             hashPass = email.equalsIgnoreCase("tu1@email.com") ? "tu1pass" : hashPass;
 
@@ -90,8 +93,12 @@ public class Login extends HttpServlet {
 
             ps = con.prepareStatement("select * from base_user where email='" + email + "'" );
             rs = ps.executeQuery();
-            return (rs.next() && hashPass.equals(rs.getString("password")));
-
-        } catch (SQLException sql) { return false; }
+            boolean auth = rs.next() && hashPass.equals(rs.getString("password"));
+            System.out.println("=" + hashPass + "=");
+            System.out.println("="+ rs.getString("password") + "=");
+            db.closeCon();
+            return auth;
+        } catch (SQLException sql) { sql.printStackTrace(); }
+        return false;
     }
 }

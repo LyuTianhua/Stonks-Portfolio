@@ -1,4 +1,4 @@
-FROM postgres:latest
+ROM postgres:latest
 
 ENV POSTGRES_USER cs310user
 ENV POSTGRES_PASSWORD cs310password
