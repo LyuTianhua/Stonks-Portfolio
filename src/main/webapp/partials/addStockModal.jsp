@@ -11,11 +11,11 @@
       <div class="modal-body">
         <form method="GET" id="add-stock-form">
 		  <div class="form-group">
-		    <label for="ticker">Ticker  <span class="text-danger invisible" id="invalid-ticker">Please enter a valid NASDAQ or NYSE ticker.</span></label>
+		    <label for="ticker">Ticker  <span class="text-danger" id="invalid-ticker">Please enter a valid NASDAQ or NYSE ticker.</span></label>
 		    <input type="text" class="form-control" id="ticker" placeholder="ex. AAPL" required>
 		  </div>
 		  <div class="form-group">
-		    <label for="quantity">Quantity  <span class="text-danger invisible" id="invalid-quantity">Please enter a valid numerical quantity greater than 0.</span></label>
+		    <label for="quantity">Quantity  <span class="text-danger" id="invalid-quantity">Please enter a valid numerical quantity greater than 0.</span></label>
 		    <input type="number" class="form-control" id="quantity" placeholder="ex. 50129" min="0" step="1" required>
 		  </div>
 		  <div class="form-group">
@@ -23,7 +23,7 @@
 		    <input type="date" class="form-control" id="date-purchased" placeholder="ex. 12/24/2019" required>
 		  </div>
 		  <div class="form-group">
-		    <label for="date-purchased">Date Sold  <span class="text-warning">(optional)</span>   <span class="text-danger invisible" id="invalid-date-sold">Please enter a date sold after the date purchased.</span></label>
+		    <label for="date-purchased">Date Sold  <span class="text-warning">(optional)</span>   <span class="text-danger" id="invalid-date-sold">Please enter a date sold after the date purchased.</span></label>
 		    <input type="date" class="form-control" id="date-sold" placeholder="ex. 1/1/2020">
 		  </div>
 		</form>

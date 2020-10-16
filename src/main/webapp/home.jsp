@@ -125,24 +125,27 @@
 	// Check valid quantity
 	function checkQuantity() {
 		 var quantity = document.getElementById("quantity");
-		    if(isNaN(quantity.value) || quantity.value.length == 0) {
+		    if(isNaN(quantity.value) || quantity.value.length == 0 || quantity.value < 1) {
 		    	document.getElementById("invalid-quantity").style.visibility = "visible";
 		    	return false;
 		    } else {
-		    	return true;
+		    	document.getElementById("invalid-quantity").style.visibility = "hidden";
 		    }
+		    return true;
 	}
 
 	// Check date sold before date purchased
 	// Todo: add check for date only 1 year in the past
 	function checkDates() {
-	    var datePurchased = document.getElementById("date-purchased").value;
-	    var dateSold = document.getElementById("date-sold").value;
+	    var datePurchased = new Date(document.getElementById("date-purchased").value);
+	    var dateSold = new Date(document.getElementById("date-sold").value);
 
-	    if(dateSold.length != 0){
-	    	if(dateSold - datePurchased < 0){
+	    if(true){
+	    	if((dateSold - datePurchased) < 0){
 	    		document.getElementById("invalid-date-sold").style.visibility = "visible";
 	    		return false;
+	    	} else {
+	    		document.getElementById("invalid-date-sold").style.visibility = "hidden";
 	    	}
 	    	return true;
 	    }
@@ -150,7 +153,10 @@
 
 	// Checks valid form inputs before submitting add-stock-form
 	function checkAddStockForm() {
-		if(checkTicker() && checkQuantity() && checkDates()) {
+		var tickerCheck = checkTicker();
+		var qtyCheck = checkQuantity();
+		var dateCheck = checkDates();
+		if(tickerCheck && qtyCheck && dateCheck) {
 			add();
 		}
 	}
