@@ -1,5 +1,5 @@
 <form id="login-fields">
-    <label class="text-left" id="email" for="exampleInputEmail1">Email Address</label>
+    <label class="text-left" id="email" for="exampleInputEmail1">Username</label>
     <input class="form-control" id="exampleInputEmail1" type="email" name="email">
     <label class="text-left" id="password" for="exampleInputPassword1">Password</label>
     <input class="form-control" id="exampleInputPassword1" type="password" name="password">
