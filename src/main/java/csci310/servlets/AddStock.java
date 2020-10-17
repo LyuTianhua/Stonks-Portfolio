@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import java.sql.*;
 
 @WebServlet("/AddStock")
-public class AddStock  extends HttpServlet {
+public class AddStock extends HttpServlet {
     public static PrintWriter pw;
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
@@ -28,11 +28,11 @@ public class AddStock  extends HttpServlet {
             int month = Integer.parseInt(dateParts[1]);
             int day = Integer.parseInt(dateParts[2]);
             int companyId = getCompanyId(ticker);
-
-            addStockToPortfolio(userId, companyId, quantity, new Date(year, month, day));
-
+            
             pw = res.getWriter();
-            pw.println(1);
+            
+            addStockToPortfolio(userId, companyId, quantity, new Date(year, month, day));            
+            pw.println(1);            
             pw.close();
         } catch (Exception e) {
             e.printStackTrace();
@@ -106,9 +106,6 @@ public class AddStock  extends HttpServlet {
         ResultSet rs = ps.executeQuery();
 
         if (rs.next()) {
-
-
-
             ps = con.prepareStatement("update stock set shares = shares + ?, purchased = ? where user_id = ? and company_id = ?");
             ps.setDouble(1, shares);
             ps.setDate(2, date);
@@ -126,5 +123,4 @@ public class AddStock  extends HttpServlet {
         }
         db.closeCon();
     }
-
 }

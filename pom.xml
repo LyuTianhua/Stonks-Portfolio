@@ -160,8 +160,20 @@
 			<artifactId>sqlite-jdbc</artifactId>
 			<version>3.32.3</version>
 		</dependency>
+		
+		<!-- Unirest for Yahoo finance API -->
+		<dependency>
+			<groupId>com.mashape.unirest</groupId>
+          	<artifactId>unirest-java</artifactId>
+          	<version>1.4.9</version>
+  		</dependency>
+  		<dependency>
+          	<groupId>org.json</groupId>
+          	<artifactId>json</artifactId>
+          	<version>20140107</version>
+  		</dependency>
+  		<!-- -->
 	</dependencies>
-
 	<build>
 		<finalName>project2</finalName>
 		<pluginManagement>

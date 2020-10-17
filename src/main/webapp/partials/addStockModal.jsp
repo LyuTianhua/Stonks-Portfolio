@@ -9,7 +9,7 @@
         </button>
       </div>
       <div class="modal-body">
-        <form method="GET" id="add-stock-form">
+        <form id="add-stock-form">
 		  <div class="form-group">
 		    <label for="ticker">Ticker  <span class="text-danger" id="invalid-ticker">Please enter a valid NASDAQ or NYSE ticker.</span></label>
 		    <input type="text" class="form-control" id="ticker" placeholder="ex. AAPL" required>

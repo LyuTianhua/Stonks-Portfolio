@@ -119,19 +119,20 @@
 	// Check for valid NYSE or NASDAQ ticker
 	// Todo: Accept API data to actually check valid ticker
 	function checkTicker() {
-		return true;
+		var response;
+
 	}
 
 	// Check valid quantity
 	function checkQuantity() {
-		 var quantity = document.getElementById("quantity");
-		    if(isNaN(quantity.value) || quantity.value.length == 0 || quantity.value < 1) {
-		    	document.getElementById("invalid-quantity").style.visibility = "visible";
-		    	return false;
-		    } else {
-		    	document.getElementById("invalid-quantity").style.visibility = "hidden";
-		    }
-		    return true;
+		var quantity = document.getElementById("quantity");
+		if(isNaN(quantity.value) || quantity.value.length == 0 || quantity.value < 1) {
+			document.getElementById("invalid-quantity").style.visibility = "visible";
+		    return false;
+		} else {
+			document.getElementById("invalid-quantity").style.visibility = "hidden";
+		}
+		return true;
 	}
 
 	// Check date sold before date purchased
@@ -153,12 +154,26 @@
 
 	// Checks valid form inputs before submitting add-stock-form
 	function checkAddStockForm() {
-		var tickerCheck = checkTicker();
-		var qtyCheck = checkQuantity();
-		var dateCheck = checkDates();
-		if(tickerCheck && qtyCheck && dateCheck) {
-			add();
-		}
+		$.ajax({
+			url : "TickerChecking",
+			type: "Get",
+			data : {
+				ticker: $("#ticker").val()
+			},
+			success : (res) => {
+				var qtyCheck = checkQuantity();
+				var dateCheck = checkDates();
+				if (res.trim() == "1") {
+					document.getElementById("invalid-ticker").style.visibility = "hidden";
+					if(qtyCheck && dateCheck) {
+						add();
+					}
+				} else {
+					document.getElementById("invalid-ticker").style.visibility = "visible";
+					
+				}
+			}
+		})
 	}
 
 	// Checks if portfolio is up or down for the day and changes
