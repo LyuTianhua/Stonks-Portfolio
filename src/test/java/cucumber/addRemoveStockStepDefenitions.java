@@ -96,6 +96,24 @@ public class addRemoveStockStepDefenitions {
         driver.findElement(By.id(company + "Btn")).click();
     }
 
+    @Then("I should see an error message stating that it is an invalid ticker")
+    public void i_should_see_an_error_message_stating_that_it_is_an_invalid_ticker() {
+    	try {
+			Thread.sleep(2000);
+		}
+		
+		catch(Exception ie) {
+			System.out.println("10");
+		}
+		
+		Boolean checkIfElementPresent= false;
+		//Checks if the home info div is present
+		if(driver.findElements(By.xpath("//*[@id=\"invalid-quantity\"]")).size()!= 0) {
+		checkIfElementPresent = true;
+		}
+		assertTrue(checkIfElementPresent);
+    }
+
     @After
     public void tearDown() { driver.quit(); }
 
