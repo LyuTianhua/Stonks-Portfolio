@@ -28,13 +28,22 @@ public class TickerCheckingTest {
     @Test
     public void TestDoGet() {
         MockHttpServletRequest mocReq1 = new MockHttpServletRequest();
+        MockHttpServletRequest mocReq2 = new MockHttpServletRequest();
         MockHttpServletResponse mocRes1 = new MockHttpServletResponse();
+        MockHttpServletResponse mocRes2 = new MockHttpServletResponse();
 
         mocReq1.addParameter("ticker", "TSLA");
         TickerChecking1.doGet(mocReq1, mocRes1);
-        
-        boolean passed = true;
+        String auth1 = (String) mocReq1.getAttribute("authenticated");
 
+        mocReq2.addParameter("ticker", "THLLY");
+        TickerChecking2.doGet(mocReq2, mocRes2);
+        String auth2 = (String) mocReq2.getAttribute("authenticated");
+        
+        boolean passed = false;
+
+        if (auth1.equals("1") && auth2.equals("0"))
+            passed = true;
 
         assertTrue(passed);
     }
@@ -45,7 +54,7 @@ public class TickerCheckingTest {
         boolean invalid1 = TickerChecking4.checkTicker("THLLY");
         boolean invalid2 = TickerChecking5.checkTicker("");
 
-        assertTrue(valid && invalid1 && invalid2);
+        assertTrue(valid && !invalid1 && !invalid2);
     }
 
 }
