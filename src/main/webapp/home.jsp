@@ -31,10 +31,6 @@
 				data-target="#view-stock-modal" id="view-stock-btn">
 				View Stock
 			</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal"
-				data-target="#upload-modal" id="upload-btn">
-				Upload CSV
-			</button>
 		</div>
 	</div>
 	<div class="row justify-content-center">
@@ -58,9 +54,6 @@
 
 <!-- View Stock Modal -->
 <%@include file="partials/viewStockModal.jsp"%>
-
-<!-- Upload CSV Modal -->
-<%@include file="partials/uploadForm.jsp"%>
 
 <script>
 
