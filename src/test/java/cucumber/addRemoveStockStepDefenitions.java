@@ -70,7 +70,7 @@ public class addRemoveStockStepDefenitions {
     public void i_should_see(String quantity, String company) {
 
         try {
-            Thread.sleep(1000);
+            Thread.sleep(2000);
 
             if (quantity.equalsIgnoreCase("0")) {
                 List<WebElement> we = driver.findElements(By.id(company + "Shares"));
