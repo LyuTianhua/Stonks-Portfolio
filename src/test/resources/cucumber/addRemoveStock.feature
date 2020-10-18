@@ -46,3 +46,19 @@ Feature: add stock to portfolio
       | quantity | 
       | '0'      |
       | '-1'     | 
+  
+  Scenario Outline: adding date sold before date purchased
+  	Given I am signed in
+  	And I click on add stock modal
+  	And I enter 'AAPL' into 'ticker'
+  	And I enter <quantity> into 'quantity'
+  	And I enter <purchased> into 'date-purchased'
+  	And I enter <sold> into 'date-sold'
+  	And I click on add stock
+  	Then I should see an error message stating that these are invalid dates
+  	Examples:
+  		| quantity | purchased       | sold          |
+      	| '1'      | '1/2/2020'      | '1/1/2020'    |
+      	| '10'     | '8/20/2020'     | '7/28/2020'   |
+      	
+   

@@ -28,8 +28,10 @@ h3 {
 	font-size: 12px;
 }
 
-#invalid-ticker, #invalid-quantity, #invalid-date-sold {
-	visibility: hidden;
+#invalid-ticker, #invalid-quantity, #invalid-date-sold,
+#one-year-error, #purchased-empty, #ticker-empty,
+#view-empty {
+	display: none;
 }
 
 #form-outer {
