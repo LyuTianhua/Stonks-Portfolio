@@ -30,7 +30,7 @@ Feature: add stock to portfolio
     And I enter 'AZN' into 'ticker'
     And I enter <quantity> into 'quantity'
     And I click on add stock
-    Then I should see no changes to the page
+  	Then I should see an error message stating that it is an invalid ticker
     Examples:
       | quantity |
       | '1'      |
@@ -41,7 +41,7 @@ Feature: add stock to portfolio
     And I enter 'AAPL' into 'ticker'
     And I enter <quantity> into 'quantity'
     And I click on add stock
-  	Then I should see an error message stating that it is an invalid ticker
+  	Then I should see an error message stating that it is an invalid quantity
     Examples:
       | quantity | 
       | '0'      |

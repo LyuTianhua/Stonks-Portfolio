@@ -70,7 +70,7 @@ public class addRemoveStockStepDefenitions {
     public void i_should_see(String quantity, String company) {
 
         try {
-            Thread.sleep(500);
+            Thread.sleep(2000);
 
             if (quantity.equalsIgnoreCase("0")) {
                 List<WebElement> we = driver.findElements(By.id(company + "Shares"));
@@ -87,7 +87,7 @@ public class addRemoveStockStepDefenitions {
     @And("I enter {string} into {string} remove input")
     public void iEnterQuantityIntoTickerRemoveInput(String quantity, String company) {
         wait.until(
-                ExpectedConditions.presenceOfElementLocated(By.id(company + "Rm"))
+        		ExpectedConditions.presenceOfElementLocated(By.id(company + "Rm"))
         ).sendKeys(quantity);
     }
 
@@ -95,14 +95,28 @@ public class addRemoveStockStepDefenitions {
     public void i_click_on_the_(String company) {
         driver.findElement(By.id(company + "Btn")).click();
     }
-
+    
     @Then("I should see an error message stating that it is an invalid ticker")
     public void i_should_see_an_error_message_stating_that_it_is_an_invalid_ticker() {
     	try {
 			Thread.sleep(2000);
+		} catch(Exception ie) {
+			System.out.println("10");
 		}
 		
-		catch(Exception ie) {
+		Boolean checkIfElementPresent= false;
+		//Checks if the home info div is present
+		if(driver.findElements(By.xpath("//*[@id=\"invalid-ticker\"]")).size()!= 0) {
+		checkIfElementPresent = true;
+		}
+		assertTrue(checkIfElementPresent);
+    }
+    
+    @Then("I should see an error message stating that it is an invalid quantity")
+    public void i_should_see_an_error_message_stating_that_it_is_an_invalid_quantity() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
 			System.out.println("10");
 		}
 		
