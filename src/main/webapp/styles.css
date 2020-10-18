@@ -24,6 +24,10 @@ h3 {
 	font-weight: 700;
 }
 
+.small-text {
+	font-size: 12px;
+}
+
 #invalid-ticker, #invalid-quantity, #invalid-date-sold {
 	visibility: hidden;
 }
