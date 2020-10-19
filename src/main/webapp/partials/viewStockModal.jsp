@@ -13,7 +13,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="submit" id="view-stock-in-modal" class="btn btn-success" value="submit" onclick="checkViewStockForm()">View stock</button>
+                <button type="submit" id="view-stock-in-modal" class="btn btn-success" value="submit" onclick="checkViewStockForm()">View Stock</button>
             	<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
             </div>
         </div>
