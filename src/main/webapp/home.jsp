@@ -173,9 +173,6 @@
 	    
 	    // Adjusting datePurchased for UTC offset
 	    datePurchased.setDate(datePurchased.getDate()+1);
-	    
-	    console.log(datePurchased);
-	    console.log(oneYearAgo);
 
 	    if(datePurchased < oneYearAgo || datePurchased >= tomorrow){
 	    	document.getElementById("one-year-error").style.display = "inline";
