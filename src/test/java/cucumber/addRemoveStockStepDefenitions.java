@@ -127,6 +127,38 @@ public class addRemoveStockStepDefenitions {
 		}
 		assertTrue(checkIfElementPresent);
     }
+    
+    @Then("I should see an error message stating that these are invalid dates")
+    public void i_should_see_an_error_message_stating_that_these_are_invalid_dates() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+			System.out.println("Exception in invalid dates test.");
+		}
+		
+		Boolean checkIfElementPresent= false;
+		//Checks if the invalid dates error message is present
+		if(driver.findElements(By.xpath("//*[@id=\"invalid-date-sold\"]")).size()!= 0) {
+		checkIfElementPresent = true;
+		}
+		assertTrue(checkIfElementPresent);
+    }
+    
+    @Then("I should see an error message stating that this date is invalid")
+    public void i_should_see_an_error_message_stating_that_this_date_is_invalid() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+			System.out.println("Exception in invalid 1 year date test.");
+		}
+		
+		Boolean checkIfElementPresent= false;
+		//Checks if the invalid dates error message is present
+		if(driver.findElements(By.xpath("//*[@id=\"one-year-error\"]")).size()!= 0) {
+		checkIfElementPresent = true;
+		}
+		assertTrue(checkIfElementPresent);
+    }
 
     @After
     public void tearDown() { driver.quit(); }

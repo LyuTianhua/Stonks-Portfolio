@@ -24,8 +24,14 @@ h3 {
 	font-weight: 700;
 }
 
-#invalid-ticker, #invalid-quantity, #invalid-date-sold {
-	visibility: hidden;
+.small-text {
+	font-size: 12px;
+}
+
+#invalid-ticker, #invalid-quantity, #invalid-date-sold,
+#one-year-error, #purchased-empty, #ticker-empty,
+#view-empty {
+	display: none;
 }
 
 #form-outer {
