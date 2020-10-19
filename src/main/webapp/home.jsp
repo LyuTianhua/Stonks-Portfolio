@@ -155,8 +155,29 @@
 	    var datePurchased = new Date(document.getElementById("date-purchased").value);
 	    var dateSold = new Date(document.getElementById("date-sold").value);
 	    var rightNow = new Date();
+	    var oneYearAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
+	    var tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
+	    
+	    // Adjusting one year ago time for UTC offset
+	    oneYearAgo.setDate(rightNow.getDate()-1);
+	    oneYearAgo.setHours(23);
+	    oneYearAgo.setMinutes(59);
+	    oneYearAgo.setSeconds(59);
+	    oneYearAgo.setMilliseconds(999);
+	    
+	    // Adjusting tomorrow's date for UTC offset and making it midnight
+	    tomorrow.setHours(0);
+	    tomorrow.setMinutes(0);
+	    tomorrow.setSeconds(0);
+	    tomorrow.setMilliseconds(1);
+	    
+	    // Adjusting datePurchased for UTC offset
+	    datePurchased.setDate(datePurchased.getDate()+1);
+	    
+	    console.log(datePurchased);
+	    console.log(oneYearAgo);
 
-	    if(rightNow.getTime() - datePurchased > 31556952000 || rightNow.getTime() - datePurchased < 0){
+	    if(datePurchased < oneYearAgo || datePurchased >= tomorrow){
 	    	document.getElementById("one-year-error").style.display = "inline";
 	    	return false;
 	    } else {
