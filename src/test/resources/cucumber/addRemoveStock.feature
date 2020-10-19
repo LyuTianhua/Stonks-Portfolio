@@ -57,9 +57,9 @@ Feature: add stock to portfolio
   	And I click on add stock
   	Then I should see an error message stating that these are invalid dates
   	Examples:
-  		| quantity | purchased       | sold          |
-      	| '1'      | '1/15/2020'     | '1/14/2020'   |
-      	| '10'     | '8/20/2020'     | '7/28/2020'   |
+  		| quantity | purchased        | sold           |
+      	| '1'      | '01/15/2020'     | '01/14/2020'   |
+      	| '10'     | '08/20/2020'     | '07/28/2020'   |
       	
    Scenario Outline: Adding date purchased more than 1 year ago
    	Given I am signed in
@@ -68,8 +68,8 @@ Feature: add stock to portfolio
    	And I enter <quantity> into 'quantity'
    	And I enter <purchased> into 'date-purchased'
    	And I click on add stock
-   	Then I should see an error message stating that this date is more than 1 year ago
+   	Then I should see an error message stating that this date is more than a year ago
    	Examples:
-   		| quantity | purchased       |
-      	| '1'      | '1/15/2019'     |
-      	| '10'     | '8/20/2019'     |
+   		| quantity | purchased        |
+      	| '1'      | '01/15/2019'     |
+      	| '10'     | '08/20/2019'     |
