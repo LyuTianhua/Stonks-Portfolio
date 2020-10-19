@@ -22,22 +22,22 @@
 
 <div class="container">
 	<div class="row justify-content-center">
-		<div class="btn-groups" role="group">
-			<button type="button" class="btn btn-primary" data-toggle="modal"
+		<div class="btn-group mt-3" role="group">
+			<button type="button" class="btn btn-dark" data-toggle="modal"
 				data-target="#add-stock-modal" id="add-stock-btn" name="add-stock-btn">
 				Add Stock
 			</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal"
+			<button type="button" class="btn btn-dark" data-toggle="modal"
 				data-target="#view-stock-modal" id="view-stock-btn">
 				View Stock
 			</button>
-			<button type="button" class="btn btn-primary" data-toggle="modal"
+			<button type="button" class="btn btn-dark" data-toggle="modal"
 				data-target="#upload-modal" id="upload-btn">
 				Upload CSV
 			</button>
 		</div>
 	</div>
-	<div class="row justify-content-center">
+	<div class="row justify-content-center m-1">
 		<div class="col-md-6">
 			<div class="row mt-3">
 				<img src="https://ak.picdn.net/shutterstock/videos/16504675/thumb/4.jpg"
@@ -45,9 +45,11 @@
 			</div>
 			<div class="row mt-3">
 				<h3>Portfolio Stocks</h3>
-				<table id="portfolio-stocks" class="table table-hover">
-					<%--filled dynamically--%>
-				</table>
+				<div class="table-responsive">
+					<table id="portfolio-stocks" class="table table-hover">
+						<%--filled dynamically--%>
+					</table>
+				</div>
 			</div>
 		</div>
 	</div>
@@ -126,18 +128,23 @@
 	// Check for valid NYSE or NASDAQ ticker
 	// Todo: Accept API data to actually check valid ticker
 	function checkTicker() {
-		var response;
-
+		if(document.getElementById("ticker").value.length == 0) {
+			document.getElementById("ticker-empty").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("ticker-empty").style.display = "none";
+		}
+		return true;
 	}
 
 	// Check valid quantity
 	function checkQuantity() {
 		var quantity = document.getElementById("quantity");
 		if(isNaN(quantity.value) || quantity.value.length == 0 || quantity.value < 1) {
-			document.getElementById("invalid-quantity").style.visibility = "visible";
+			document.getElementById("invalid-quantity").style.display = "inline";
 		    return false;
 		} else {
-			document.getElementById("invalid-quantity").style.visibility = "hidden";
+			document.getElementById("invalid-quantity").style.display = "none";
 		}
 		return true;
 	}
@@ -147,15 +154,49 @@
 	function checkDates() {
 	    var datePurchased = new Date(document.getElementById("date-purchased").value);
 	    var dateSold = new Date(document.getElementById("date-sold").value);
+	    var rightNow = new Date();
+	    var oneYearAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
+	    var tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
+	    
+	    // Adjusting one year ago time for UTC offset
+	    oneYearAgo.setDate(rightNow.getDate()-1);
+	    oneYearAgo.setHours(23);
+	    oneYearAgo.setMinutes(59);
+	    oneYearAgo.setSeconds(59);
+	    oneYearAgo.setMilliseconds(999);
+	    
+	    // Adjusting tomorrow's date for UTC offset and making it midnight
+	    tomorrow.setHours(0);
+	    tomorrow.setMinutes(0);
+	    tomorrow.setSeconds(0);
+	    tomorrow.setMilliseconds(1);
+	    
+	    // Adjusting datePurchased for UTC offset
+	    datePurchased.setDate(datePurchased.getDate()+1);
 
+	    if(datePurchased < oneYearAgo || datePurchased >= tomorrow){
+	    	document.getElementById("one-year-error").style.display = "inline";
+	    	return false;
+	    } else {
+	    	document.getElementById("one-year-error").style.display = "none";
+	    }
+	    
+	    if(document.getElementById("date-purchased").value.length == 0) {
+	    	document.getElementById("purchased-empty").style.display = "inline";
+	    	return false;
+	    } else {
+	    	document.getElementById("purchased-empty").style.display = "none";
+	    }
+	    
 	    if(document.getElementById("date-sold").value.length > 0){
-	    	if((dateSold - datePurchased) < 0){
-	    		document.getElementById("invalid-date-sold").style.visibility = "visible";
+	    	if((dateSold - datePurchased) < 0) {
+	    		document.getElementById("invalid-date-sold").style.display = "inline";
 	    		return false;
 	    	} else {
-	    		document.getElementById("invalid-date-sold").style.visibility = "hidden";
+	    		document.getElementById("invalid-date-sold").style.display = "none";
 	    	}
 	    }
+	    
 		return true;
 	}
 
@@ -170,6 +211,7 @@
 			success : (res) => {
 				var qtyCheck = checkQuantity();
 				var dateCheck = checkDates();
+				var tickerEmpty = checkTicker();
 				if (res.trim() == "1") {
 					document.getElementById("invalid-ticker").style.visibility = "hidden";
 					if(qtyCheck && dateCheck) {
@@ -181,6 +223,22 @@
 				}
 			}
 		})
+	}
+	
+	// Performs ticker check before submitting view stock form
+	// TODO: Check valid ticker before adding to view stock
+	function checkViewStockForm() {
+		// Insert AJAX call for checking valid ticker from API
+		
+		// Checking if ticker is empty
+		if(document.getElementById("ticker").value.length == 0) {
+			console.log("View ticker empty.");
+			document.getElementById("view-empty").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("view-empty").style.display = "none";
+		}
+		return true;
 	}
 
 	// Checks if portfolio is up or down for the day and changes
