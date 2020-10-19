@@ -144,8 +144,8 @@ public class addRemoveStockStepDefenitions {
 		assertTrue(checkIfElementPresent);
     }
     
-    @Then("I should see an error message stating that this date is more than a year ago")
-    public void i_should_see_an_error_message_stating_that_this_date_is_more_than_year_ago() {
+    @Then("I should see an error message stating that this date is invalid")
+    public void i_should_see_an_error_message_stating_that_this_date_is_invalid() {
     	try {
 			Thread.sleep(2000);
 		} catch(Exception ie) {

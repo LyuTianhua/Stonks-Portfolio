@@ -156,7 +156,7 @@
 	    var dateSold = new Date(document.getElementById("date-sold").value);
 	    var rightNow = new Date();
 
-	    if(rightNow.getTime() - datePurchased > 31556952000){
+	    if(rightNow.getTime() - datePurchased > 31556952000 || rightNow.getTime() - datePurchased < 0){
 	    	document.getElementById("one-year-error").style.display = "inline";
 	    	return false;
 	    } else {
