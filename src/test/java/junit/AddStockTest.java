@@ -88,6 +88,7 @@ public class AddStockTest {
     
     @Test
     public void TestGetGraphData() throws Exception {
+        assert(AddStock.getGraphData("AAPL").length() > 0);
         assert(AddStock.getGraphData("").length() == 0);
     }
 

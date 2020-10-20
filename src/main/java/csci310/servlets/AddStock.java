@@ -139,7 +139,15 @@ public class AddStock extends HttpServlet {
     }
     
     public static String getGraphData(String ticker) {
-
+		try {
+			HttpResponse<JsonNode> response = Unirest.get("https://yahoo-finance-low-latency.p.rapidapi.com/v8/finance/chart/" + ticker + "?lang=en&range=1y&region=US&interval=1d")
+					.header("x-rapidapi-host", "yahoo-finance-low-latency.p.rapidapi.com")
+					.header("x-rapidapi-key", "f1e55eb2c9msh2690eb51d13f30ap1d7cdajsn96819c5a1864")
+					.asJson();
+			if (response.getStatus() == 200) {
+				return response.getBody().getObject().toString();
+			}
+		} catch (Exception ignored) {}
 		return "";
     }
 }
