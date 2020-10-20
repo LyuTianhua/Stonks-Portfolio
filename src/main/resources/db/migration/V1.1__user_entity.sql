@@ -24,6 +24,7 @@ create table Stock (
    shares int,
    purchased date not null ,
    sold date ,
+   data VARCHAR(65535) ,
    foreign key (company_id) references Company(id) ,
    foreign key (user_id) references Base_User(id)
 );

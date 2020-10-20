@@ -62,7 +62,7 @@ public class AddStockTest {
 
     @Test
     public void TestAddStockToPortfolio() throws SQLException {
-        AddStock.addStockToPortfolio(1, 1, 10, new Date(2010, 10, 10));
+        AddStock.addStockToPortfolio(1, 1, 10, new Date(2010, 10, 10), "");
         Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
 
         PreparedStatement ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
@@ -73,7 +73,7 @@ public class AddStockTest {
         assertEquals(10, rs.getDouble("shares"), 0.0);
         con.close();
 
-        AddStock.addStockToPortfolio(1, 1, 10, new Date(2020, 10, 11));
+        AddStock.addStockToPortfolio(1, 1, 10, new Date(2020, 10, 11), "");
         con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
 
         ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
@@ -84,6 +84,12 @@ public class AddStockTest {
 
         assertEquals(20, rs.getDouble("shares"), 0.0);
         con.close();
+    }
+    
+    @Test
+    public void TestGetGraphData() throws Exception {
+        assert(AddStock.getGraphData("AAPL").length() > 0);
+        assert(AddStock.getGraphData("").length() == 0);
     }
 
 }
