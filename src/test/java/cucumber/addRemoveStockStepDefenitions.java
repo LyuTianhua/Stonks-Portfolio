@@ -1,87 +1,166 @@
 package cucumber;
 
-import static org.junit.Assert.assertTrue;
-
-import java.util.List;
-
+import io.cucumber.java.en.And;
+import io.cucumber.java.en.Given;
+import io.cucumber.java.en.Then;
+import org.junit.After;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
-import io.cucumber.java.After;
-import io.cucumber.java.en.Given;
-import io.cucumber.java.en.Then;
-import io.cucumber.java.en.When;
+import java.util.List;
 
-/**
- * Step definitions for Cucumber tests.
- */
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
+
 public class addRemoveStockStepDefenitions {
 
-	private static final String ROOT_URL = new Configurations().url;
+    private static final String ROOT_URL = "http://localhost:8081/";
+    private final WebDriver driver = new ChromeDriver(RunCucumberTests.options);
+    private final WebDriverWait wait = new WebDriverWait(driver, 3);
 
-	private final WebDriver driver = new ChromeDriver();
+    @Given("I am signed in")
+    public void i_am_signed_in() {
 
-	@Given("I am signed in")
-	public void i_am_signed_in() {
-		driver.get(ROOT_URL + "index.jsp");
-		WebElement queryBox = driver.findElement(By.name("email"));
-		queryBox.sendKeys("tu1@email.com");
-		queryBox = driver.findElement(By.name("password"));
-		queryBox.sendKeys("tu1pass");
-		driver.findElement(By.name("signin")).click();
-		try {
-			Thread.sleep(500);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-	}
+        driver.get(ROOT_URL + "index.jsp");
 
-	
-	@Given("I enter {string} into ticker")
-	public void i_enter_into_ticker(String string) {
-		WebElement queryBox = driver.findElement(By.id("tickerIn"));
-		queryBox.sendKeys(string);
-	}
-	
-	
-	@Given("I enter {string} into quantity")
-	public void i_enter_into_quantity(String string) {
-		WebElement queryBox = driver.findElement(By.id("quantityIn"));
-		queryBox.sendKeys(string);
-	}
-	
-	@Given("I enter {string} into company")
-	public void i_enter_into_company(String string) {
-		WebElement queryBox = driver.findElement(By.id("companyNameIn"));
-		queryBox.sendKeys(string);
-	}
-	
-	@Given("I click the add stock button")
-	public void i_click_the_add_stock_button() {
-		driver.findElement(By.id("add-btn")).click();;
-	}
-	
-	@Then("I should see 10 TSLA stock on the portfolio")
-	public void i_should_see_TSLA_stock_on_the_portfolio() {
-	    try {
-	        Thread.sleep(500);
-	    } catch (InterruptedException ignored) {}
-	    assertTrue(driver.findElement(By.name("quantityOut")).getAttribute("innerHTML").contains("10"));
-	}
-	
-	@After()
-	public void cleanup() {
-		try {
+        driver.findElement(By.id("iEmail")).sendKeys("tu1@email.com");
+
+        driver.findElement(By.id("iPassword")).sendKeys("tu1pass");
+
+        driver.findElement(By.id("signin")).click();
+
+    }
+
+    @And("I enter {string} into {string}")
+    public void i_enter(String key, String value) {
+
+        driver.switchTo().activeElement();
+        wait.until(
+                ExpectedConditions.elementToBeClickable((By.id(value)))
+        ).sendKeys(key);
+
+    }
+
+
+    @And("I click on add stock modal")
+    public void i_click_on_add_stock_modal() {
+
+        wait.until(
+                ExpectedConditions.presenceOfElementLocated(By.id("add-stock-btn"))
+        ).click();
+
+    }
+
+    @And("I click on add stock")
+    public void i_click_on() {
+
+        driver.switchTo().activeElement();
+        wait.until(
+                ExpectedConditions.presenceOfElementLocated(By.id("add-stock-in-modal"))
+        ).click();
+
+    }
+
+
+    @Then("I should see {string} {string} stock on the portfolio")
+    public void i_should_see(String quantity, String company) {
+
+        try {
+            Thread.sleep(2000);
+
+            if (quantity.equalsIgnoreCase("0")) {
+                List<WebElement> we = driver.findElements(By.id(company + "Shares"));
+                assertEquals(0, we.size());
+            }
+            else {
+
+                WebElement we = driver.findElement(By.id(company + "Shares"));
+                assertTrue(quantity.equalsIgnoreCase(we.getText()));
+            }
+        } catch (InterruptedException ignored) {}
+    }
+
+    @And("I enter {string} into {string} remove input")
+    public void iEnterQuantityIntoTickerRemoveInput(String quantity, String company) {
+        wait.until(
+        		ExpectedConditions.presenceOfElementLocated(By.id(company + "Rm"))
+        ).sendKeys(quantity);
+    }
+
+    @And("I click on the {string} remove button")
+    public void i_click_on_the_(String company) {
+        driver.findElement(By.id(company + "Btn")).click();
+    }
+    
+    @Then("I should see an error message stating that it is an invalid ticker")
+    public void i_should_see_an_error_message_stating_that_it_is_an_invalid_ticker() {
+    	try {
 			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		} catch(Exception ie) {
+			System.out.println("10");
 		}
-		driver.quit();
-	}
+		
+		Boolean checkIfElementPresent= false;
+		//Checks if the home info div is present
+		if(driver.findElements(By.xpath("//*[@id=\"invalid-ticker\"]")).size()!= 0) {
+		checkIfElementPresent = true;
+		}
+		assertTrue(checkIfElementPresent);
+    }
+    
+    @Then("I should see an error message stating that it is an invalid quantity")
+    public void i_should_see_an_error_message_stating_that_it_is_an_invalid_quantity() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+			System.out.println("10");
+		}
+		
+		Boolean checkIfElementPresent= false;
+		//Checks if the home info div is present
+		if(driver.findElements(By.xpath("//*[@id=\"invalid-quantity\"]")).size()!= 0) {
+		checkIfElementPresent = true;
+		}
+		assertTrue(checkIfElementPresent);
+    }
+    
+    @Then("I should see an error message stating that these are invalid dates")
+    public void i_should_see_an_error_message_stating_that_these_are_invalid_dates() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+			System.out.println("Exception in invalid dates test.");
+		}
+		
+		Boolean checkIfElementPresent= false;
+		//Checks if the invalid dates error message is present
+		if(driver.findElements(By.xpath("//*[@id=\"invalid-date-sold\"]")).size()!= 0) {
+		checkIfElementPresent = true;
+		}
+		assertTrue(checkIfElementPresent);
+    }
+    
+    @Then("I should see an error message stating that this date is invalid")
+    public void i_should_see_an_error_message_stating_that_this_date_is_invalid() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+			System.out.println("Exception in invalid 1 year date test.");
+		}
+		
+		Boolean checkIfElementPresent= false;
+		//Checks if the invalid dates error message is present
+		if(driver.findElements(By.xpath("//*[@id=\"one-year-error\"]")).size()!= 0) {
+		checkIfElementPresent = true;
+		}
+		assertTrue(checkIfElementPresent);
+    }
+
+    @After
+    public void tearDown() { driver.quit(); }
+
 }
-
-	
-
-

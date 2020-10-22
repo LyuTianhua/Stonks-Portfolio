@@ -1,63 +1,56 @@
 package cucumber;
 
-import io.cucumber.java.After;
-import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
+import org.junit.After;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.chrome.ChromeDriver;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+
+import java.util.concurrent.TimeUnit;
 
 import static org.junit.Assert.assertTrue;
 
 public class inactiveStepDefinition {
-	private static final String ROOT_URL = new Configurations().url;
 
-	private final WebDriver driver = new ChromeDriver();
+	private static final String ROOT_URL = "http://localhost:8081/";
+	private final WebDriver driver = new ChromeDriver(RunCucumberTests.options);
+
+	private final WebDriverWait wait = new WebDriverWait(driver, 3);
 
 	@Given("I am on the home page")
 	public void i_am_on_the_home_page() {
-		driver.get(ROOT_URL + "home.jsp");
+
+		driver.get(ROOT_URL + "index.jsp");
+		WebElement queryBox = driver.findElement(By.id("iEmail"));
+		queryBox.sendKeys("tu1@email.com");
+
+		queryBox = driver.findElement(By.id("iPassword"));
+		queryBox.sendKeys("tu1pass");
+
+		driver.findElement(By.id("signin")).click();
+
 	}
-	
-	@When("I do nothing for 5 seconds")
+
+	@When("I do nothing for 120 seconds")
 	public void iDoNothingForSeconds() {
 		try {
-			Thread.sleep(5000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+			Thread.sleep(120000);
+			driver.manage().timeouts().implicitlyWait(120, TimeUnit.SECONDS);
+		} catch (InterruptedException ignored) {}
 	}
-	
-	@When("I click title")
-	public void iClickTitle() {
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		driver.findElement(By.linkText("USC CS 310 Stock Portfolio Management")).click();
-	}
-	
+
 	@Then("I should be at page {string}")
 	public void iShouldBeAtPage(String url) {
-		try {
-			Thread.sleep(2000);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
+		wait.until(ExpectedConditions.urlContains(url));
 		assertTrue(driver.getCurrentUrl().contains(url));
 	}
-	
-	@After()
-	public void cleanup() {
-		try {
-			Thread.sleep(100);
-		} catch (InterruptedException e) {
-			e.printStackTrace();
-		}
-		driver.quit();
-	}
+
+	@After
+	public void tearDown() { driver.quit(); }
+
 }

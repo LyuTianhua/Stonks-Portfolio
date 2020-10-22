@@ -11,3 +11,5 @@ buildNumber.properties
 .mvn/wrapper/maven-wrapper.jar
 project2.iml
 .idea/**/*
+csci310.db
+debug.log

@@ -6,8 +6,11 @@ import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
-import javax.servlet.ServletException;
+
 import java.io.IOException;
+import java.sql.DriverManager;
+import java.sql.SQLException;
+
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
@@ -61,8 +64,7 @@ public class LoginTest extends Mockito {
     }
 
     @Test
-    public void testValidate() {
-
+    public void testValidate() throws SQLException {
         boolean valid = Login.authenticated("tu1@email.com", "tu1pass");
         boolean invalid = Login.authenticated("bad connection", "bad connection");
 

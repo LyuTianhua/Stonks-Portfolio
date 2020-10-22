@@ -1,310 +1,263 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8"
-    pageEncoding="UTF-8"%>
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
 <head>
 	<meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
 	<link rel="stylesheet" href="styles.css">
 	<title>Home</title>
+
 </head>
 <body>
-	<nav class="navbar navbar-light my-nav">
-		<a class="navbar-brand text-wrap" href="#">USC CS 310 Stock Portfolio Management</a>	 
-		<button id="logout" type="button" class="btn btn-dark float-right">Log Out</button>
-	</nav>
-	<div class="container">
-		<div class="row justify-content-center">
-			<div class="btn-groups" role="group">
-  				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#add-stock-modal" id="add-stock-btn">
-  				Add Stock
-  				</button>
-  				<button type="button" class="btn btn-primary" data-toggle="modal" data-target="#view-stock-modal" id="view-stock-btn">
-  				View Stock
-  				</button>
+
+<%
+	HttpSession sesh = request.getSession(false);
+
+	int id = sesh.getAttribute("id") == null ? 0 : (int)sesh.getAttribute("id");
+	if (id == 0) response.sendRedirect("index.jsp");
+%>
+
+<%@include file="partials/nav.jsp"%>
+
+<div class="container">
+	<div class="row justify-content-center">
+		<div class="btn-group mt-3" role="group">
+			<button type="button" class="btn btn-dark" data-toggle="modal"
+				data-target="#add-stock-modal" id="add-stock-btn" name="add-stock-btn">
+				Add Stock
+			</button>
+			<button type="button" class="btn btn-dark" data-toggle="modal"
+				data-target="#view-stock-modal" id="view-stock-btn">
+				View Stock
+			</button>
+			<button type="button" class="btn btn-dark" data-toggle="modal"
+				data-target="#upload-modal" id="upload-btn">
+				Upload CSV
+			</button>
+		</div>
+	</div>
+	<div class="row justify-content-center m-1">
+		<div class="col-md-6">
+			<div class="row mt-3">
+				<img src="https://ak.picdn.net/shutterstock/videos/16504675/thumb/4.jpg"
+					class="img-fluid rounded shadow" alt="">
 			</div>
-		</div>			
-		<div class="row justify-content-center">
-			<div class="col-md-6">
-				<div class="row mt-3">
-					<img src="https://ak.picdn.net/shutterstock/videos/16504675/thumb/4.jpg" class="img-fluid rounded shadow" alt="">
-				</div>
-				<div class="row mt-3">
-					<h3>Portfolio Stocks</h3>
+			<div class="row mt-3">
+				<h3>Portfolio Stocks</h3>
+				<div class="table-responsive">
 					<table id="portfolio-stocks" class="table table-hover">
-						<tr>
-							<th>Stonk</th>
-							<th>Price</th>
-							<th>Shares</th>
-							<th>Remove Stock</th>
-						</tr>
-
-
-<%--						<tr>--%>
-<%--							<td>AAPL</td>--%>
-<%--							<td>$115.55</td>--%>
-<%--							<td>50,129</td>--%>
-<%--							<td>--%>
-<%--								<button type="button" class="close" aria-label="Close">--%>
-<%--  									<span aria-hidden="true">&times;</span>--%>
-<%--								</button>--%>
-<%--							</td>--%>
-<%--						</tr>--%>
-<%--						<tr>--%>
-<%--							<td>MSFT</td>--%>
-<%--							<td>$115.55</td>--%>
-<%--							<td>50,129</td>--%>
-<%--							<td>--%>
-<%--								<button type="button" class="close" aria-label="Close">--%>
-<%--  									<span aria-hidden="true">&times;</span>--%>
-<%--								</button>--%>
-<%--							</td>--%>
-<%--						</tr>--%>
-<%--						<tr>--%>
-<%--							<td>TSLA</td>--%>
-<%--							<td>$115.55</td>--%>
-<%--							<td>50,129</td>--%>
-<%--							<td>--%>
-<%--								<button type="button" class="close" aria-label="Close">--%>
-<%--  									<span aria-hidden="true">&times;</span>--%>
-<%--								</button>--%>
-<%--							</td>--%>
-<%--						</tr>--%>
-<%--						<tr>--%>
-<%--							<td>SPCE</td>--%>
-<%--							<td>$115.55</td>--%>
-<%--							<td>50,129</td>--%>
-<%--							<td>--%>
-<%--								<button type="button" class="close" aria-label="Close">--%>
-<%--  									<span aria-hidden="true">&times;</span>--%>
-<%--								</button>--%>
-<%--							</td>--%>
-<%--						</tr>--%>
+						<%--filled dynamically--%>
 					</table>
 				</div>
-				<div class="row mt-3">
-					<h3>Viewing Stocks</h3>
-					<table class="table table-hover">
-						<tr>
-							<th>Stonk</th>
-							<th>Price</th>
-							<th>Shares</th>
-							<th>Remove Stock</th>
-						</tr>
-						<tr>
-							<td>AAPL</td>
-							<td>$115.55</td>
-							<td>50,129</td>
-							<td>
-								<button type="button" class="close" aria-label="Close">
-  									<span aria-hidden="true">&times;</span>
-								</button>
-							</td>
-						</tr>
-						<tr>
-							<td>TSLA</td>
-							<td>$115.55</td>
-							<td>50,129</td>
-							<td>
-								<button type="button" class="close" aria-label="Close">
-  									<span aria-hidden="true">&times;</span>
-								</button>
-							</td>
-						</tr>
-						<tr>
-							<td>MSFT</td>
-							<td>$115.55</td>
-							<td>50,129</td>
-							<td>
-								<button type="button" class="close" aria-label="Close">
-  									<span aria-hidden="true">&times;</span>
-								</button>
-							</td>
-						</tr>
-						<tr>
-							<td>SPCE</td>
-							<td>$115.55</td>
-							<td>50,129</td>
-							<td>
-								<button type="button" class="close" aria-label="Close">
-  									<span aria-hidden="true">&times;</span>
-								</button>
-							</td>
-						</tr>
-					</table>
-				</div>		
 			</div>
 		</div>
 	</div>
+</div>
+
+<!-- Add Stock Modal -->
+<%@include file="partials/addStockModal.jsp"%>
+
+<!-- View Stock Modal -->
+<%@include file="partials/viewStockModal.jsp"%>
+
+<!-- Upload CSV Modal -->
+<%@include file="partials/uploadForm.jsp"%>
+
+<script>
+
+	const logout = () =>
+			$.ajax({
+				url : "Logout",
+				type : "Get",
+				success : () => window.location.href = "index.jsp"
+			})
 
 
-	<form id="add-stock-modal-form">
-		<div class="form-group">
-			<label for="ticker">Ticker</label>
-			<input type="text" class="form-control" id="tickerIn" placeholder="ex. AAPL">
-		</div>
-		<div class="form-group">
-			<label for="quantity">Quantity</label>
-			<input type="text" class="form-control" id="quantityIn" placeholder="ex. 50129">
-		</div>
-		<div class="form-group">
-			<label for="company-name">Company Name</label>
-			<input type="text" class="form-control" id="companyNameIn" placeholder="ex. Apple">
-		</div>
-		<div class="form-group">
-			<label for="date-purchased">Date Purchased</label>
-			<input type="text" class="form-control" id="date-purchased" placeholder="ex. 12/24/2019">
-		</div>
-		<div class="form-group">
-			<label for="date-sold">Date Sold</label>
-			<input type="text" class="form-control" id="date-sold" placeholder="ex. 1/1/2020">
-		</div>
+	const add = () =>
+			$.ajax({
+				url : "AddStock",
+				type: "Get",
+				data : {
+					ticker   : $("#ticker").val(),
+					date     : $("#date-purchased").val(),
+					quantity : $("#quantity").val()
+				},
+				success : () => location.reload()
+			})
 
-		<button type="submit" form="add-stock-modal-form" id = "add-btn"value="submit" class="btn btn-primary">Add Stock</button>
-		<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>
 
-	</form>
+	const remove = (t, q) =>
+			$.ajax({
+				url : "RemoveStock",
+				type : "Get",
+				data : {
+					ticker   : t,
+					quantity : $(q).val()
+				},
+				success : () => location.reload()
+			})
 
-	<!-- Add Stock Modal -->
-<%--	<div class="modal fade" id="add-stock-modal" tabindex="-1" role="dialog" aria-labelledby="add-stock-modal-label" aria-hidden="true">--%>
-<%--	  <div class="modal-dialog" role="document">--%>
-<%--	    <div class="modal-content">--%>
-<%--	      <div class="modal-header">--%>
-<%--	        <h5 class="modal-title" id="add-stock-modal-label">Add a stock to your portfolio</h5>--%>
-<%--	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">--%>
-<%--	          <span aria-hidden="true">&times;</span>--%>
-<%--	        </button>--%>
-<%--	      </div>--%>
-<%--	      <div class="modal-body">--%>
-<%--	        <form id="add-stock-modal-form">--%>
-<%--			  <div class="form-group">--%>
-<%--			    <label for="ticker">Ticker</label>--%>
-<%--			    <input type="text" class="form-control" id="ticker" placeholder="ex. AAPL">--%>
-<%--			  </div>--%>
-<%--			  <div class="form-group">--%>
-<%--			    <label for="quantity">Quantity</label>--%>
-<%--			    <input type="text" class="form-control" id="quantity" placeholder="ex. 50129">--%>
-<%--			  </div>--%>
-<%--			  <div class="form-group">--%>
-<%--			    <label for="company-name">Company Name</label>--%>
-<%--			    <input type="text" class="form-control" id="company-name" placeholder="ex. Apple">--%>
-<%--			  </div>--%>
-<%--			  <div class="form-group">--%>
-<%--			    <label for="date-purchased">Date Purchased</label>--%>
-<%--			    <input type="text" class="form-control" id="date-purchased" placeholder="ex. 12/24/2019">--%>
-<%--			  </div>--%>
-<%--			  <div class="form-group">--%>
-<%--			    <label for="date-sold">Date Sold</label>--%>
-<%--			    <input type="text" class="form-control" id="date-sold" placeholder="ex. 1/1/2020">--%>
-<%--			  </div>--%>
 
-<%--				<button type="submit" form="add-stock-modal-form" value="submit" class="btn btn-primary">Add Stock</button>--%>
-<%--				<button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>--%>
+	const idleTimer = () => {
+		let t;
+		window.onload = resetTimer;
+		window.onmousemove = resetTimer; // catches mouse movements
+		window.onmousedown = resetTimer; // catches mouse movements
+		window.onclick = resetTimer;     // catches mouse clicks
+		window.onscroll = resetTimer;    // catches scrolling
+		window.onkeypress = resetTimer;  //catches keyboard actions
 
-<%--			</form>--%>
-<%--	      </div>--%>
-<%--	    </div>--%>
-<%--	  </div>--%>
-<%--	</div>--%>
-	
-	<!-- View Stock Modal -->
-<%--	<div class="modal fade" id="view-stock-modal" tabindex="-1" role="dialog" aria-labelledby="view-stock-modal-label" aria-hidden="true">--%>
-<%--	  <div class="modal-dialog" role="document">--%>
-<%--	    <div class="modal-content">--%>
-<%--	      <div class="modal-header">--%>
-<%--	        <h5 class="modal-title" id="view-stock-modal-label">View a stock</h5>--%>
-<%--	        <button type="button" class="close" data-dismiss="modal" aria-label="Close">--%>
-<%--	          <span aria-hidden="true">&times;</span>--%>
-<%--	        </button>--%>
-<%--	      </div>--%>
-<%--	      <div class="modal-body">--%>
-<%--	        <form method="GET">--%>
-<%--			  <div class="form-group">--%>
-<%--			    <label for="ticker1">Ticker</label>--%>
-<%--			    <input type="text" class="form-control" id="ticker1" placeholder="ex. AAPL">--%>
-<%--			  </div>--%>
-<%--			</form>--%>
-<%--	      </div>--%>
-<%--	      <div class="modal-footer">--%>
-<%--	        <button type="button" class="btn btn-secondary" data-dismiss="modal">Cancel</button>--%>
-<%--	        <button type="button" class="btn btn-primary">View stock</button>--%>
-<%--	      </div>--%>
-<%--	    </div>--%>
-<%--	  </div>--%>
-<%--	</div>--%>
-	<script type="text/javascript">
-		document.querySelector("#logout").onclick = function(event) {
-			window.location.href = "index.jsp";
+		function resetTimer() {
+			clearTimeout(t);
+			t = setTimeout(logout, 120000);  // time is in milliseconds (1000 is 1 second)
 		}
-                                        
-		function idleTimer() {
-		 	let t;
-		 	window.onload = resetTimer;
-		 	window.onmousemove = resetTimer; // catches mouse movements
-		 	window.onmousedown = resetTimer; // catches mouse movements
-		 	window.onclick = resetTimer;     // catches mouse clicks
-		 	window.onscroll = resetTimer;    // catches scrolling
-		 	window.onkeypress = resetTimer;  //catches keyboard actions
-		
-		 	function logout() {
-		 		window.location.href = '/index.jsp';  //Adapt to actual logout script
-		 	}
-		
-		 	function resetTimer() {
-		 		clearTimeout(t);
-		 		t = setTimeout(logout, 3000);  // time is in milliseconds (1000 is 1 second)
-		 	}
+	}
+	idleTimer();
+
+	window.addEventListener( "load", () =>
+			$.ajax( {
+				url : "LoadProfile",
+				type : "Get",
+				success : (res) => $("#portfolio-stocks").html(res)
+			})
+	)
+
+</script>
+<script>
+	// Check for valid NYSE or NASDAQ ticker
+	// Todo: Accept API data to actually check valid ticker
+	function checkTicker() {
+		if(document.getElementById("ticker").value.length == 0) {
+			document.getElementById("ticker-empty").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("ticker-empty").style.display = "none";
 		}
-		idleTimer();
+		return true;
+	}
 
-		document.querySelector("#add-stock-modal-form").onsubmit = function(event) {
-			event.preventDefault();	
-			// let email = document.querySelector("#exampleInputEmail1").value.trim();
-			let ticker = document.querySelector("#tickerIn").value.trim();
-			let company = document.querySelector("#companyNameIn").value.trim();
-			let quantity = document.querySelector("#quantityIn").value.trim();
+	// Check valid quantity
+	function checkQuantity() {
+		var quantity = document.getElementById("quantity");
+		if(isNaN(quantity.value) || quantity.value.length == 0 || quantity.value < 1) {
+			document.getElementById("invalid-quantity").style.display = "inline";
+		    return false;
+		} else {
+			document.getElementById("invalid-quantity").style.display = "none";
+		}
+		return true;
+	}
 
-			let httpRequest = new XMLHttpRequest();
-			// httpRequest.open("GET", "/AddStock?" + "email=" + email + "&ticker=" + ticker + "&company=" + company + "&quantity=" + quantity, true);
-			httpRequest.open("GET", "/AddStock?" + "ticker=" + ticker + "&company=" + company + "&quantity=" + quantity, true);
-			httpRequest.send();
-			httpRequest.onreadystatechange = function() {			
-				const msg = httpRequest.responseText.trim();
-				if (msg === "1") {
-					// document.querySelector("#testTicker").innerHTML.value = ticker.toString()
-					// document.querySelector("#testQuantity").innerHTML.value = quantity.toString()
-					// window.location.href = "home.jsp";
-					let stockRow = document.createElement("tr");
-					let tickerCell = document.createElement("td");
-					let priceCell = document.createElement("td");
-					let qualityCell = document.createElement("td");
-					let removeCell = document.createElement("td");
+	// Check date sold before date purchased
+	// Todo: add check for date only 1 year in the past
+	function checkDates() {
+	    var datePurchased = new Date(document.getElementById("date-purchased").value);
+	    var dateSold = new Date(document.getElementById("date-sold").value);
+	    var rightNow = new Date();
+	    var oneYearAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
+	    var tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
+	    
+	    // Adjusting one year ago time for UTC offset
+	    oneYearAgo.setDate(rightNow.getDate()-1);
+	    oneYearAgo.setHours(23);
+	    oneYearAgo.setMinutes(59);
+	    oneYearAgo.setSeconds(59);
+	    oneYearAgo.setMilliseconds(999);
+	    
+	    // Adjusting tomorrow's date for UTC offset and making it midnight
+	    tomorrow.setHours(0);
+	    tomorrow.setMinutes(0);
+	    tomorrow.setSeconds(0);
+	    tomorrow.setMilliseconds(1);
+	    
+	    // Adjusting datePurchased for UTC offset
+	    datePurchased.setDate(datePurchased.getDate()+1);
+
+	    if(datePurchased < oneYearAgo || datePurchased >= tomorrow){
+	    	document.getElementById("one-year-error").style.display = "inline";
+	    	return false;
+	    } else {
+	    	document.getElementById("one-year-error").style.display = "none";
+	    }
+	    
+	    if(document.getElementById("date-purchased").value.length == 0) {
+	    	document.getElementById("purchased-empty").style.display = "inline";
+	    	return false;
+	    } else {
+	    	document.getElementById("purchased-empty").style.display = "none";
+	    }
+	    
+	    if(document.getElementById("date-sold").value.length > 0){
+	    	if((dateSold - datePurchased) < 0) {
+	    		document.getElementById("invalid-date-sold").style.display = "inline";
+	    		return false;
+	    	} else {
+	    		document.getElementById("invalid-date-sold").style.display = "none";
+	    	}
+	    }
+	    
+		return true;
+	}
+
+	// Checks valid form inputs before submitting add-stock-form
+	function checkAddStockForm() {
+		$.ajax({
+			url : "TickerChecking",
+			type: "Get",
+			data : {
+				ticker: $("#ticker").val()
+			},
+			success : (res) => {
+				var qtyCheck = checkQuantity();
+				var dateCheck = checkDates();
+				var tickerEmpty = checkTicker();
+				if (res.trim() == "1") {
+					document.getElementById("invalid-ticker").style.visibility = "hidden";
+					if(qtyCheck && dateCheck) {
+						add();
+					}
+				} else {
+					document.getElementById("invalid-ticker").style.visibility = "visible";
 					
-					tickerCell.setAttribute("name", "ticker");
-					qualityCell.setAttribute("name", "quantityOut");
-					
-					tickerCell.innerHTML = ticker;
-					qualityCell.innerHTML = quantity;
-					removeCell.innerHTML = "<button type=\"button\" class=\"close\" aria-label=\"Close\"><span aria-hidden=\"true\">&times;</span></button>";
-					stockRow.appendChild(tickerCell);
-					stockRow.appendChild(priceCell);
-					stockRow.appendChild(qualityCell);
-					stockRow.appendChild(removeCell);
-					
-					document.querySelector("#portfolio-stocks").appendChild(stockRow);
-				} else if (msg === "0") {
-					// set error message div
-					document.querySelector("#Error-Message").innerHTML = "Password and Email don't match";
 				}
 			}
+		})
+	}
+	
+	// Performs ticker check before submitting view stock form
+	// TODO: Check valid ticker before adding to view stock
+	function checkViewStockForm() {
+		// Insert AJAX call for checking valid ticker from API
+		
+		// Checking if ticker is empty
+		if(document.getElementById("ticker").value.length == 0) {
+			console.log("View ticker empty.");
+			document.getElementById("view-empty").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("view-empty").style.display = "none";
 		}
+		return true;
+	}
 
-	</script>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.5.1/jquery.min.js" integrity="sha512-bLT0Qm9VnAYZDflyKcBaQ2gg0hSYNQrJ8RilYldYQ1FxQYoCLtUjuuRuZo+fjqhx/qtq/1itJ0C2ejDxltZVFg==" crossorigin="anonymous"></script>
-	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-	<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
-    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+	// Checks if portfolio is up or down for the day and changes
+	// portfolio value color and up/down arrow based on each
+	function checkUpOrDown() {
+		var isUp = <%= session.getAttribute("isUp") %>
+		if(isUp){
+			document.getElementById("portfolio-value").style.color = "green";
+			document.getElementById("up-arrow").style.visibility = "visible";
+		} else {
+			document.getElementById("portfolio-value").style.color = "red";
+			document.getElementById("down-arrow").style.visibility = "visible";
+		}
+	}
+
+</script>
+<script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
+<script src="https://code.jquery.com/jquery-3.5.0.js" integrity="sha256-r/AaFHrszJtwpe+tHyNi/XCfMxYpbsRg2Uqn0x3s2zc=" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
 </body>
 </html>

@@ -6,24 +6,23 @@ import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import java.io.IOException;
+import javax.servlet.http.HttpSession;
 import java.sql.*;
 
 import static org.junit.Assert.assertEquals;
 
 public class AddStockTest {
-  
+
     public static AddStock addStock;
-    public static Connection con;
 
     @Before
     public void setUp() throws Exception {
         addStock = new AddStock();
-        AddStock.con = DriverManager.getConnection("jdbc:postgresql://localhost:5433/cs310", "cs310user", "cs310password");
-        con = AddStock.con;
+        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
 
         PreparedStatement ps = con.prepareStatement("delete from stock where user_id=1 and company_id=1");
         ps.execute();
+        con.close();
     }
 
     @Test
@@ -31,19 +30,20 @@ public class AddStockTest {
         MockHttpServletRequest mocReq = new MockHttpServletRequest();
         MockHttpServletResponse mocRes = new MockHttpServletResponse();
 
-        mocReq.addParameter("email", "tu1@email.com");
+        HttpSession reqSession = mocReq.getSession(true);
+        reqSession.setAttribute("id", 1);
         mocReq.addParameter("ticker", "TSLA");
         mocReq.addParameter("company", "Tesla");
         mocReq.addParameter("quantity", "10");
 
         addStock.doGet(mocReq, mocRes);
 
-
-        PreparedStatement ps = AddStock.con.prepareStatement("select shares from stock where user_id=1 and company_id=1");
+        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
+        PreparedStatement ps = con.prepareStatement("select * from Stock where user_id=1 and company_id=1");
         ResultSet rs = ps.executeQuery();
-        rs.next();
 
         assertEquals(10, rs.getDouble("shares"), 0.0);
+        con.close();
     }
 
     @Test
@@ -54,25 +54,27 @@ public class AddStockTest {
     @Test
     public void TestGetCompanyId() throws SQLException {
         //testing existing company should get id from db
-        assertEquals(AddStock.getCompanyId("TSLA", "Tesla"), 1);
+        assertEquals(AddStock.getCompanyId("TSLA"), 1);
 
         //testing adding company not in db, adds company returns id
-        assertEquals(AddStock.getCompanyId("LULU", "Lululemon"), 3);
+        assertEquals(AddStock.getCompanyId("LULU"), 2);
     }
 
     @Test
     public void TestAddStockToPortfolio() throws SQLException {
-        AddStock.addStockToPortfolio(1, 1, 10);
+        AddStock.addStockToPortfolio(1, 1, 10, new Date(2010, 10, 10), "");
+        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
 
         PreparedStatement ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
         ps.setInt(1, 1);
         ps.setInt(2, 1);
         ResultSet rs = ps.executeQuery();
         rs.next();
-
         assertEquals(10, rs.getDouble("shares"), 0.0);
+        con.close();
 
-        AddStock.addStockToPortfolio(1, 1, 10);
+        AddStock.addStockToPortfolio(1, 1, 10, new Date(2020, 10, 11), "");
+        con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
 
         ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
         ps.setInt(1, 1);
@@ -81,7 +83,13 @@ public class AddStockTest {
         rs.next();
 
         assertEquals(20, rs.getDouble("shares"), 0.0);
-
+        con.close();
+    }
+    
+    @Test
+    public void TestGetGraphData() throws Exception {
+        assert(AddStock.getGraphData("AAPL").length() > 0);
+        assert(AddStock.getGraphData("").length() == 0);
     }
 
 }

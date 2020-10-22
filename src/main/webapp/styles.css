@@ -19,6 +19,21 @@ h3 {
     width:100%;
 }
 
+.value {
+	font-size: 40px;
+	font-weight: 700;
+}
+
+.small-text {
+	font-size: 12px;
+}
+
+#invalid-ticker, #invalid-quantity, #invalid-date-sold,
+#one-year-error, #purchased-empty, #ticker-empty,
+#view-empty {
+	display: none;
+}
+
 #form-outer {
     height: auto;
     padding: 40px 60px;
