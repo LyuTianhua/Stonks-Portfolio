@@ -22,7 +22,7 @@
 
 <div class="container">
 	<div class="row justify-content-center">
-		<div class="btn-group mt-3" role="group">
+		<div class="btn-group col-12 col-md-6 col-lg-6 mt-3" role="group">
 			<button type="button" class="btn btn-dark" data-toggle="modal"
 				data-target="#add-stock-modal" id="add-stock-btn" name="add-stock-btn">
 				Add Stock
@@ -37,19 +37,19 @@
 			</button>
 		</div>
 	</div>
-	<div class="row justify-content-center m-1">
-		<div class="col-md-6">
-			<div class="row mt-3">
-				<img src="https://ak.picdn.net/shutterstock/videos/16504675/thumb/4.jpg"
-					class="img-fluid rounded shadow" alt="">
-			</div>
-			<div class="row mt-3">
-				<h3>Portfolio Stocks</h3>
-				<div class="table-responsive">
-					<table id="portfolio-stocks" class="table table-hover">
-						<%--filled dynamically--%>
-					</table>
-				</div>
+	<div class="row justify-content-center">
+		<div class="col-12 col-md-9 mt-3">
+			<img src="https://ak.picdn.net/shutterstock/videos/16504675/thumb/4.jpg"
+				class="img-fluid rounded shadow" alt="">
+		</div>
+	</div>
+	<div class="row justify-content-center">
+		<div class="col-12 col-md-8 mt-3 overflow-auto">
+			<h3>Portfolio Stocks</h3>
+			<div class="table-responsive">
+				<table id="portfolio-stocks" class="table table-hover">
+					<%--filled dynamically--%>
+				</table>
 			</div>
 		</div>
 	</div>
