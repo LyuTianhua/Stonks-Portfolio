@@ -26,8 +26,7 @@ public class AddStock extends HttpServlet {
             double quantity = Double.parseDouble(req.getParameter("quantity"));
             String fullDate = req.getParameter("date");
 
-            if (fullDate == null)
-                fullDate = "1970-01-01";
+            fullDate = "1970-01-01";
 
             String[] dateParts = fullDate.split("-", 3);
             int year = Integer.parseInt(dateParts[0]);
@@ -41,9 +40,7 @@ public class AddStock extends HttpServlet {
             addStockToPortfolio(userId, companyId, quantity, new Date(year, month, day), getGraphData(ticker));            
             pw.println(1);            
             pw.close();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+        } catch (Exception ignored) {}
         db.closeCon();
     }
 
