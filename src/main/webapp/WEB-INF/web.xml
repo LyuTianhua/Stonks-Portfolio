@@ -32,6 +32,10 @@
         <servlet-name>TickerChecking</servlet-name>
         <servlet-class>csci310.servlets.TickerChecking</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoadGraph</servlet-name>
+        <servlet-class>csci310.servlets.LoadGraph</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -59,5 +63,9 @@
     <servlet-mapping>
         <servlet-name>TickerChecking</servlet-name>
         <url-pattern>/TickerChecking</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadGraph</servlet-name>
+        <url-pattern>/LoadGraph</url-pattern>
     </servlet-mapping>
 </web-app>

@@ -54,15 +54,15 @@ public class AddStockTest {
     @Test
     public void TestGetCompanyId() throws SQLException {
         //testing existing company should get id from db
-        assertEquals(AddStock.getCompanyId("TSLA"), 1);
+        assertEquals(AddStock.getCompanyId("TSLA", AddStock.getGraphData("TSLA")), 1);
 
         //testing adding company not in db, adds company returns id
-        assertEquals(AddStock.getCompanyId("LULU"), 2);
+        assertEquals(AddStock.getCompanyId("LULU", AddStock.getGraphData("LULU")), 2);
     }
 
     @Test
     public void TestAddStockToPortfolio() throws SQLException {
-        AddStock.addStockToPortfolio(1, 1, 10, new Date(2010, 10, 10), "");
+        AddStock.addStockToPortfolio(1, 1, 10, new Date(2010, 10, 10), new Date(2010, 10, 20));
         Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
 
         PreparedStatement ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
@@ -73,7 +73,7 @@ public class AddStockTest {
         assertEquals(10, rs.getDouble("shares"), 0.0);
         con.close();
 
-        AddStock.addStockToPortfolio(1, 1, 10, new Date(2020, 10, 11), "");
+        AddStock.addStockToPortfolio(1, 1, 10, new Date(2020, 10, 11), new Date(2020, 10, 21));
         con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
 
         ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");

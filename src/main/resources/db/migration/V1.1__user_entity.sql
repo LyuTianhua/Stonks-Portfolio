@@ -11,8 +11,8 @@ drop table if exists Company;
 
 create table Company (
      id integer primary key not null,
-     name varchar(50),
-     ticker varchar(10) not null unique
+     ticker varchar(10) not null unique,
+     data blob
 );
 
 drop table if exists Stock;
@@ -30,4 +30,3 @@ create table Stock (
 );
 
 insert into base_user (email, password) values ('tu1@email.com', 'tu1pass');
-insert into company (ticker) values ('TSLA');

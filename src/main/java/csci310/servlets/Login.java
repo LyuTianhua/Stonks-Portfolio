@@ -94,11 +94,9 @@ public class Login extends HttpServlet {
             ps = con.prepareStatement("select * from base_user where email='" + email + "'" );
             rs = ps.executeQuery();
             boolean auth = rs.next() && hashPass.equals(rs.getString("password"));
-            System.out.println("=" + hashPass + "=");
-            System.out.println("="+ rs.getString("password") + "=");
             db.closeCon();
             return auth;
-        } catch (SQLException sql) { sql.printStackTrace(); }
+        } catch (SQLException ignored) {}
         return false;
     }
 }

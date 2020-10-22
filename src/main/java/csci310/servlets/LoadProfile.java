@@ -28,7 +28,7 @@ public class LoadProfile  extends HttpServlet {
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
-            res.setContentType("text/html");
+//            res.setContentType("text/html");
             String ticker, shares, rm, btn, radio;
 
 
@@ -65,6 +65,8 @@ public class LoadProfile  extends HttpServlet {
             pw.close();
 
         } catch (SQLException | IOException ignored) { }
+
+        req.setAttribute("loaded", true);
         db.closeCon();
     }
 

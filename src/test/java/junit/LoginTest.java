@@ -8,7 +8,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.IOException;
-import java.sql.DriverManager;
 import java.sql.SQLException;
 
 import static org.junit.Assert.assertFalse;

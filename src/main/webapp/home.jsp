@@ -8,6 +8,8 @@
 	<link rel="stylesheet" href="styles.css">
 	<title>Home</title>
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+
 </head>
 <body>
 
@@ -39,8 +41,7 @@
 	</div>
 	<div class="row justify-content-center">
 		<div class="col-12 col-md-9 mt-3">
-			<img src="https://ak.picdn.net/shutterstock/videos/16504675/thumb/4.jpg"
-				class="img-fluid rounded shadow" alt="">
+			<%@include file="partials/graph.jsp"%>
 		</div>
 	</div>
 	<div class="row justify-content-center">
@@ -80,7 +81,8 @@
 				type: "Get",
 				data : {
 					ticker   : $("#ticker").val(),
-					date     : $("#date-purchased").val(),
+					purchased     : $("#date-purchased").val(),
+					sold	 : $("#date-sold").val(),
 					quantity : $("#quantity").val()
 				},
 				success : () => location.reload()
@@ -119,9 +121,34 @@
 			$.ajax( {
 				url : "LoadProfile",
 				type : "Get",
-				success : (res) => $("#portfolio-stocks").html(res)
+				success : (res) => {
+					$("#portfolio-stocks").html(res)
+					loadGraph();
+				}
 			})
 	)
+
+	const loadGraph = () => {
+		$.ajax({
+			url : "LoadGraph",
+			type: "Get",
+			success: (res) => {
+
+				console.log(res)
+				var ctx = 'myChart';
+				var myChart = new Chart(ctx, {
+					type: 'line',
+					labels: 'values',
+					data: {
+						datasets: [{
+							label: '# of Votes',
+							data: res.values
+						}]
+					}
+				});
+			}
+		})
+	}
 
 </script>
 <script>
