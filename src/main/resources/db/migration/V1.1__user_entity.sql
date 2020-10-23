@@ -39,6 +39,7 @@ insert into base_user (email, password) values ('testuser3@email.com', '5baa61e4
 
 insert into company (ticker) values ('TSLA');
 
+drop table if exists UserLoginRecord;
 create table UserLoginRecord (
      id integer primary key not null ,
      user_id int not null ,
