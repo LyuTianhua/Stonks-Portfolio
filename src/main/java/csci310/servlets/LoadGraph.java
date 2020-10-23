@@ -26,6 +26,8 @@ public class LoadGraph extends HttpServlet {
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
 
+        System.out.println("\n\n here\n\n");
+
         try {
             pw = res.getWriter();
             int id = (int) req.getSession().getAttribute("id");
@@ -40,7 +42,7 @@ public class LoadGraph extends HttpServlet {
     }
 
 
-    public static String graph(int id) throws SQLException {
+    public String graph(int id) throws SQLException {
 
         double[] values = new double[254];
         Graph graph = new Graph();

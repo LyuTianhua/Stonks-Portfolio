@@ -1,5 +1,6 @@
 package junit;
 
+import csci310.servlets.Database;
 import csci310.servlets.RemoveStock;
 import org.junit.Before;
 import org.junit.Test;
@@ -20,7 +21,8 @@ public class RemoveStockTest {
     @Before
     public void setUp() throws Exception {
         removeStock = new RemoveStock();
-        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
+        Database db = new Database();
+        Connection con = db.getConn();
 
         PreparedStatement ps = con.prepareStatement("delete from stock where user_id=?");
         ps.setInt(1, 1);
@@ -31,7 +33,7 @@ public class RemoveStockTest {
         ps.setInt(2, 1);
         ps.setDouble(3, 10);
         ps.execute();
-        con.close();
+        db.closeCon();
     }
 
     @Test
@@ -48,14 +50,15 @@ public class RemoveStockTest {
 
         removeStock.doGet(mocReq, mocRes);
 
-        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
+        Database db = new Database();
+        Connection con = db.getConn();
         PreparedStatement ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
         ps.setInt(1, 1);
         ps.setInt(2, 1);
         ResultSet rs = ps.executeQuery();
         rs.next();
         assertEquals(5, rs.getDouble("shares"), 0.0);
-        con.close();
+        db.closeCon();
 
         mocReq = new MockHttpServletRequest();
         mocRes = new MockHttpServletResponse();
