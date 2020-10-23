@@ -68,7 +68,8 @@ public class RemoveStockTest {
 
         removeStock.doGet(mocReq, mocRes);
 
-        con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
+        db = new Database();
+        con = db.getConn();
         ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
         ps.setInt(1, 1);
         ps.setInt(2, 1);
@@ -76,7 +77,7 @@ public class RemoveStockTest {
         rs.next();
 
         assertFalse(rs.next());
-        con.close();
+        db.closeCon();
     }
 
     @Test
