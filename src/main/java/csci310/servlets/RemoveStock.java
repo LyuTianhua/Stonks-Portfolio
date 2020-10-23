@@ -43,13 +43,12 @@ public class RemoveStock extends HttpServlet {
         ps.setInt(2, companyId);
         ResultSet rs = ps.executeQuery();
 
-        if (rs.next()) {
-            ps = con.prepareStatement("update stock set shares = shares - ? where user_id=? and company_id=?");
-            ps.setDouble(1, shares);
-            ps.setInt(2, userId );
-            ps.setInt(3, companyId);
-            ps.executeUpdate();
-        }
+        ps = con.prepareStatement("update stock set shares = shares - ? where user_id=? and company_id=?");
+        ps.setDouble(1, shares);
+        ps.setInt(2, userId );
+        ps.setInt(3, companyId);
+        ps.executeUpdate();
+
         ps = con.prepareStatement("delete from stock where shares <= 0");
         ps.execute();
         db.closeCon();
