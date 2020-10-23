@@ -30,7 +30,7 @@ public class RemoveStock extends HttpServlet {
         ps.setString(1, ticker);
         ResultSet rs = ps.executeQuery();
         rs.next();
-        Integer id = rs.getInt("id");
+        int id = rs.getInt("id");
         db.closeCon();
         return id;
     }

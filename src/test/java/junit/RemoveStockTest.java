@@ -84,7 +84,21 @@ public class RemoveStockTest {
 
     @Test
     public void TestGetCompanyId() throws SQLException {
-        assertEquals(RemoveStock.getCompanyId("TSLA"), 1);
+        Database db = new Database();
+        Connection con = db.getConn();
+        PreparedStatement ps = con.prepareStatement("insert into company (ticker) values (?)");
+        ps.setString(1, "FB");
+        ps.execute();
+        db.closeCon();
+
+        assertEquals(RemoveStock.getCompanyId("FB"), 3);
+
+        db = new Database();
+        con = db.getConn();
+        ps = con.prepareStatement("delete from company where ticker = ?");
+        ps.setString(1, "FB");
+        ps.execute();
+        db.closeCon();
     }
 
     @Test
