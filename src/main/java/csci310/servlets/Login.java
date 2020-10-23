@@ -6,6 +6,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import java.util.Date;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.security.MessageDigest;
@@ -22,14 +23,15 @@ public class Login extends HttpServlet {
     public static ResultSet rs;
 
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
-
-        Database db = new Database();
-        Connection con = db.getConn();
-
         try {
             String email = req.getParameter("email");
             String password = req.getParameter("password");
             PrintWriter pw = res.getWriter();
+            if(!checkForThreeAttempts(email)) {
+                req.setAttribute("authenticated", "3");
+                pw.write("3");
+                throw new Exception("failed");
+            }
             if (authenticated(email, hashPassword(password))) {
                 req.setAttribute("authenticated", "1");
                 int id = getUserId(email);
@@ -44,7 +46,46 @@ public class Login extends HttpServlet {
             }
             pw.close();
         } catch (Exception ignored) { }
+    }
+
+    public static void addFootprintRecord(Integer userId, Connection con) throws SQLException {
+        Date curr_date = new Date();
+        PreparedStatement ps = con.prepareStatement("insert into UserLoginRecord (user_id, datetime_accessed) values (?, ?)");
+        ps.setInt(1, userId);
+        ps.setDate(2, new java.sql.Date(curr_date.getTime()));
+        ps.execute();
+    }
+
+    public static boolean checkForThreeAttempts(String email) {
+        Database db = new Database();
+        Connection con = db.getConn();
+        int size = 0;
+        try {
+            PreparedStatement ps = con.prepareStatement("select * from base_user where email='" + email + "'" );
+            ResultSet rs = ps.executeQuery();
+
+            if(!rs.next()) {
+                db.closeCon();
+                // Returns true if the user does not exist so we can just do authenticate check for the error
+                System.out.println("User does not exist");
+                return true;
+            }
+            int user_id = rs.getInt("id");
+
+            Date curr_date = new Date();
+            java.sql.Date sql_date = new java.sql.Date(curr_date.getTime());
+            // Set the initial time to 2 minutes before
+            long valid_start_time = sql_date.getTime() - 120000;
+
+            ps = con.prepareStatement("select Count(*) as size from UserLoginRecord where datetime_accessed>? and user_id=?");
+            ps.setLong(1, valid_start_time);
+            ps.setInt(2, user_id);
+            rs = ps.executeQuery();
+            rs.next();
+            size = rs.getInt("size");
+        } catch(SQLException err) {}
         db.closeCon();
+        return size < 3;
     }
 
     public static int getUserId(String email) throws SQLException {
@@ -93,10 +134,15 @@ public class Login extends HttpServlet {
 
             ps = con.prepareStatement("select * from base_user where email='" + email + "'" );
             rs = ps.executeQuery();
-            boolean auth = rs.next() && hashPass.equals(rs.getString("password"));
+            boolean exists = rs.next();
+            boolean auth = exists && hashPass.equals(rs.getString("password"));
+            if(exists && !auth) {
+                // If the user fails to login we add a record
+                addFootprintRecord(rs.getInt("id"), con);
+            }
             db.closeCon();
             return auth;
-        } catch (SQLException ignored) {}
+        } catch (SQLException sql) {}
         return false;
     }
 }

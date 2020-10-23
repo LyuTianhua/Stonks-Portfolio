@@ -16,6 +16,7 @@ import java.util.logging.Level;
 @CucumberOptions()
 //@CucumberOptions(features = {"src/test/resources/cucumber/addRemoveStock.feature"})
 
+
 public class RunCucumberTests {
 
 	public static ChromeOptions options;
@@ -30,5 +31,4 @@ public class RunCucumberTests {
 		System.setProperty("webdriver.chrome.silentOutput", "true");
 		java.util.logging.Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
 	}
-
 }
