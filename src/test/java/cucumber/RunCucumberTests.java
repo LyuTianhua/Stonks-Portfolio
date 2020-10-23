@@ -25,6 +25,8 @@ public class RunCucumberTests {
 		WebDriverManager.chromedriver().setup();
 		options = new ChromeOptions();
 		options.setHeadless(true);
+		//for the mobile acceptance tests
+		//options.addArguments("--window-size=360,640");
 		System.setProperty("webdriver.chrome.silentOutput", "true");
 		java.util.logging.Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
 	}
