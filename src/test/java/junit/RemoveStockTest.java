@@ -21,6 +21,14 @@ public class RemoveStockTest {
     @Before
     public void setUp() throws Exception {
         removeStock = new RemoveStock();
+
+    }
+
+    @Test
+    public void TestDoGet() throws SQLException {
+        MockHttpServletRequest mocReq = new MockHttpServletRequest();
+        MockHttpServletResponse mocRes = new MockHttpServletResponse();
+
         Database db = new Database();
         Connection con = db.getConn();
 
@@ -34,12 +42,6 @@ public class RemoveStockTest {
         ps.setDouble(3, 10);
         ps.execute();
         db.closeCon();
-    }
-
-    @Test
-    public void TestDoGet() throws SQLException {
-        MockHttpServletRequest mocReq = new MockHttpServletRequest();
-        MockHttpServletResponse mocRes = new MockHttpServletResponse();
 
         HttpSession session = mocReq.getSession(true);
         assert session != null;
@@ -50,9 +52,9 @@ public class RemoveStockTest {
 
         removeStock.doGet(mocReq, mocRes);
 
-        Database db = new Database();
-        Connection con = db.getConn();
-        PreparedStatement ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
+        db = new Database();
+        con = db.getConn();
+        ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
         ps.setInt(1, 1);
         ps.setInt(2, 1);
         ResultSet rs = ps.executeQuery();
@@ -88,15 +90,29 @@ public class RemoveStockTest {
     @Test
     public void TestUpdateStock() throws SQLException {
 
+        Database db = new Database();
+        Connection con = db.getConn();
+
+        PreparedStatement ps = con.prepareStatement("delete from stock where user_id=?");
+        ps.setInt(1, 1);
+        ps.execute();
+
+        ps = con.prepareStatement("insert into stock (user_id, company_id, shares, purchased) values (?, ?, ?, current_date)");
+        ps.setInt(1, 1);
+        ps.setInt(2, 1);
+        ps.setDouble(3, 10);
+        ps.execute();
+        db.closeCon();
+
         RemoveStock.updateStock(1, 1, 5);
 
-        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
-        PreparedStatement ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
+        con = db.getConn();
+        ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
         ps.setInt(1, 1);
         ps.setInt(2, 1);
         ResultSet rs = ps.executeQuery();
         rs.next();
         assertEquals(5, rs.getDouble("shares"), 0.0);
-        con.close();
+        db.getConn();
     }
 }
