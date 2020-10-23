@@ -30,5 +30,4 @@ public class RunCucumberTests {
 		System.setProperty("webdriver.chrome.silentOutput", "true");
 		java.util.logging.Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
 	}
-
 }

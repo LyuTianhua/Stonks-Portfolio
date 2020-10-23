@@ -19,7 +19,7 @@ import static org.junit.Assert.assertTrue;
 public class loginStepDefinitions {
 
 	private static final String ROOT_URL = "http://localhost:8081/";
-	private final WebDriver driver = new ChromeDriver();
+	private final WebDriver driver = new ChromeDriver(RunCucumberTests.options);
 	private final WebDriverWait wait = new WebDriverWait(driver, 3);
 
 	@Given("I am on the login page")
