@@ -13,8 +13,8 @@ import java.util.logging.Level;
  * Run all the cucumber tests in the current package.
  */
 @RunWith(Cucumber.class)
-//@CucumberOptions()
-@CucumberOptions(features = {"src/test/resources/cucumber/failedAttempts.feature"})
+@CucumberOptions()
+//@CucumberOptions(features = {"src/test/resources/cucumber/failedAttempts.feature"})
 
 public class RunCucumberTests {
 
