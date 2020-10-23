@@ -14,7 +14,7 @@ import java.util.logging.Level;
  */
 @RunWith(Cucumber.class)
 @CucumberOptions()
-//@CucumberOptions(features = {"src/test/resources/cucumber/inactive.feature"})
+//@CucumberOptions(features = {"src/test/resources/cucumber/failedAttempts.feature"})
 
 public class RunCucumberTests {
 
@@ -30,5 +30,4 @@ public class RunCucumberTests {
 		System.setProperty("webdriver.chrome.silentOutput", "true");
 		java.util.logging.Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
 	}
-
 }

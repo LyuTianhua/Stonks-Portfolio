@@ -30,4 +30,17 @@ create table Stock (
 );
 
 insert into base_user (email, password) values ('tu1@email.com', 'tu1pass');
+insert into base_user (email, password) values ('failed1@email.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8');
+insert into base_user (email, password) values ('failed2@email.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8');
+insert into base_user (email, password) values ('testuser1@email.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8');
+insert into base_user (email, password) values ('testuser2@email.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8');
+insert into base_user (email, password) values ('testuser3@email.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8');
+
 insert into company (ticker) values ('TSLA');
+
+create table UserLoginRecord (
+     id integer primary key not null ,
+     user_id int not null ,
+     datetime_accessed Date,
+     foreign key (user_id) references base_user(id)
+);

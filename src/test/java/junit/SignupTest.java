@@ -18,8 +18,8 @@ public class SignupTest {
     @Before
     public void setUp() throws SQLException {
         Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
-        PreparedStatement ps = con.prepareStatement("DELETE FROM base_user WHERE email <> 'tu1@email.com'" );
-        ps.execute();
+//        PreparedStatement ps = con.prepareStatement("DELETE FROM base_user WHERE email <> 'tu1@email.com'" );
+//        ps.execute();
         con.close();
     }
 
