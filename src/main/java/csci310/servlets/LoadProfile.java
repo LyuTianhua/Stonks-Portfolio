@@ -33,7 +33,6 @@ public class LoadProfile  extends HttpServlet {
 
 
             pw.println("<tr>\n" +
-                    "<th>Graph</th>\n" +
                     "<th>Stonk</th>\n" +
                     "<th>Shares</th>\n" +
                     "<th>Remove</th>\n" +
@@ -48,7 +47,6 @@ public class LoadProfile  extends HttpServlet {
                 radio = ticker + "Radio";
 
                 pw.println("<tr>");
-                pw.println("<th> <input id='" + radio + "' type='checkbox' value='" + ticker + "' onclick='graphStock(0)' class='tableBox'></th>");
                 pw.println("<th id=\"" + ticker + "\">" + ticker + "</th>");
                 pw.println("<th id=\"" + shares + "\">" + rs.getInt("shares") + "</th>");
                 pw.println("<th> <input id=\"" + rm + "\" type =\"test\" ></th>");

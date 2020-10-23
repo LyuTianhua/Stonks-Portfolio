@@ -12,6 +12,7 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 
 
 @WebServlet("/LoadGraph")
@@ -42,36 +43,52 @@ public class LoadGraph extends HttpServlet {
     public static String graph(int id) throws SQLException {
 
         double[] values = new double[254];
+        Graph graph = new Graph();
 
         db = new Database();
         con = db.getConn();
-        ps = con.prepareStatement("select company.data as cData, purchased, sold from stock left join company on stock.company_id = Company.id where user_id=?");
+        ps = con.prepareStatement("select company.data as cData, company.ticker as ticker, purchased, sold from stock left join company on stock.company_id = Company.id where user_id=?");
         ps.setInt(1, id);
         rs = ps.executeQuery();
 
         while (rs.next())
-            addValues(values,  rs.getString("cData"));
+            addValues(graph, values,  rs.getString("cData"), rs.getString("ticker"));
 
         db.closeCon();
 
         Gson gson = new Gson();
 
-        return gson.toJson(new Graph(values));
+        graph.addDataset(new DataSet("Total", values));
+
+        return gson.toJson(graph);
     }
 
-    public static void addValues(double[] values, String data) {
+    public static void addValues(Graph graph, double[] values, String data, String ticker) {
         if (data.equals("")) return;
 
+        double[] companyValues = new double[254];
+
         String[] splitData = data.split(" ", -1);
-        for (int i = 0; i < values.length - 1; i++)
-            values[i] += Double.parseDouble(splitData[i]);
+        for (int i = 0; i < values.length - 1; i++) {
+            double d = Double.parseDouble(splitData[i]);
+            values[i] += d;
+            companyValues[i] = d;
+        }
 
-
+        graph.addDataset(new DataSet(ticker, companyValues));
     }
 
     private static class Graph {
-        double[] values;
-        public Graph(double[] v) { values = v; }
+        ArrayList<DataSet> dataSets;
+        public Graph() { dataSets = new ArrayList<>(); }
+        public void addDataset(DataSet ds) { dataSets.add(ds); }
     }
-
+    private static class DataSet {
+        String label;
+        double[] data;
+        public DataSet(String l, double[] d) {
+            label = l;
+            data = d;
+        }
+    }
 }

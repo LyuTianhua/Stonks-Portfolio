@@ -13,12 +13,7 @@
 </head>
 <body>
 
-<%
-	HttpSession sesh = request.getSession(false);
-
-	int id = sesh.getAttribute("id") == null ? 0 : (int)sesh.getAttribute("id");
-	if (id == 0) response.sendRedirect("index.jsp");
-%>
+<%	if (request.getSession(false).getAttribute("id") == null) response.sendRedirect("index.jsp");	%>
 
 <%@include file="partials/nav.jsp"%>
 
@@ -67,39 +62,33 @@
 
 <script>
 
-	const logout = () =>
-			$.ajax({
-				url : "Logout",
-				type : "Get",
-				success : () => window.location.href = "index.jsp"
-			})
+	const logout = () => $.ajax({
+		url : "Logout",
+		type : "Get",
+		success : () => window.location.href = "index.jsp"
+	})
 
+	const add = () => $.ajax({
+		url : "AddStock",
+		type: "Get",
+		data : {
+			ticker   : $("#ticker").val(),
+			purchased     : $("#date-purchased").val(),
+			sold	 : $("#date-sold").val(),
+			quantity : $("#quantity").val()
+		},
+		success : () => location.reload()
+	})
 
-	const add = () =>
-			$.ajax({
-				url : "AddStock",
-				type: "Get",
-				data : {
-					ticker   : $("#ticker").val(),
-					purchased     : $("#date-purchased").val(),
-					sold	 : $("#date-sold").val(),
-					quantity : $("#quantity").val()
-				},
-				success : () => location.reload()
-			})
-
-
-	const remove = (t, q) =>
-			$.ajax({
-				url : "RemoveStock",
-				type : "Get",
-				data : {
-					ticker   : t,
-					quantity : $(q).val()
-				},
-				success : () => location.reload()
-			})
-
+	const remove = (t, q) => $.ajax({
+		url : "RemoveStock",
+		type : "Get",
+		data : {
+			ticker   : t,
+			quantity : $(q).val()
+		},
+		success : () => location.reload()
+	})
 
 	const idleTimer = () => {
 		let t;
@@ -117,6 +106,32 @@
 	}
 	idleTimer();
 
+	var labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
+		101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200,
+		201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254]
+
+	var ctx = document.getElementById('myChart');
+	var myChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels,
+			datasets: [{
+				label: 'portfolio',
+				data: [],
+				borderWidth: 1
+			}]
+		},
+		options: {
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					}
+				}]
+			}
+		}
+	});
+
 	window.addEventListener( "load", () =>
 			$.ajax( {
 				url : "LoadProfile",
@@ -133,20 +148,26 @@
 			url : "LoadGraph",
 			type: "Get",
 			success: (res) => {
-
-				console.log(res)
-				var ctx = 'myChart';
-				var myChart = new Chart(ctx, {
-					type: 'line',
-					labels: 'values',
-					data: {
-						datasets: [{
-							label: '# of Votes',
-							data: res.values
-						}]
-					}
-				});
+				var graphData = res.dataSets
+				myChart.data.datasets = graphData
+				myChart.update()
 			}
+		})
+	}
+
+	const graphStock = (ticker) => {
+		$.ajax({
+			url: "AddStockToGraph",
+			data: { ticker },
+			success : (res) => {
+				var graphData = res.values
+				myChart.data.datasets.push({
+					label : ticker,
+					data : graphData
+				})
+				myChart.update()
+			}
+
 		})
 	}
 
@@ -155,7 +176,7 @@
 	// Check for valid NYSE or NASDAQ ticker
 	// Todo: Accept API data to actually check valid ticker
 	function checkTicker() {
-		if(document.getElementById("ticker").value.length == 0) {
+		if(document.getElementById("ticker").value.length === 0) {
 			document.getElementById("ticker-empty").style.display = "inline";
 			return false;
 		} else {
@@ -167,7 +188,7 @@
 	// Check valid quantity
 	function checkQuantity() {
 		var quantity = document.getElementById("quantity");
-		if(isNaN(quantity.value) || quantity.value.length == 0 || quantity.value < 1) {
+		if(isNaN(quantity.value) || quantity.value.length === 0 || quantity.value < 1) {
 			document.getElementById("invalid-quantity").style.display = "inline";
 		    return false;
 		} else {
@@ -208,7 +229,7 @@
 	    	document.getElementById("one-year-error").style.display = "none";
 	    }
 	    
-	    if(document.getElementById("date-purchased").value.length == 0) {
+	    if(document.getElementById("date-purchased").value.length === 0) {
 	    	document.getElementById("purchased-empty").style.display = "inline";
 	    	return false;
 	    } else {
@@ -239,7 +260,7 @@
 				var qtyCheck = checkQuantity();
 				var dateCheck = checkDates();
 				var tickerEmpty = checkTicker();
-				if (res.trim() == "1") {
+				if (res.trim() === "1") {
 					document.getElementById("invalid-ticker").style.visibility = "hidden";
 					if(qtyCheck && dateCheck) {
 						add();
@@ -258,7 +279,7 @@
 		// Insert AJAX call for checking valid ticker from API
 		
 		// Checking if ticker is empty
-		if(document.getElementById("ticker").value.length == 0) {
+		if(document.getElementById("ticker").value.length === 0) {
 			console.log("View ticker empty.");
 			document.getElementById("view-empty").style.display = "inline";
 			return false;
