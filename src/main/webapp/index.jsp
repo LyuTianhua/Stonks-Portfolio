@@ -40,6 +40,7 @@
 							},
 							success : (res) => {
 								if (res === "1") $("#Error-Message").html("Password and Email don't match")
+								else if(res === "3") $("#Error-Message").html("Already attempted to login 3 times in the last 2 minutes. Account is locked temporarily")
 								else
 									window.location.href = "home.jsp"
 							}
