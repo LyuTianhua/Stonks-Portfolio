@@ -1,0 +1,8 @@
+Best Practice Coverage Report
+Owner: TeamR
+Grade: 3.2/10
+Comments: 
+Using commit: https://github.com/CSCI310/project-20203b-groupr-20203/commit/8009c68863da86452da30a55edb4f3f9f2908918
+Reported statement coverage: 28.0
+Reported branch coverage: 36.0
+Average coverage: 32.0
