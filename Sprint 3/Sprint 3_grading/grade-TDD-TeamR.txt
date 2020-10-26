@@ -1,0 +1,19 @@
+Best Practice TDD Report
+Owner: TeamR
+Grade: 5.4/10
+Comments: 
+	Test method was not created before method : loadprofile.doget
+		Method commit: https://github.com/CSCI310/project-20203b-groupr-20203/commit/d975e0fec3426a11291688d71e0ed183acb200c2
+	Test method was not created before method : logout.doget
+		Method commit: https://github.com/CSCI310/project-20203b-groupr-20203/commit/d975e0fec3426a11291688d71e0ed183acb200c2
+	No test method found for: database.closecon
+		Commit: https://github.com/CSCI310/project-20203b-groupr-20203/commit/db6107500a479802ffd309014c4e0320e5da27b5
+	No test method found for: loadgraph.adddataset
+		Commit: https://github.com/CSCI310/project-20203b-groupr-20203/commit/6dae45fb609e802959c26af6e965117c0e6eb7a0
+	No test method found for: addstock.makedate
+		Commit: https://github.com/CSCI310/project-20203b-groupr-20203/commit/e5b2a31c66c5d6796b7d62dbcf67c1829c0c4844
+	No test method found for: addstock.parsegraphresponse
+		Commit: https://github.com/CSCI310/project-20203b-groupr-20203/commit/e5b2a31c66c5d6796b7d62dbcf67c1829c0c4844
+Correct TDD methods: 7
+Incorrect TDD methods: 6
+Total methods evaluated for TDD: 13
