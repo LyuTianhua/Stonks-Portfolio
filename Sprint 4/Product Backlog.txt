@@ -1,0 +1,15 @@
+General Description: A web application that can help users track the value of their stock portfolio over time and make investment decisions.
+
+Product Backlog:
+
+2. Ability to add or remove stocks from the portfolio
+3. Track and visualize changes in value over time of user’s portfolio
+4. View and compare the historical performance of a stock
+5. Works on the Chrome web browser and mobile devices
+6. The application must be secure and protect confidentiality of users’ data.
+7. Users must be able to create an account in the system
+8. User interfaces must look modern and be attractive.
+10. Logout after user has been inactive for 120 seconds.
+11. Timeout Passwords after 3 tries
+13. Error messages for add and removing stocks
+14. Bulk import of stocks via a CSV file

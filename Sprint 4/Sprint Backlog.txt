@@ -1,0 +1,16 @@
+Sprint Backlog:
+
+
+2. Ability to add or remove stocks from the portfolio
+3. Track and visualize changes in value over time of user’s portfolio
+4. View and compare the historical performance of a stock
+6. The application must be secure and protect confidentiality of users’ data.
+7. Users must be able to create an account in the system
+11. Timeout Passwords after 3 tries
+13. Error messages for add and removing stocks
+14. Bulk import of stocks via a CSV file
+
+We added 2 because we got feedback from the CPs to add some error checking that we left out for that feature. We added 3,4 because the CPs said we should differentiate between the portfolio stocks and historical stocks on our graph. We added 6 because of the feedback received from our sprint review to implement the acceptance tests to start on the "insecure website" popup. The reason we picked 7 is because based on the CP feedback, we need to finish the error checking issues. The reason we added 11 is because we timed the user out for 2 minutes instead of 1 minute based on the CP feedback, we will modify this. We added 13,14 because of CP feedback from sprint review and also because we did not finish all of the tests and CSV functionality in the previous sprint.
+
+
+List of Meeting Participants: Harshil Shah, Dariya Khojasteh, Richard Hernandez, Tianhua Lyu, John Marshall
