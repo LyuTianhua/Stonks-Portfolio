@@ -1,86 +1,71 @@
 package junit;
 
 import csci310.servlets.Login;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.IOException;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
-import java.sql.*;
 
 public class LoginTest extends Mockito {
 
-    private static MockHttpServletRequest mocReq;
-    private static MockHttpServletRequest mocReq2;
-    private static MockHttpServletRequest mocReq3;
-    private static MockHttpServletResponse mocRes;
-    private static MockHttpServletResponse mocRes2;
-    private static MockHttpServletResponse mocRes3;
-
-    @BeforeClass
-    public static void setUp() {
-        mocReq = new MockHttpServletRequest();
-        mocReq2 = new MockHttpServletRequest();
-        mocReq3 = new MockHttpServletRequest();
-        mocRes = new MockHttpServletResponse();
-        mocRes2 = new MockHttpServletResponse();
-        mocRes3 = new MockHttpServletResponse();
-    }
+    Login login;
+    MockHttpServletRequest mocReq;
+    MockHttpServletResponse mocRes;
 
     @Test
     public void testDoPost() throws IOException {
 
-        mocReq.addParameter("email", "tu1@email.com");
-        mocReq.addParameter("password", "tu1pass");
+        login = new Login();
 
+        int id = 888;
+        String name = "loginDoPostTestUser";
+        String password = "force_allow";
 
-        Login login = new Login();
+        Helper.insert_user_id_name_password(id, name, password);
+
+        make_new_mock_objects();
+        mocReq.addParameter("email", name);
+        mocReq.addParameter("password", password);
+
         login.doPost(mocReq, mocRes);
-        String auth = (String) mocReq.getAttribute("authenticated");
+        assertTrue((boolean)mocReq.getAttribute("authenticated"));
 
-        mocReq2.addParameter("email", "wrong");
-        mocReq2.addParameter("password", "wrong");
-        Login loginFail = new Login();
-        loginFail.doPost(mocReq2, mocRes2);
-        String auth2 = (String) mocReq2.getAttribute("authenticated");
+        Helper.delete_user_where_name(name);
 
-        boolean passed = false;
 
-        if (auth.equals("1") && auth2.equals("0"))
-            passed = true;
+        make_new_mock_objects();
+        mocReq.addParameter("email", "wrong");
+        mocReq.addParameter("password", "wrong");
+        login.doPost(mocReq, mocRes);
+        assertFalse((boolean) mocReq.getAttribute("authenticated"));
 
-        assertTrue(passed);
 
         //Test the checkAllAttempts
-        mocReq3.addParameter("email", "testuser3@email.com");
-        mocReq3.addParameter("password", "wrong");
 
+        make_new_mock_objects();
+        mocReq.addParameter("email", "testuser3@email.com");
+        mocReq.addParameter("password", "wrong");
 
-        loginFail.doPost(mocReq3, mocRes3);
-        loginFail.doPost(mocReq3, mocRes3);
-        loginFail.doPost(mocReq3, mocRes3);
-        loginFail.doPost(mocReq3, mocRes3);
-        String auth3 = (String) mocReq3.getAttribute("authenticated");
+        login.doPost(mocReq, mocRes);
+        login.doPost(mocReq, mocRes);
+        login.doPost(mocReq, mocRes);
+        login.doPost(mocReq, mocRes);
+        String auth3 = (String) mocReq.getAttribute("authenticated");
         boolean pastThreeAttempts = auth3.equals("3");
         assertTrue(pastThreeAttempts);
     }
 
     @Test
-    public void testHashPassword() {
+    public void testHashPassword() { }
 
-        String unhashed = "unhashed";
-        String hashed = "unhashed";
-        hashed = Login.hashPassword(hashed);
-        assertFalse(unhashed.equalsIgnoreCase(hashed));
-
-    }
+    @Test
+    public void testValidate() { }
 
     @Test
     public void testAddFootprintRecord() {
@@ -126,12 +111,8 @@ public class LoginTest extends Mockito {
         assertFalse(attempt2);
     }
 
-    @Test
-    public void testValidate() throws SQLException {
-        boolean valid = Login.authenticated("tu1@email.com", "tu1pass");
-        boolean invalid = Login.authenticated("bad connection", "bad connection");
-
-        assertTrue(valid && !invalid);
+    public void make_new_mock_objects() {
+        mocReq = new MockHttpServletRequest();
+        mocRes = new MockHttpServletResponse();
     }
-
 }

@@ -1,150 +1,132 @@
 package csci310.servlets;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
-
-import java.io.PrintWriter;
-import java.sql.*;
-
-import org.json.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
 
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+import java.sql.*;
+
 @WebServlet("/AddStock")
 public class AddStock extends HttpServlet {
+
+    public static PreparedStatement ps;
+    public static ResultSet rs;
+    public static Database db;
+    public static Connection con;
     public static PrintWriter pw;
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
-        Database db = new Database();
-        Connection con = db.getConn();
         try {
+            db = new Database();
+            con = db.getConn();
+
             int userId = (int) req.getSession().getAttribute("id");
-            String ticker = req.getParameter("ticker").toUpperCase();
-            double quantity = Double.parseDouble(req.getParameter("quantity"));
-            String fullDate = req.getParameter("date");
+            String ticker = req.getParameter("ticker") == null ? (String) req.getAttribute("ticker") : req.getParameter("ticker").toUpperCase();
+            double quantity = req.getParameter("quantity") == null ? Double.parseDouble((String) req.getAttribute("quantity")) : Double.parseDouble(req.getParameter("quantity"));
+            String purchased = req.getParameter("purchased") == null ? (String) req.getAttribute("purchased") : req.getParameter("purchased");
+            String sold = req.getParameter("sold") == null ? (String) req.getAttribute("sold") : req.getParameter("sold");
 
-            fullDate = "1970-01-01";
+            String data = getGraphData(ticker);
 
-            String[] dateParts = fullDate.split("-", 3);
-            int year = Integer.parseInt(dateParts[0]);
-            int month = Integer.parseInt(dateParts[1]);
-            int day = Integer.parseInt(dateParts[2]);
-            int companyId = getCompanyId(ticker);
-            
+            int companyId = getCompanyId(ticker, data);
+
             pw = res.getWriter();
-            
-            // Updated for graph data
-            addStockToPortfolio(userId, companyId, quantity, new Date(year, month, day), getGraphData(ticker));            
-            pw.println(1);            
+
+            addStockToPortfolio(userId, companyId, quantity, makeDate(purchased), makeDate(sold));
+
+            pw.println(1);
             pw.close();
+            db.closeCon();
         } catch (Exception ignored) {}
-        db.closeCon();
     }
 
-    public static int getUserId(String email) throws SQLException {
-        Database db = new Database();
-        Connection con = db.getConn();
-        PreparedStatement ps = con.prepareStatement("SELECT id FROM base_user WHERE email=?");
-        ps.setString(1, email);
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        Integer id = rs.getInt("id");
-        db.closeCon();
-        return id;
-    }
-
-    public static int getCompanyId(String ticker) throws SQLException {
-        Database db = new Database();
-        Connection con = db.getConn();
-
+    public static int getCompanyId(String ticker, String data) throws SQLException {
         //Statement to check if the company exists
-        PreparedStatement ps = con.prepareStatement(
-                "select id from company where ticker=?"
-        );
+        ps = con.prepareStatement("select id from company where ticker=?");
         ps.setString(1, ticker);
-        ResultSet rs = ps.executeQuery();
+        rs = ps.executeQuery();
 
         //If does not exists, Get company id
         if(rs.next()) {
-            Integer id = rs.getInt("id");
-            db.closeCon();
-            return id;
+            return rs.getInt("id");
         } else {
-            ps = con.prepareStatement(
-                    "INSERT INTO company (ticker) VALUES (?)"
-            );
+            ps = con.prepareStatement("INSERT INTO company (ticker, data) VALUES (?, ?)");
             ps.setString(1, ticker);
+            ps.setString(2, data);
             ps.execute();
-            ps = con.prepareStatement(
-                    "select id from company where ticker=?"
-            );
+            ps = con.prepareStatement("select id from company where ticker=?");
             ps.setString(1, ticker);
             rs = ps.executeQuery();
             rs.next();
-            Integer id = rs.getInt("id");
-            db.closeCon();
-            return id;
+            return rs.getInt("id");
         }
 
-
-//        PreparedStatement ps = con.prepareStatement(
-//                "with i as (INSERT INTO company (ticker) VALUES (?) ON CONFLICT (ticker) DO NOTHING RETURNING id) select id from i union all select id from company where ticker = ? limit 1;");
-//        ps.setString(1, ticker);
-//        ps.setString(2, ticker);
-//
-//        ResultSet rs = ps.executeQuery();
-//        rs.next();
     }
 
-
-    public static void addStockToPortfolio(int userId, int companyId, double shares, Date date, String jsonData) throws SQLException {
-        Database db = new Database();
-        Connection con = db.getConn();
-        PreparedStatement ps = con.prepareStatement("select * from stock where company_id=? and user_id=?");
+    public static void addStockToPortfolio(int userId, int companyId, double shares, Date purchased, Date sold) throws SQLException {
+        ps = con.prepareStatement("select * from stock where company_id=? and user_id=?");
         ps.setInt(1, userId);
         ps.setInt(2, companyId);
 
-        ResultSet rs = ps.executeQuery();
+        rs = ps.executeQuery();
 
         if (rs.next()) {
-            ps = con.prepareStatement("update stock set shares = shares + ?, purchased = ?, data = ? where user_id = ? and company_id = ?");
+            ps = con.prepareStatement("update stock set shares = shares + ?, purchased = ?, sold = ? where user_id = ? and company_id = ?");
             ps.setDouble(1, shares);
-            ps.setDate(2, date);
+            ps.setDate(2, purchased);
 
             // Updated graph data
-            ps.setString(3, jsonData);
-            
+            ps.setDate(3, sold);
+
             ps.setInt(4, userId);
             ps.setInt(5, companyId);
             ps.executeUpdate();
         } else {
-            ps = con.prepareStatement("insert into stock (company_id, user_id, shares, purchased, data) values (?, ?, ?, ?, ?)");
+            ps = con.prepareStatement("insert into stock (company_id, user_id, shares, purchased, sold) values (?, ?, ?, ?, ?)");
             ps.setInt(1, companyId);
             ps.setInt(2, userId);
             ps.setDouble(3, shares);
-            ps.setDate(4, date);
-            
+            ps.setDate(4, purchased);
+
             // Added graph data
-            ps.setString(5, jsonData);
-            
+            ps.setDate(5, sold);
+
             ps.execute();
         }
-        db.closeCon();
     }
-    
-    public static String getGraphData(String ticker) {
-		try {
-			HttpResponse<JsonNode> response = Unirest.get("https://yahoo-finance-low-latency.p.rapidapi.com/v8/finance/chart/" + ticker + "?lang=en&range=1y&region=US&interval=1d")
-					.header("x-rapidapi-host", "yahoo-finance-low-latency.p.rapidapi.com")
-					.header("x-rapidapi-key", "f1e55eb2c9msh2690eb51d13f30ap1d7cdajsn96819c5a1864")
-					.asJson();
-			if (response.getStatus() == 200) {
-				return response.getBody().getObject().toString();
-			}
-		} catch (Exception ignored) {}
-		return "";
+
+    public static String getGraphData(String ticker) throws UnirestException {
+        HttpResponse<JsonNode> response = Unirest.get("https://yahoo-finance-low-latency.p.rapidapi.com/v8/finance/chart/" + ticker + "?lang=en&range=1y&region=US&interval=1d")
+                .header("x-rapidapi-host", "yahoo-finance-low-latency.p.rapidapi.com")
+                .header("x-rapidapi-key", "f1e55eb2c9msh2690eb51d13f30ap1d7cdajsn96819c5a1864")
+                .asJson();
+        return response.getStatus() == 200? parseGraphResponse(response.getBody().getObject().toString()) : "";
+    }
+
+    public static Date makeDate(String d) {
+        if (d == null || d.equals(""))
+            d = new java.sql.Date(System.currentTimeMillis()).toString();
+        String[] dateParts = d.split("-", 3);
+        int year = Integer.parseInt(dateParts[0]);
+        int month = Integer.parseInt(dateParts[1]);
+        int day = Integer.parseInt(dateParts[2]);
+        return new Date(year, month, day);
+    }
+
+    public static String parseGraphResponse(String res) {
+        String offset = "\"adjclose\":[";
+        String data = res.substring(res.lastIndexOf(offset) + offset.length() , res.lastIndexOf("]}]},"));
+
+        String[] individuals = data.split(",", -1);
+        String ret = "";
+        for (String s : individuals)
+            ret += s.substring(0, s.indexOf(".") + 2) + " ";
+
+        return ret;
     }
 }
