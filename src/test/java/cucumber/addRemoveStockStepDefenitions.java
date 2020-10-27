@@ -159,6 +159,22 @@ public class addRemoveStockStepDefenitions {
 		}
 		assertTrue(checkIfElementPresent);
     }
+    
+    @Then("I should see an error message stating to enter a purchase date")
+    public void i_should_see_an_error_message_stating_to_enter_a_purchase_date() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+			System.out.println("Exception in invalid 1 year date test.");
+		}
+		
+		Boolean checkIfElementPresent= false;
+		//Checks if the invalid dates error message is present
+		if(driver.findElements(By.xpath("//*[@id=\"purchased-empty\"]")).size()!= 0) {
+		checkIfElementPresent = true;
+		}
+		assertTrue(checkIfElementPresent);
+    }
 
     @After
     public void tearDown() { driver.quit(); }

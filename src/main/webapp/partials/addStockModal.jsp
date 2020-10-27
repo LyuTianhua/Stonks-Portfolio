@@ -16,7 +16,7 @@
 		    <input type="number" class="form-control" id="quantity" placeholder="ex. 50129" min="0" step="1" required>
 		  </div>
 		  <div class="form-group">
-		    <label for="date-purchased">Date Purchased     <span class="text-danger" id="one-year-error">Please enter a valid date in the past (max 1 year ago from today's date).</span> <span class="text-danger" id="purchased-empty">This field is required.</span></label>
+		    <label for="date-purchased">Date Purchased     <span class="text-danger" id="one-year-error">Please enter a valid date in the past (max 1 year ago from today's date).</span> <span class="text-danger" id="purchased-empty">Please enter a purchase date.</span></label>
 		    <input type="date" class="form-control" id="date-purchased" placeholder="ex. 12/24/2019" required>
 		  </div>
 		  <div class="form-group">
