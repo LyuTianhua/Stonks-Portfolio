@@ -53,7 +53,7 @@
 			</div>
 			<h3>Historical Stocks</h3>
 			<div class="table-responsive">
-				<table id="portfolio-stocks" class="table table-hover">
+				<table id="historical-stocks" class="table table-hover">
 					<%--filled dynamically--%>
 				</table>
 			</div>
