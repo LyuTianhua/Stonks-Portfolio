@@ -33,7 +33,7 @@ public class LoginTest extends Mockito {
         mocReq.addParameter("password", password);
 
         login.doPost(mocReq, mocRes);
-        assertTrue((boolean)mocReq.getAttribute("authenticated"));
+        assertTrue(mocReq.getAttribute("authenticated").equals("1"));
 
         Helper.delete_user_where_name(name);
 
@@ -42,7 +42,7 @@ public class LoginTest extends Mockito {
         mocReq.addParameter("email", "wrong");
         mocReq.addParameter("password", "wrong");
         login.doPost(mocReq, mocRes);
-        assertFalse((boolean) mocReq.getAttribute("authenticated"));
+        assertFalse(mocReq.getAttribute("authenticated").equals("1"));
 
 
         //Test the checkAllAttempts
