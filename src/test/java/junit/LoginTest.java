@@ -22,20 +22,20 @@ public class LoginTest extends Mockito {
 
         login = new Login();
 
-        int id = 888;
-        String name = "loginDoPostTestUser";
-        String password = "force_allow";
-
-        Helper.insert_user_id_name_password(id, name, password);
+//        int id = 888;
+//        String name = "loginDoPostTestUser";
+//        String password = "force_allow";
+//
+//        Helper.insert_user_id_name_password(id, name, password);
 
         make_new_mock_objects();
-        mocReq.addParameter("email", name);
-        mocReq.addParameter("password", password);
+        mocReq.addParameter("email", "admin");
+        mocReq.addParameter("password", "force_allow");
 
         login.doPost(mocReq, mocRes);
         assertEquals(mocReq.getAttribute("authenticated"), "1");
 
-        Helper.delete_user_where_name(name);
+//        Helper.delete_user_where_name(name);
 
 
         make_new_mock_objects();
