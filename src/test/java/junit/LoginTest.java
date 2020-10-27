@@ -76,7 +76,7 @@ public class LoginTest extends Mockito {
             Login login = new Login();
             int size = 0;
             int user_id = 4;
-            login.addFootprintRecord(user_id, con);
+            Login.addFootprintRecord(user_id, con);
             //Now we check if there is exists a record
             PreparedStatement ps = con.prepareStatement("select Count(*) as size from UserLoginRecord where user_id=?");
             ps.setInt(1, user_id);
@@ -98,16 +98,16 @@ public class LoginTest extends Mockito {
     public void testCheckForThreeAttempts() {
         Login login = new Login();
         String user_email = "testuser2@email.com";
-        String hashed_pass = login.hashPassword("wrong");
-        login.authenticated(user_email, hashed_pass);
-        login.authenticated(user_email, hashed_pass);
+        String hashed_pass = Login.hashPassword("wrong");
+        Login.authenticated(user_email, hashed_pass);
+        Login.authenticated(user_email, hashed_pass);
 
-        boolean attempt1 = login.checkForThreeAttempts(user_email);
+        boolean attempt1 = Login.checkForThreeAttempts(user_email);
         assertTrue(attempt1);
 
         // On 4th try should faile
-        login.authenticated(user_email, hashed_pass);
-        boolean attempt2 = login.checkForThreeAttempts(user_email);
+        Login.authenticated(user_email, hashed_pass);
+        boolean attempt2 = Login.checkForThreeAttempts(user_email);
         assertFalse(attempt2);
     }
 
