@@ -33,14 +33,14 @@ public class Login extends HttpServlet {
                 throw new Exception("failed");
             }
             if (authenticated(email, hashPassword(password))) {
-                req.setAttribute("authenticated", true);
+                req.setAttribute("authenticated", "1");
                 int id = getUserId(email);
                 HttpSession session = req.getSession(true);
                 session.setAttribute("id", id);
                 session.setAttribute("email", email);
                 pw.write("0");
             } else {
-                req.setAttribute("authenticated", false);
+                req.setAttribute("authenticated", "0");
                 pw.write("1");
                 throw new Exception("fail");
             }
