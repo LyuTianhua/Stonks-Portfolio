@@ -4,10 +4,8 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.After;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -19,8 +17,8 @@ import static org.junit.Assert.assertTrue;
 public class loginStepDefinitions {
 
 	private static final String ROOT_URL = "http://localhost:8081/";
-	private final WebDriver driver = new ChromeDriver(RunCucumberTests.options);
-	private final WebDriverWait wait = new WebDriverWait(driver, 3);
+	WebDriver driver = RunCucumberTests.driver;
+	WebDriverWait wait = RunCucumberTests.wait;
 
 	@Given("I am on the login page")
 	public void i_am_on_the_login_page() {
@@ -62,6 +60,6 @@ public class loginStepDefinitions {
 		assertTrue(driver.findElement(By.id("Error-Message")).getAttribute("innerHTML").contains(errMsg));
 	}
 
-	@After
-	public void tearDown() { driver.quit(); }
+//	@After
+//	public void tearDown() { driver.quit(); }
 }

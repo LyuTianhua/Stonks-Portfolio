@@ -171,6 +171,15 @@
 		})
 	}
 
+	const uploadCSV = () =>
+		$.ajax({
+			url: "CSV",
+			data: {
+				path: document.getElementById("csv-file").files[0].name,
+			},
+			success: () => location.reload()
+		})
+
 </script>
 <script>
 	// Check for valid NYSE or NASDAQ ticker

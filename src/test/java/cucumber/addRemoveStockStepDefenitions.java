@@ -3,11 +3,9 @@ package cucumber;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
-import org.junit.After;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -19,20 +17,15 @@ import static org.junit.Assert.assertTrue;
 public class addRemoveStockStepDefenitions {
 
     private static final String ROOT_URL = "http://localhost:8081/";
-    private final WebDriver driver = new ChromeDriver(RunCucumberTests.options);
-    private final WebDriverWait wait = new WebDriverWait(driver, 3);
+    WebDriver driver = RunCucumberTests.driver;
+    WebDriverWait wait = RunCucumberTests.wait;
 
     @Given("I am signed in")
     public void i_am_signed_in() {
-
         driver.get(ROOT_URL + "index.jsp");
-
-        driver.findElement(By.id("iEmail")).sendKeys("tu1@email.com");
-
-        driver.findElement(By.id("iPassword")).sendKeys("tu1pass");
-
+        driver.findElement(By.id("iEmail")).sendKeys("admin");
+        driver.findElement(By.id("iPassword")).sendKeys("force_pass");
         driver.findElement(By.id("signin")).click();
-
     }
 
     @And("I enter {string} into {string}")
@@ -103,7 +96,7 @@ public class addRemoveStockStepDefenitions {
 		} catch(Exception ie) {
 			System.out.println("10");
 		}
-		
+
 		Boolean checkIfElementPresent= false;
 		//Checks if the home info div is present
 		if(driver.findElements(By.xpath("//*[@id=\"invalid-ticker\"]")).size()!= 0) {
@@ -119,7 +112,7 @@ public class addRemoveStockStepDefenitions {
 		} catch(Exception ie) {
 			System.out.println("10");
 		}
-		
+
 		Boolean checkIfElementPresent= false;
 		//Checks if the home info div is present
 		if(driver.findElements(By.xpath("//*[@id=\"invalid-quantity\"]")).size()!= 0) {
@@ -135,7 +128,7 @@ public class addRemoveStockStepDefenitions {
 		} catch(Exception ie) {
 			System.out.println("Exception in invalid dates test.");
 		}
-		
+
 		Boolean checkIfElementPresent= false;
 		//Checks if the invalid dates error message is present
 		if(driver.findElements(By.xpath("//*[@id=\"invalid-date-sold\"]")).size()!= 0) {
@@ -151,7 +144,7 @@ public class addRemoveStockStepDefenitions {
 		} catch(Exception ie) {
 			System.out.println("Exception in invalid 1 year date test.");
 		}
-		
+
 		Boolean checkIfElementPresent= false;
 		//Checks if the invalid dates error message is present
 		if(driver.findElements(By.xpath("//*[@id=\"one-year-error\"]")).size()!= 0) {
@@ -160,7 +153,7 @@ public class addRemoveStockStepDefenitions {
 		assertTrue(checkIfElementPresent);
     }
 
-    @After
-    public void tearDown() { driver.quit(); }
+//    @After
+//    public void tearDown() { driver.quit(); }
 
 }
