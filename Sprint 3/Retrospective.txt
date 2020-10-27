@@ -1,0 +1,15 @@
+Sprint Retrospective:
+
+List of Meeting Participants: Harshil Shah, Dariya Khojasteh, Richard Hernandez, Tianhua Lyu, John Marshall
+
+The process aspects that will be changed are that we will make sure to upload the retrospective meeting files in the right repo this time around and monitor Piazza more closely to make sure we capture any changes that have occurred.
+
+For sustainable pace, we will make sure we are working an even amount per day and not committing too much code one day and not doing much for other days, we will do this by coordinating and estimating approximately how much code we will be needing to modify for a particular task.
+
+We will also make sure to follow TDD standards more closely and ensure that all methods have a test case written for them before pushing our code and ensure that no random files get added pushed to GitHub (last time we had the mvn file).
+
+For coverage, we will make sure to run Corbetura before submitting our code to ensure that we still have full statement and branch coverage and we will ensure that our README file has all the information the CP's need to run our project because our database wasn't turned on in the previous sprint, which caused a lot of the Corbetura tests to fail.
+
+For continuous integration, we will make sure that the build passes on GitHub before merging and not leave any non passing builds as an open PR on GitHub.
+
+In terms of tasks that we will add based on sprint review are: build separate tables for historical vs portfolio stocks, refactor our SSL acceptance tests based on CP feedback, we will also finish the necessary error checking for adding and removing stocks, add the BE implementation of the CSV file upload method. We will also work on building the graph based on the feedback we received from CPs. The reason for these changes is due to feedback from CP's during our sprint review and our sprint 3 grading report.
