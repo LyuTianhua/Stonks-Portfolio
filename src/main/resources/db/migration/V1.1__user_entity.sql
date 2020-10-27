@@ -34,7 +34,7 @@ insert into base_user (email, password) values ('failed1@email.com', '5baa61e4c9
 insert into base_user (email, password) values ('failed2@email.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8');
 insert into base_user (email, password) values ('testuser1@email.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8');
 insert into base_user (email, password) values ('testuser2@email.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8');
-insert into base_user (email, password) values ('testuser3@email.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8');
+-- insert into base_user (email, password) values ('testuser3@email.com', '5baa61e4c9b93f3f0682250b6cf8331b7ee68fd8');
 
 
 drop table if exists UserLoginRecord;
