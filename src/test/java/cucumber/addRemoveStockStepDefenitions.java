@@ -80,7 +80,7 @@ public class addRemoveStockStepDefenitions {
     @And("I enter {string} into {string} remove input")
     public void iEnterQuantityIntoTickerRemoveInput(String quantity, String company) {
         wait.until(
-        		ExpectedConditions.presenceOfElementLocated(By.id(company + "Rm"))
+                ExpectedConditions.presenceOfElementLocated(By.id(company + "Rm"))
         ).sendKeys(quantity);
     }
 
@@ -88,69 +88,69 @@ public class addRemoveStockStepDefenitions {
     public void i_click_on_the_(String company) {
         driver.findElement(By.id(company + "Btn")).click();
     }
-    
+
     @Then("I should see an error message stating that it is an invalid ticker")
     public void i_should_see_an_error_message_stating_that_it_is_an_invalid_ticker() {
-    	try {
-			Thread.sleep(2000);
-		} catch(Exception ie) {
-			System.out.println("10");
-		}
+        try {
+            Thread.sleep(2000);
+        } catch(Exception ie) {
+            System.out.println("10");
+        }
 
-		Boolean checkIfElementPresent= false;
-		//Checks if the home info div is present
-		if(driver.findElements(By.xpath("//*[@id=\"invalid-ticker\"]")).size()!= 0) {
-		checkIfElementPresent = true;
-		}
-		assertTrue(checkIfElementPresent);
+        Boolean checkIfElementPresent= false;
+        //Checks if the home info div is present
+        if(driver.findElements(By.xpath("//*[@id=\"invalid-ticker\"]")).size()!= 0) {
+            checkIfElementPresent = true;
+        }
+        assertTrue(checkIfElementPresent);
     }
-    
+
     @Then("I should see an error message stating that it is an invalid quantity")
     public void i_should_see_an_error_message_stating_that_it_is_an_invalid_quantity() {
-    	try {
-			Thread.sleep(2000);
-		} catch(Exception ie) {
-			System.out.println("10");
-		}
+        try {
+            Thread.sleep(2000);
+        } catch(Exception ie) {
+            System.out.println("10");
+        }
 
-		Boolean checkIfElementPresent= false;
-		//Checks if the home info div is present
-		if(driver.findElements(By.xpath("//*[@id=\"invalid-quantity\"]")).size()!= 0) {
-		checkIfElementPresent = true;
-		}
-		assertTrue(checkIfElementPresent);
+        Boolean checkIfElementPresent= false;
+        //Checks if the home info div is present
+        if(driver.findElements(By.xpath("//*[@id=\"invalid-quantity\"]")).size()!= 0) {
+            checkIfElementPresent = true;
+        }
+        assertTrue(checkIfElementPresent);
     }
-    
+
     @Then("I should see an error message stating that these are invalid dates")
     public void i_should_see_an_error_message_stating_that_these_are_invalid_dates() {
-    	try {
-			Thread.sleep(2000);
-		} catch(Exception ie) {
-			System.out.println("Exception in invalid dates test.");
-		}
+        try {
+            Thread.sleep(2000);
+        } catch(Exception ie) {
+            System.out.println("Exception in invalid dates test.");
+        }
 
-		Boolean checkIfElementPresent= false;
-		//Checks if the invalid dates error message is present
-		if(driver.findElements(By.xpath("//*[@id=\"invalid-date-sold\"]")).size()!= 0) {
-		checkIfElementPresent = true;
-		}
-		assertTrue(checkIfElementPresent);
+        Boolean checkIfElementPresent= false;
+        //Checks if the invalid dates error message is present
+        if(driver.findElements(By.xpath("//*[@id=\"invalid-date-sold\"]")).size()!= 0) {
+            checkIfElementPresent = true;
+        }
+        assertTrue(checkIfElementPresent);
     }
-    
+
     @Then("I should see an error message stating that this date is invalid")
     public void i_should_see_an_error_message_stating_that_this_date_is_invalid() {
-    	try {
-			Thread.sleep(2000);
-		} catch(Exception ie) {
-			System.out.println("Exception in invalid 1 year date test.");
-		}
+        try {
+            Thread.sleep(2000);
+        } catch(Exception ie) {
+            System.out.println("Exception in invalid 1 year date test.");
+        }
 
-		Boolean checkIfElementPresent= false;
-		//Checks if the invalid dates error message is present
-		if(driver.findElements(By.xpath("//*[@id=\"one-year-error\"]")).size()!= 0) {
-		checkIfElementPresent = true;
-		}
-		assertTrue(checkIfElementPresent);
+        Boolean checkIfElementPresent= false;
+        //Checks if the invalid dates error message is present
+        if(driver.findElements(By.xpath("//*[@id=\"one-year-error\"]")).size()!= 0) {
+            checkIfElementPresent = true;
+        }
+        assertTrue(checkIfElementPresent);
     }
 
 //    @After
