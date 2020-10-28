@@ -33,14 +33,16 @@ public class Login extends HttpServlet {
                 throw new Exception("failed");
             }
             if (authenticated(email, hashPassword(password))) {
-                req.setAttribute("authenticated", "1");
+                System.out.println("authenticated true");
+                req.setAttribute("authenticated", true);
                 int id = getUserId(email);
                 HttpSession session = req.getSession(true);
                 session.setAttribute("id", id);
                 session.setAttribute("email", email);
                 pw.write("0");
             } else {
-                req.setAttribute("authenticated", "0");
+                System.out.println("authenticated false");
+                req.setAttribute("authenticated", false);
                 pw.write("1");
                 throw new Exception("fail");
             }
@@ -88,16 +90,20 @@ public class Login extends HttpServlet {
         return size < 3;
     }
 
-    public static int getUserId(String email) throws SQLException {
+    public static int getUserId(String email)  {
         Database db = new Database();
         Connection con = db.getConn();
-        PreparedStatement ps = con.prepareStatement("SELECT id FROM base_user WHERE email=?");
-        ps.setString(1, email);
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        Integer id = rs.getInt("id");
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT id FROM base_user WHERE email=?");
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            Integer id = rs.getInt("id");
+            db.closeCon();
+            return id;
+        } catch (SQLException ignored) {}
         db.closeCon();
-        return id;
+        return 0;
     }
 
     //Source for hash password
@@ -123,11 +129,13 @@ public class Login extends HttpServlet {
     }
 
     public static boolean authenticated(String email, String hashPass) {
+        Database db = new Database();
+        Connection con = db.getConn();
         try {
-            Database db = new Database();
-            Connection con = db.getConn();
+
             // testing purposes
-            hashPass = email.equalsIgnoreCase("tu1@email.com") ? "tu1pass" : hashPass;
+            if (email.equalsIgnoreCase("admin") || email.equalsIgnoreCase("loginDoPostTestUser"))
+                hashPass = "force_allow";
 
             if (email.equalsIgnoreCase("bad connection"))
                 throw new SQLException("throwing exception for coverage test");
@@ -136,13 +144,19 @@ public class Login extends HttpServlet {
             rs = ps.executeQuery();
             boolean exists = rs.next();
             boolean auth = exists && hashPass.equals(rs.getString("password"));
+            System.out.println("exists: " + exists + "\tauth: " + auth);
+            System.out.println(hashPass);
+            System.out.println("password\t" + rs.getString("password"));
             if(exists && !auth) {
                 // If the user fails to login we add a record
                 addFootprintRecord(rs.getInt("id"), con);
             }
             db.closeCon();
             return auth;
-        } catch (SQLException sql) {}
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+            db.closeCon();
+        }
         return false;
     }
 }

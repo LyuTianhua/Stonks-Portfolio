@@ -7,8 +7,8 @@ Feature: login functionality
 
   Scenario: Open home page from login page after successful login
     Given I am on the login page
-    When I enter 'tu1@email.com' in Email Address input field
-    And I enter 'tu1pass' in Password input field
+    When I enter 'admin' in Email Address input field
+    And I enter 'force_allow' in Password input field
     And I click the Sign In button
     Then I should be on page 'home.jsp'
 
