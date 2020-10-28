@@ -13,6 +13,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.Arrays;
 
 
 @WebServlet("/LoadGraph")
@@ -42,8 +43,6 @@ public class LoadGraph extends HttpServlet {
 
 
     public static String graph(int id) {
-
-        double[] values = new double[254];
         Graph graph = new Graph();
 
         db = new Database();
@@ -54,45 +53,60 @@ public class LoadGraph extends HttpServlet {
             rs = ps.executeQuery();
 
             while (rs.next())
-                addValues(graph, values, rs.getString("cData"), rs.getString("ticker"));
+                addValues(graph, rs.getString("cData"), rs.getString("ticker"));
 
-            db.closeCon();
-
-            Gson gson = new Gson();
-
-            graph.addDataset(new DataSet("Total", values));
-
-            return gson.toJson(graph);
         } catch (SQLException ignored) {}
         db.closeCon();
-        return "";
+
+        Double[] values = new Double[365];
+        Arrays.fill(values, 0d);
+
+        for (DataSet ds : graph.dataSets)
+            for (int i = 0; i < ds.data.length; i++)
+                values[i] += ds.data[i];
+
+        graph.addDataset(new DataSet("Total", values));
+
+        Gson gson = new Gson();
+        return gson.toJson(graph);
     }
 
-    public static void addValues(Graph graph, double[] values, String data, String ticker) {
+    public static void addValues(Graph graph, String data, String ticker) {
         if (data.equals("")) return;
 
-        double[] companyValues = new double[254];
+        ArrayList<Double> companyValues = new ArrayList<>();
 
         String[] splitData = data.split(" ", -1);
-        for (int i = 0; i < values.length - 1; i++) {
+        for (int i = 0; i < splitData.length - 1; i++) {
             double d = Double.parseDouble(splitData[i]);
-            values[i] += d;
-            companyValues[i] = d;
+            companyValues.add(d);
 
+            if (i % 5 == 0) {
+                companyValues.add(d);
+                companyValues.add(d);
+            }
+
+            if (i % 35 == 0)
+                companyValues.add(d);
         }
 
-        graph.addDataset(new DataSet(ticker, companyValues));
+        companyValues.add(companyValues.get(companyValues.size()-1));
+        companyValues.add(companyValues.get(companyValues.size()-1));
+
+        Double[] companyValuesArray = companyValues.toArray(new Double[0]);
+
+        graph.addDataset(new DataSet(ticker, companyValuesArray));
     }
 
     private static class Graph {
-        ArrayList<DataSet> dataSets;
+        public ArrayList<DataSet> dataSets;
         public Graph() { dataSets = new ArrayList<>(); }
         public void addDataset(DataSet ds) { dataSets.add(ds); }
     }
     private static class DataSet {
-        String label;
-        double[] data;
-        public DataSet(String l, double[] d) {
+        public String label;
+        public Double[] data;
+        public DataSet(String l, Double[] d) {
             label = l;
             data = d;
         }
