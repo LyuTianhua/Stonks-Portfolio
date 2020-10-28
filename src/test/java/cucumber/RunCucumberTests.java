@@ -3,9 +3,12 @@ package cucumber;
 import io.cucumber.junit.Cucumber;
 import io.cucumber.junit.CucumberOptions;
 import io.github.bonigarcia.wdm.WebDriverManager;
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.runner.RunWith;
+import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
+import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.util.logging.Level;
 
@@ -14,11 +17,13 @@ import java.util.logging.Level;
  */
 @RunWith(Cucumber.class)
 @CucumberOptions()
-//@CucumberOptions(features = {"src/test/resources/cucumber/failedAttempts.feature"})
+//@CucumberOptions(features = {"src/test/resources/cucumber/csv.feature"})
 
 public class RunCucumberTests {
 
 	public static ChromeOptions options;
+	public static ChromeDriver driver;
+	public static WebDriverWait wait;
 
 	@BeforeClass
 	public static void setup() {
@@ -29,5 +34,11 @@ public class RunCucumberTests {
 		//options.addArguments("--window-size=360,640");
 		System.setProperty("webdriver.chrome.silentOutput", "true");
 		java.util.logging.Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
+		driver = new ChromeDriver(RunCucumberTests.options);
+		wait = new WebDriverWait(driver, 5);
 	}
+
+	@AfterClass
+	public static void tearDown() { driver.quit(); }
+
 }
