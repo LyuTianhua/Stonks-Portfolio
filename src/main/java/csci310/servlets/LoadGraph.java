@@ -80,18 +80,18 @@ public class LoadGraph extends HttpServlet {
         for (int i = 0; i < splitData.length - 1; i++) {
             double d = Double.parseDouble(splitData[i]);
             companyValues.add(d);
-
-            if (i % 5 == 0) {
-                companyValues.add(d);
-                companyValues.add(d);
-            }
-
-            if (i % 35 == 0)
-                companyValues.add(d);
+//
+//            if (i % 5 == 0) {
+//                companyValues.add(d);
+//                companyValues.add(d);
+//            }
+//
+//            if (i % 35 == 0)
+//                companyValues.add(d);
         }
 
-        companyValues.add(companyValues.get(companyValues.size()-1));
-        companyValues.add(companyValues.get(companyValues.size()-1));
+//        companyValues.add(companyValues.get(companyValues.size()-1));
+//        companyValues.add(companyValues.get(companyValues.size()-1));
 
         Double[] companyValuesArray = companyValues.toArray(new Double[0]);
 
