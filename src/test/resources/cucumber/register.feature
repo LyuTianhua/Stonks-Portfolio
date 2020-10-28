@@ -1,4 +1,4 @@
-Feature: Register for site
+Feature: Register for siteFeature: Register for site
 
   Scenario Outline: Trying to register for site
     Given I am on the register page

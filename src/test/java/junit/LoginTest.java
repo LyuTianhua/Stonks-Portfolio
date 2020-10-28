@@ -8,7 +8,7 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import java.io.IOException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 public class LoginTest extends Mockito {
@@ -22,27 +22,32 @@ public class LoginTest extends Mockito {
 
         login = new Login();
 
-//        int id = 888;
-//        String name = "loginDoPostTestUser";
-//        String password = "force_allow";
-//
-//        Helper.insert_user_id_name_password(id, name, password);
+        int id = 888;
+        String name = "loginDoPostTestUser";
+        String password = "force_allow";
+
+        Helper.insert_user_name_password(name, password);
 
         make_new_mock_objects();
-        mocReq.addParameter("email", "admin");
-        mocReq.addParameter("password", "force_allow");
+        mocReq.addParameter("email", name);
+        mocReq.addParameter("password", password);
 
         login.doPost(mocReq, mocRes);
-        assertEquals(mocReq.getAttribute("authenticated"), "1");
 
-//        Helper.delete_user_where_name(name);
+        boolean first = (boolean) mocReq.getAttribute("authenticated");
+
+        System.out.println("\n\n\n\n\n" + first + "\n\n\n\n");
+
+        assertTrue((boolean)mocReq.getAttribute("authenticated"));
+
+        Helper.delete_user_where_name(name);
 
 
         make_new_mock_objects();
         mocReq.addParameter("email", "wrong");
         mocReq.addParameter("password", "wrong");
         login.doPost(mocReq, mocRes);
-        assertEquals(mocReq.getAttribute("authenticated"), "0");
+        assertFalse((boolean) mocReq.getAttribute("authenticated"));
 
 
         //Test the checkAllAttempts

@@ -68,7 +68,7 @@ public class AddStockTest {
         Helper.delete_company_where_ticker(ticker);
         Helper.delete_user_where_id(user_id);
 
-        Helper.insert_user_id_name_password(user_id, name, password);
+        Helper.insert_user_id_name_password(387, "removeTestUser", password);
         Helper.insert_company_id_ticker(company_id, ticker);
 
         make_new_mock_objects();
@@ -88,9 +88,9 @@ public class AddStockTest {
         assertEquals(10d, rs.getDouble("shares"), 0.0);
         db.closeCon();
 
-        Helper.delete_from_stock_user_company(user_id, company_id);
+        Helper.delete_from_stock_user_company(387, company_id);
         Helper.delete_company_where_id(company_id);
-        Helper.delete_user_where_id(user_id);
+        Helper.delete_user_where_id(387);
     }
 
     @Test
@@ -101,7 +101,7 @@ public class AddStockTest {
 
     @Test
     public void TestAddStockToPortfolio() { }
-    
+
     @Test
     public void TestGetGraphData() { }
 
