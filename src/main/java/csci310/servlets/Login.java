@@ -33,6 +33,7 @@ public class Login extends HttpServlet {
                 throw new Exception("failed");
             }
             if (authenticated(email, hashPassword(password))) {
+                System.out.println("authenticated true");
                 req.setAttribute("authenticated", true);
                 int id = getUserId(email);
                 HttpSession session = req.getSession(true);
@@ -40,6 +41,7 @@ public class Login extends HttpServlet {
                 session.setAttribute("email", email);
                 pw.write("0");
             } else {
+                System.out.println("authenticated false");
                 req.setAttribute("authenticated", false);
                 pw.write("1");
                 throw new Exception("fail");
@@ -143,7 +145,9 @@ public class Login extends HttpServlet {
             }
             db.closeCon();
             return auth;
-        } catch (SQLException sql) {}
+        } catch (SQLException sql) {
+            sql.printStackTrace();
+        }
         return false;
     }
 }
