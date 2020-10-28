@@ -125,9 +125,10 @@ public class Login extends HttpServlet {
     }
 
     public static boolean authenticated(String email, String hashPass) {
+        Database db = new Database();
+        Connection con = db.getConn();
         try {
-            Database db = new Database();
-            Connection con = db.getConn();
+
             // testing purposes
             if (email.equalsIgnoreCase("admin") || email.equalsIgnoreCase("loginDoPostTestUser"))
                 hashPass = "force_allow";
@@ -139,6 +140,9 @@ public class Login extends HttpServlet {
             rs = ps.executeQuery();
             boolean exists = rs.next();
             boolean auth = exists && hashPass.equals(rs.getString("password"));
+            System.out.println("exists: " + exists + "\tauth: " + auth);
+            System.out.println(hashPass);
+            System.out.println("password\t" + rs.getString("password"));
             if(exists && !auth) {
                 // If the user fails to login we add a record
                 addFootprintRecord(rs.getInt("id"), con);
@@ -147,6 +151,7 @@ public class Login extends HttpServlet {
             return auth;
         } catch (SQLException sql) {
             sql.printStackTrace();
+            db.closeCon();
         }
         return false;
     }
