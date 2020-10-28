@@ -90,16 +90,20 @@ public class Login extends HttpServlet {
         return size < 3;
     }
 
-    public static int getUserId(String email) throws SQLException {
+    public static int getUserId(String email)  {
         Database db = new Database();
         Connection con = db.getConn();
-        PreparedStatement ps = con.prepareStatement("SELECT id FROM base_user WHERE email=?");
-        ps.setString(1, email);
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        Integer id = rs.getInt("id");
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT id FROM base_user WHERE email=?");
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            Integer id = rs.getInt("id");
+            db.closeCon();
+            return id;
+        } catch (SQLException ignored) {}
         db.closeCon();
-        return id;
+        return 0;
     }
 
     //Source for hash password

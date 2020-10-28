@@ -21,9 +21,10 @@ public class Signup extends HttpServlet {
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
         PrintWriter pw = res.getWriter();
+        db = new Database();
+        con = db.getConn();
         try {
-            db = new Database();
-            con = db.getConn();
+
             String email = req.getParameter("email");
             String password = req.getParameter("password");
             String confirm = req.getParameter("confirm");
@@ -48,6 +49,7 @@ public class Signup extends HttpServlet {
             }
         } catch (SQLException ignored) { }
 
+        db.closeCon();
         req.setAttribute("authenticated", false);
         pw.println(0);
         pw.close();

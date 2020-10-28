@@ -22,9 +22,6 @@ public class AddStock extends HttpServlet {
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
         try {
-            db = new Database();
-            con = db.getConn();
-
             int userId = (int) req.getSession().getAttribute("id");
             String ticker = req.getParameter("ticker") == null ? (String) req.getAttribute("ticker") : req.getParameter("ticker").toUpperCase();
             double quantity = req.getParameter("quantity") == null ? Double.parseDouble((String) req.getAttribute("quantity")) : Double.parseDouble(req.getParameter("quantity"));
@@ -45,59 +42,78 @@ public class AddStock extends HttpServlet {
         } catch (Exception ignored) {}
     }
 
-    public static int getCompanyId(String ticker, String data) throws SQLException {
-        //Statement to check if the company exists
-        ps = con.prepareStatement("select id from company where ticker=?");
-        ps.setString(1, ticker);
-        rs = ps.executeQuery();
-
-        //If does not exists, Get company id
-        if(rs.next()) {
-            return rs.getInt("id");
-        } else {
-            ps = con.prepareStatement("INSERT INTO company (ticker, data) VALUES (?, ?)");
-            ps.setString(1, ticker);
-            ps.setString(2, data);
-            ps.execute();
+    public static int getCompanyId(String ticker, String data)  {
+        db = new Database();
+        con = db.getConn();
+        try {
+            //Statement to check if the company exists
             ps = con.prepareStatement("select id from company where ticker=?");
             ps.setString(1, ticker);
             rs = ps.executeQuery();
-            rs.next();
-            return rs.getInt("id");
+
+            //If does not exists, Get company id
+            if(rs.next()) {
+                int id = rs.getInt("id");
+                db.closeCon();
+                return id;
+            } else {
+                ps = con.prepareStatement("INSERT INTO company (ticker, data) VALUES (?, ?)");
+                ps.setString(1, ticker);
+                ps.setString(2, data);
+                ps.execute();
+                ps = con.prepareStatement("select id from company where ticker=?");
+                ps.setString(1, ticker);
+                rs = ps.executeQuery();
+                rs.next();
+                int id = rs.getInt("id");
+                db.closeCon();
+                return id;
+            }
+        } catch (SQLException ignored) {
+
         }
+        db.closeCon();
+        return 0;
 
     }
 
     public static void addStockToPortfolio(int userId, int companyId, double shares, Date purchased, Date sold) throws SQLException {
-        ps = con.prepareStatement("select * from stock where company_id=? and user_id=?");
-        ps.setInt(1, userId);
-        ps.setInt(2, companyId);
+        db = new Database();
+        con = db.getConn();
 
-        rs = ps.executeQuery();
+        try {
+            ps = con.prepareStatement("select * from stock where company_id=? and user_id=?");
+            ps.setInt(1, userId);
+            ps.setInt(2, companyId);
 
-        if (rs.next()) {
-            ps = con.prepareStatement("update stock set shares = shares + ?, purchased = ?, sold = ? where user_id = ? and company_id = ?");
-            ps.setDouble(1, shares);
-            ps.setDate(2, purchased);
+            rs = ps.executeQuery();
 
-            // Updated graph data
-            ps.setDate(3, sold);
+            if (rs.next()) {
+                ps = con.prepareStatement("update stock set shares = shares + ?, purchased = ?, sold = ? where user_id = ? and company_id = ?");
+                ps.setDouble(1, shares);
+                ps.setDate(2, purchased);
 
-            ps.setInt(4, userId);
-            ps.setInt(5, companyId);
-            ps.executeUpdate();
-        } else {
-            ps = con.prepareStatement("insert into stock (company_id, user_id, shares, purchased, sold) values (?, ?, ?, ?, ?)");
-            ps.setInt(1, companyId);
-            ps.setInt(2, userId);
-            ps.setDouble(3, shares);
-            ps.setDate(4, purchased);
+                // Updated graph data
+                ps.setDate(3, sold);
 
-            // Added graph data
-            ps.setDate(5, sold);
+                ps.setInt(4, userId);
+                ps.setInt(5, companyId);
+                ps.executeUpdate();
+            } else {
+                ps = con.prepareStatement("insert into stock (company_id, user_id, shares, purchased, sold) values (?, ?, ?, ?, ?)");
+                ps.setInt(1, companyId);
+                ps.setInt(2, userId);
+                ps.setDouble(3, shares);
+                ps.setDate(4, purchased);
 
-            ps.execute();
-        }
+                // Added graph data
+                ps.setDate(5, sold);
+
+                ps.execute();
+            }
+        } catch (SQLException ignored) {}
+
+        db.closeCon();
     }
 
     public static String getGraphData(String ticker) throws UnirestException {

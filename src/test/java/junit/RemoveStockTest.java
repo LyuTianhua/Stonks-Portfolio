@@ -38,7 +38,7 @@ public class RemoveStockTest {
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
         mocReq.addParameter("ticker", "K");
-        mocReq.addParameter("quantity", "5");
+        mocReq.addParameter("quantity", "10");
 
         removeStock.doGet(mocReq, mocRes);
 
@@ -50,7 +50,7 @@ public class RemoveStockTest {
         rs = ps.executeQuery();
 
         if (rs.next())
-            assertEquals(5, rs.getDouble("shares"), 0.0);
+            assertEquals(10, rs.getDouble("shares"), 0.0);
 
         db.closeCon();
 

@@ -26,7 +26,7 @@ public class LoginTest extends Mockito {
         String name = "loginDoPostTestUser";
         String password = "force_allow";
 
-        Helper.insert_user_id_name_password(id, name, password);
+        Helper.insert_user_name_password(name, password);
 
         make_new_mock_objects();
         mocReq.addParameter("email", name);

@@ -15,35 +15,47 @@ public class RemoveStock extends HttpServlet {
     static PreparedStatement ps;
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
+        db = new Database();
+        con = db.getConn();
         try {
-            db = new Database();
-            con = db.getConn();
             String ticker = req.getParameter("ticker");
             int companyId = getCompanyId(ticker);
             int userId = (int) req.getSession().getAttribute("id");
             double quantity = Double.parseDouble(req.getParameter("quantity"));
             updateStock(userId, companyId, quantity);
-            db.closeCon();
         } catch (Exception ignored) {}
+        db.closeCon();
     }
 
     public static int getCompanyId(String ticker) throws SQLException {
-        ps = con.prepareStatement("select * from company where ticker=?");
-        ps.setString(1, ticker);
-        rs = ps.executeQuery();
-        rs.next();
-        return rs.getInt("id");
+        db = new Database();
+        con = db.getConn();
+        try {
+            ps = con.prepareStatement("select * from company where ticker=?");
+            ps.setString(1, ticker);
+            rs = ps.executeQuery();
+            rs.next();
+            db.closeCon();
+            return rs.getInt("id");
+        } catch (SQLException ignored) {}
+        db.closeCon();
+        return 0;
     }
 
     public static void updateStock(int userId, int companyId, double shares) throws SQLException {
-        ps = con.prepareStatement("update stock set shares = shares - ? where user_id=? and company_id=?");
-        ps.setDouble(1, shares);
-        ps.setInt(2, userId );
-        ps.setInt(3, companyId);
-        ps.executeUpdate();
+        db = new Database();
+        con = db.getConn();
+        try {
+            ps = con.prepareStatement("update stock set shares = shares - ? where user_id=? and company_id=?");
+            ps.setDouble(1, shares);
+            ps.setInt(2, userId);
+            ps.setInt(3, companyId);
+            ps.executeUpdate();
 
-        ps = con.prepareStatement("delete from stock where shares <= 0");
-        ps.execute();
+            ps = con.prepareStatement("delete from stock where shares <= 0");
+            ps.execute();
+        } catch (SQLException ignored) {}
+        db.closeCon();
     }
 
 }
