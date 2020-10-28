@@ -36,6 +36,10 @@
         <servlet-name>CSV</servlet-name>
         <servlet-class>csci310.servlets.CSV</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>LoadGraph</servlet-name>
+        <servlet-class>csci310.servlets.LoadGraph</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -67,5 +71,9 @@
     <servlet-mapping>
         <servlet-name>CSV</servlet-name>
         <url-pattern>/CSV</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadGraph</servlet-name>
+        <url-pattern>/LoadGraph</url-pattern>
     </servlet-mapping>
 </web-app>

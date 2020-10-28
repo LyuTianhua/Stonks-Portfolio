@@ -69,15 +69,13 @@ public class AddStock extends HttpServlet {
                 db.closeCon();
                 return id;
             }
-        } catch (SQLException ignored) {
-
-        }
+        } catch (SQLException ignored) { }
         db.closeCon();
         return 0;
 
     }
 
-    public static void addStockToPortfolio(int userId, int companyId, double shares, Date purchased, Date sold) throws SQLException {
+    public static void addStockToPortfolio(int userId, int companyId, double shares, Date purchased, Date sold) {
         db = new Database();
         con = db.getConn();
 

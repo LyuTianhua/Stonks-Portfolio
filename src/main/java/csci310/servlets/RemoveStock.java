@@ -33,7 +33,7 @@ public class RemoveStock extends HttpServlet {
             int id = rs.getInt("id");
             db.closeCon();
             return id;
-        } catch (SQLException sqle) {sqle.printStackTrace();}
+        } catch (SQLException ignored) {}
         db.closeCon();
         return 0;
     }

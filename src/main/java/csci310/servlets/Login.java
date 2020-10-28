@@ -153,10 +153,9 @@ public class Login extends HttpServlet {
             }
             db.closeCon();
             return auth;
-        } catch (SQLException sql) {
-            sql.printStackTrace();
-            db.closeCon();
-        }
+        } catch (SQLException ignored) {}
+
+        db.closeCon();
         return false;
     }
 }

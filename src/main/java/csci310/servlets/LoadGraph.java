@@ -26,8 +26,6 @@ public class LoadGraph extends HttpServlet {
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
 
-        System.out.println("\n\n here\n\n");
-
         try {
             pw = res.getWriter();
             int id = (int) req.getSession().getAttribute("id");
@@ -35,34 +33,39 @@ public class LoadGraph extends HttpServlet {
             res.setContentType("application/json; charset=UTF-8");
             pw.print(graph(id));
 
+            req.setAttribute("loaded", true);
             pw.flush();
             pw.close();
 
-        } catch (SQLException | IOException ignored) { }
+        } catch (IOException ignored) { }
     }
 
 
-    public String graph(int id) throws SQLException {
+    public static String graph(int id) {
 
         double[] values = new double[254];
         Graph graph = new Graph();
 
         db = new Database();
         con = db.getConn();
-        ps = con.prepareStatement("select company.data as cData, company.ticker as ticker, purchased, sold from stock left join company on stock.company_id = Company.id where user_id=?");
-        ps.setInt(1, id);
-        rs = ps.executeQuery();
+        try {
+            ps = con.prepareStatement("select company.data as cData, company.ticker as ticker, purchased, sold from stock left join company on stock.company_id = Company.id where user_id=?");
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
 
-        while (rs.next())
-            addValues(graph, values,  rs.getString("cData"), rs.getString("ticker"));
+            while (rs.next())
+                addValues(graph, values, rs.getString("cData"), rs.getString("ticker"));
 
+            db.closeCon();
+
+            Gson gson = new Gson();
+
+            graph.addDataset(new DataSet("Total", values));
+
+            return gson.toJson(graph);
+        } catch (SQLException ignored) {}
         db.closeCon();
-
-        Gson gson = new Gson();
-
-        graph.addDataset(new DataSet("Total", values));
-
-        return gson.toJson(graph);
+        return "";
     }
 
     public static void addValues(Graph graph, double[] values, String data, String ticker) {

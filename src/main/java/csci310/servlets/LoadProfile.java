@@ -28,7 +28,6 @@ public class LoadProfile  extends HttpServlet {
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
-//            res.setContentType("text/html");
             String ticker, shares, rm, btn, radio;
 
 

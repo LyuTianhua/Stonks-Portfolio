@@ -18,11 +18,7 @@ public class CSV extends HttpServlet {
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
         try {
-
-            int id = (int) req.getSession().getAttribute("id");
             String path = req.getParameter("path");
-
-            System.out.println(path);
 
             File file = new File(path);
             FileReader fr = new FileReader(file);
