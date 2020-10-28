@@ -45,7 +45,6 @@ public class failedAttemptsStepDefinition {
 
     @When("I clear the password field to fail")
     public void iClearThePasswordFieldToFail() {
-        System.out.println(driver.getCurrentUrl());
         driver.findElement(By.id("iPassword")).clear();
     }
 

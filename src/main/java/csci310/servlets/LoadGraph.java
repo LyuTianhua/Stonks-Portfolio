@@ -78,6 +78,7 @@ public class LoadGraph extends HttpServlet {
             double d = Double.parseDouble(splitData[i]);
             values[i] += d;
             companyValues[i] = d;
+
         }
 
         graph.addDataset(new DataSet(ticker, companyValues));

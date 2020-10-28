@@ -22,7 +22,6 @@ public class CSVStepDefenitions {
     @And("I choose {string}")
     public void i_choose(String path) {
         String virtual_path = System.getProperty("user.dir") + "/" + path;
-        System.out.println(virtual_path);
         wait.until(ExpectedConditions.elementToBeClickable(By.id("csv-file"))).sendKeys(virtual_path);
     }
 

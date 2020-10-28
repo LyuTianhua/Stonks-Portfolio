@@ -33,7 +33,6 @@ public class Login extends HttpServlet {
                 throw new Exception("failed");
             }
             if (authenticated(email, hashPassword(password))) {
-                System.out.println("authenticated true");
                 req.setAttribute("authenticated", true);
                 int id = getUserId(email);
                 HttpSession session = req.getSession(true);
@@ -41,7 +40,6 @@ public class Login extends HttpServlet {
                 session.setAttribute("email", email);
                 pw.write("0");
             } else {
-                System.out.println("authenticated false");
                 req.setAttribute("authenticated", false);
                 pw.write("1");
                 throw new Exception("fail");
@@ -69,7 +67,6 @@ public class Login extends HttpServlet {
             if(!rs.next()) {
                 db.closeCon();
                 // Returns true if the user does not exist so we can just do authenticate check for the error
-                System.out.println("User does not exist");
                 return true;
             }
             int user_id = rs.getInt("id");
@@ -144,9 +141,6 @@ public class Login extends HttpServlet {
             rs = ps.executeQuery();
             boolean exists = rs.next();
             boolean auth = exists && hashPass.equals(rs.getString("password"));
-            System.out.println("exists: " + exists + "\tauth: " + auth);
-            System.out.println(hashPass);
-            System.out.println("password\t" + rs.getString("password"));
             if(exists && !auth) {
                 // If the user fails to login we add a record
                 addFootprintRecord(rs.getInt("id"), con);
