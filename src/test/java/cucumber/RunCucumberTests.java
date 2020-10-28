@@ -17,7 +17,7 @@ import java.util.logging.Level;
  */
 @RunWith(Cucumber.class)
 @CucumberOptions()
-//@CucumberOptions(features = {"src/test/resources/cucumber/csv.feature"})
+//@CucumberOptions(features = {"src/test/resources/cucumber/addRemoveStock.feature"})
 
 public class RunCucumberTests {
 
@@ -29,7 +29,7 @@ public class RunCucumberTests {
 	public static void setup() {
 		WebDriverManager.chromedriver().setup();
 		options = new ChromeOptions();
-		options.setHeadless(true);
+//		options.setHeadless(true);
 		//for the mobile acceptance tests
 		//options.addArguments("--window-size=360,640");
 		System.setProperty("webdriver.chrome.silentOutput", "true");

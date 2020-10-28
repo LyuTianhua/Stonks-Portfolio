@@ -15,19 +15,14 @@ public class RemoveStock extends HttpServlet {
     static PreparedStatement ps;
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
-        db = new Database();
-        con = db.getConn();
-        try {
             String ticker = req.getParameter("ticker");
             int companyId = getCompanyId(ticker);
             int userId = (int) req.getSession().getAttribute("id");
             double quantity = Double.parseDouble(req.getParameter("quantity"));
             updateStock(userId, companyId, quantity);
-        } catch (Exception ignored) {}
-        db.closeCon();
     }
 
-    public static int getCompanyId(String ticker) throws SQLException {
+    public static int getCompanyId(String ticker)  {
         db = new Database();
         con = db.getConn();
         try {
@@ -35,14 +30,15 @@ public class RemoveStock extends HttpServlet {
             ps.setString(1, ticker);
             rs = ps.executeQuery();
             rs.next();
+            int id = rs.getInt("id");
             db.closeCon();
-            return rs.getInt("id");
-        } catch (SQLException ignored) {}
+            return id;
+        } catch (SQLException sqle) {sqle.printStackTrace();}
         db.closeCon();
         return 0;
     }
 
-    public static void updateStock(int userId, int companyId, double shares) throws SQLException {
+    public static void updateStock(int userId, int companyId, double shares) {
         db = new Database();
         con = db.getConn();
         try {
