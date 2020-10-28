@@ -33,6 +33,11 @@ public class LoginTest extends Mockito {
         mocReq.addParameter("password", password);
 
         login.doPost(mocReq, mocRes);
+
+        boolean first = (boolean) mocReq.getAttribute("authenticated");
+
+        System.out.println("\n\n\n\n\n" + first + "\n\n\n\n");
+
         assertTrue((boolean)mocReq.getAttribute("authenticated"));
 
         Helper.delete_user_where_name(name);
