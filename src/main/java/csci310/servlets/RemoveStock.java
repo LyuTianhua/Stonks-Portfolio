@@ -25,17 +25,16 @@ public class RemoveStock extends HttpServlet {
     public static int getCompanyId(String ticker)  {
         db = new Database();
         con = db.getConn();
+        int id = 0;
         try {
             ps = con.prepareStatement("select * from company where ticker=?");
             ps.setString(1, ticker);
             rs = ps.executeQuery();
             rs.next();
-            int id = rs.getInt("id");
-            db.closeCon();
-            return id;
+            id = rs.getInt("id");
         } catch (SQLException ignored) {}
         db.closeCon();
-        return 0;
+        return id;
     }
 
     public static void updateStock(int userId, int companyId, double shares) {

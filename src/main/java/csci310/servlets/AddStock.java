@@ -45,6 +45,7 @@ public class AddStock extends HttpServlet {
     public static int getCompanyId(String ticker, String data)  {
         db = new Database();
         con = db.getConn();
+        int id = 0;
         try {
             //Statement to check if the company exists
             ps = con.prepareStatement("select id from company where ticker=?");
@@ -53,9 +54,7 @@ public class AddStock extends HttpServlet {
 
             //If does not exists, Get company id
             if(rs.next()) {
-                int id = rs.getInt("id");
-                db.closeCon();
-                return id;
+                id = rs.getInt("id");
             } else {
                 ps = con.prepareStatement("INSERT INTO company (ticker, data) VALUES (?, ?)");
                 ps.setString(1, ticker);
@@ -65,13 +64,11 @@ public class AddStock extends HttpServlet {
                 ps.setString(1, ticker);
                 rs = ps.executeQuery();
                 rs.next();
-                int id = rs.getInt("id");
-                db.closeCon();
-                return id;
+                id = rs.getInt("id");
             }
         } catch (SQLException ignored) { }
         db.closeCon();
-        return 0;
+        return id;
 
     }
 

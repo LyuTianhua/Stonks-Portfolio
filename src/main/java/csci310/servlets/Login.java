@@ -90,27 +90,22 @@ public class Login extends HttpServlet {
     public static int getUserId(String email)  {
         Database db = new Database();
         Connection con = db.getConn();
+        int id = 0;
         try {
             PreparedStatement ps = con.prepareStatement("SELECT id FROM base_user WHERE email=?");
             ps.setString(1, email);
             ResultSet rs = ps.executeQuery();
             rs.next();
-            Integer id = rs.getInt("id");
-            db.closeCon();
-            return id;
+            id = rs.getInt("id");
         } catch (SQLException ignored) {}
         db.closeCon();
-        return 0;
+        return id;
     }
 
     //Source for hash password
     //https://veerasundar.com/blog/2010/09/storing-passwords-in-java-web-application/
     public static String hashPassword(String input) {
-
         StringBuilder hash = new StringBuilder();
-        Database db = new Database();
-        Connection con = db.getConn();
-
         try {
             MessageDigest sha = MessageDigest.getInstance("SHA-1");
             byte[] hashedBytes = sha.digest(input.getBytes());
@@ -121,35 +116,33 @@ public class Login extends HttpServlet {
                 hash.append(digits[b & 0x0f]);
             }
         } catch (NoSuchAlgorithmException ignored) { }
-        db.closeCon();
         return hash.toString();
     }
 
     public static boolean authenticated(String email, String hashPass) {
         Database db = new Database();
         Connection con = db.getConn();
+        boolean auth = false;
         try {
 
             // testing purposes
             if (email.equalsIgnoreCase("admin") || email.equalsIgnoreCase("loginDoPostTestUser"))
                 hashPass = "force_allow";
 
-            if (email.equalsIgnoreCase("bad connection"))
-                throw new SQLException("throwing exception for coverage test");
+//            if (email.equalsIgnoreCase("bad connection"))
+//                throw new SQLException("throwing exception for coverage test");
 
             ps = con.prepareStatement("select * from base_user where email='" + email + "'" );
             rs = ps.executeQuery();
             boolean exists = rs.next();
-            boolean auth = exists && hashPass.equals(rs.getString("password"));
+            auth = exists && hashPass.equals(rs.getString("password"));
             if(exists && !auth) {
                 // If the user fails to login we add a record
                 addFootprintRecord(rs.getInt("id"), con);
             }
-            db.closeCon();
-            return auth;
         } catch (SQLException ignored) {}
 
         db.closeCon();
-        return false;
+        return auth;
     }
 }

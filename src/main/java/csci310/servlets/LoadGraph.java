@@ -33,7 +33,7 @@ public class LoadGraph extends HttpServlet {
             res.setContentType("application/json; charset=UTF-8");
             pw.print(graph(id));
 
-            req.setAttribute("loaded", true);
+            req.setAttribute("loaded", "true");
             pw.flush();
             pw.close();
 
