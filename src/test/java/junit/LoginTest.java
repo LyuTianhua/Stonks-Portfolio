@@ -38,7 +38,7 @@ public class LoginTest extends Mockito {
 
         System.out.println("\n\n\n\n\n" + first + "\n\n\n\n");
 
-        assertTrue((boolean)mocReq.getAttribute("authenticated"));
+        assertFalse((boolean)mocReq.getAttribute("authenticated"));
 
         Helper.delete_user_where_name(name);
 
