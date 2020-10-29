@@ -28,12 +28,10 @@ public class LoadProfile  extends HttpServlet {
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
-            res.setContentType("text/html");
             String ticker, shares, rm, btn, radio;
 
 
             pw.println("<tr>\n" +
-                    "<th>Graph</th>\n" +
                     "<th>Stonk</th>\n" +
                     "<th>Shares</th>\n" +
                     "<th>Remove</th>\n" +
@@ -48,7 +46,6 @@ public class LoadProfile  extends HttpServlet {
                 radio = ticker + "Radio";
 
                 pw.println("<tr>");
-                pw.println("<th> <input id='" + radio + "' type='checkbox' value='" + ticker + "' onclick='graphStock(0)' class='tableBox'></th>");
                 pw.println("<th id=\"" + ticker + "\">" + ticker + "</th>");
                 pw.println("<th id=\"" + shares + "\">" + rs.getInt("shares") + "</th>");
                 pw.println("<th> <input id=\"" + rm + "\" type =\"test\" ></th>");
@@ -65,6 +62,8 @@ public class LoadProfile  extends HttpServlet {
             pw.close();
 
         } catch (SQLException | IOException ignored) { }
+
+        req.setAttribute("loaded", true);
         db.closeCon();
     }
 

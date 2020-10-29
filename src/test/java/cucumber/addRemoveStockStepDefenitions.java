@@ -94,7 +94,6 @@ public class addRemoveStockStepDefenitions {
         try {
             Thread.sleep(2000);
         } catch(Exception ie) {
-            System.out.println("10");
         }
 
         Boolean checkIfElementPresent= false;
@@ -110,7 +109,6 @@ public class addRemoveStockStepDefenitions {
         try {
             Thread.sleep(2000);
         } catch(Exception ie) {
-            System.out.println("10");
         }
 
         Boolean checkIfElementPresent= false;
@@ -126,7 +124,6 @@ public class addRemoveStockStepDefenitions {
         try {
             Thread.sleep(2000);
         } catch(Exception ie) {
-            System.out.println("Exception in invalid dates test.");
         }
 
         Boolean checkIfElementPresent= false;
@@ -142,7 +139,7 @@ public class addRemoveStockStepDefenitions {
         try {
             Thread.sleep(2000);
         } catch(Exception ie) {
-            System.out.println("Exception in invalid 1 year date test.");
+//            System.out.println("Exception in invalid 1 year date test.");
         }
 
         Boolean checkIfElementPresent= false;

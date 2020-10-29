@@ -1,4 +1,5 @@
 package csci310.servlets;
+
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
@@ -10,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
 import java.sql.*;
+import java.util.ArrayList;
 
 @WebServlet("/AddStock")
 public class AddStock extends HttpServlet {
@@ -45,6 +47,7 @@ public class AddStock extends HttpServlet {
     public static int getCompanyId(String ticker, String data)  {
         db = new Database();
         con = db.getConn();
+        int id = 0;
         try {
             //Statement to check if the company exists
             ps = con.prepareStatement("select id from company where ticker=?");
@@ -53,31 +56,46 @@ public class AddStock extends HttpServlet {
 
             //If does not exists, Get company id
             if(rs.next()) {
-                int id = rs.getInt("id");
-                db.closeCon();
-                return id;
+                id = rs.getInt("id");
             } else {
+
+
+                ArrayList<Double> companyValues = new ArrayList<>();
+
+                String[] splitData = data.split(" ", -1);
+                for (int i = 0; i < splitData.length - 1; i++) {
+                    double d = Double.parseDouble(splitData[i]);
+                    companyValues.add(d);
+                    if (i % 5 == 0) {
+                        companyValues.add(d);
+                        companyValues.add(d);
+                    }
+                    if (i % 35 == 0)
+                        companyValues.add(d);
+                }
+                companyValues.add(companyValues.get(companyValues.size()-1));
+                companyValues.add(companyValues.get(companyValues.size()-1));
+
+                StringBuilder yearData = new StringBuilder();
+                for (Double d : companyValues) yearData.append(d.toString()).append(" ");
+
                 ps = con.prepareStatement("INSERT INTO company (ticker, data) VALUES (?, ?)");
                 ps.setString(1, ticker);
-                ps.setString(2, data);
+                ps.setString(2, yearData.toString());
                 ps.execute();
                 ps = con.prepareStatement("select id from company where ticker=?");
                 ps.setString(1, ticker);
                 rs = ps.executeQuery();
                 rs.next();
-                int id = rs.getInt("id");
-                db.closeCon();
-                return id;
+                id = rs.getInt("id");
             }
-        } catch (SQLException ignored) {
-
-        }
+        } catch (SQLException ignored) { }
         db.closeCon();
-        return 0;
+        return id;
 
     }
 
-    public static void addStockToPortfolio(int userId, int companyId, double shares, Date purchased, Date sold) throws SQLException {
+    public static void addStockToPortfolio(int userId, int companyId, double shares, Date purchased, Date sold) {
         db = new Database();
         con = db.getConn();
 
