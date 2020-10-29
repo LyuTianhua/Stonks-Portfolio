@@ -74,7 +74,7 @@ Feature: add stock to portfolio
       	| '1'      | '01/15/2019'     |
       	| '10'     | '08/20/2019'     |
       	
-    Scenario Outline: Adding date purchased more than 1 year ago
+    Scenario Outline: Adding date purchased in the future
    	 Given I am signed in
    	 And I click on add stock modal
    	 And I enter 'AAPL' into 'ticker'
