@@ -46,6 +46,9 @@
 				<table id="portfolio-stocks" class="table table-hover">
 					<%--filled dynamically--%>
 				</table>
+				<table id="historical-stocks" class="table table-hover">
+					<%-- filled dynamically --%>
+				</table>
 			</div>
 		</div>
 	</div>
