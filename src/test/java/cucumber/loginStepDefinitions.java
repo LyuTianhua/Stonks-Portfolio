@@ -11,6 +11,8 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.assertTrue;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * Step definitions for Cucumber tests.
  */
@@ -24,26 +26,27 @@ public class loginStepDefinitions {
 	public void i_am_on_the_login_page() {
 		driver.get(ROOT_URL + "index.jsp");
 	}
+	
+	@Given("I am on the home page without login")
+	public void i_am_on_the_home_page_without_login() {
+		driver.get(ROOT_URL + "home.jsp");
+	}
 
+	@When("I click the Sign In tab")
+	public void iClickTheSignInTab() {
+		driver.findElement(By.linkText("Sign In")).click();
+	}
+	
 	@When("I click the Register tab")
 	public void iClickTheRegisterTab() {
 		driver.findElement(By.linkText("Register")).click();
 	}
 
-	@Then("I should be on page {string}")
-	public void iShouldBeOnPageRegisterJsp(String url) {
-		wait.until(ExpectedConditions.urlContains(url));
-		assertTrue(driver.getCurrentUrl().contains(url));
-	}
-
 	@When("I enter {string} in Email Address input field")
 	public void iEnterTuEmailComInEmailAddressInputField(String email) {
-		wait.until(
-				ExpectedConditions.elementToBeClickable(By.id("iEmail"))
-		).sendKeys(email);
-
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("iEmail"))).sendKeys(email);
 	}
-
+	
 	@And("I enter {string} in Password input field")
 	public void iEnterTuPassInPasswordInputField(String password) {
 		driver.findElement(By.id("iPassword")).sendKeys(password);
@@ -52,6 +55,12 @@ public class loginStepDefinitions {
 	@And("I click the Sign In button")
 	public void iClickTheSignInButton() {
 		driver.findElement(By.id("signin")).click();
+	}
+	
+	@Then("I should be on page {string}")
+	public void iShouldBeOnPageRegisterJsp(String url) {
+		wait.until(ExpectedConditions.urlContains(url));
+		assertTrue(driver.getCurrentUrl().contains(url));
 	}
 
 	@Then("an error message {string} should show up")

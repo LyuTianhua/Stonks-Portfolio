@@ -12,9 +12,6 @@
 
 </head>
 <body>
-
-<%	if (request.getSession(false).getAttribute("id") == null) response.sendRedirect("index.jsp");	%>
-
 <%@include file="partials/nav.jsp"%>
 
 <div class="container">
@@ -61,6 +58,9 @@
 <%@include file="partials/uploadForm.jsp"%>
 
 <script>
+	<%if (request.getSession(false).getAttribute("id") == null) {%>
+		window.location.replace("index.jsp");
+	<%}%>
 
 	const logout = () => $.ajax({
 		url : "Logout",
