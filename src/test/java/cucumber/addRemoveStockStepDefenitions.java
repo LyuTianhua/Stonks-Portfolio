@@ -4,6 +4,7 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import org.openqa.selenium.By;
+import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -148,6 +149,52 @@ public class addRemoveStockStepDefenitions {
             checkIfElementPresent = true;
         }
         assertTrue(checkIfElementPresent);
+    }
+    
+    @Then("I should see an error message stating to enter a purchase date")
+    public void i_should_see_an_error_message_stating_to_enter_a_purchase_date() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+			System.out.println("Exception in invalid 1 year date test.");
+		}
+		
+		Boolean checkIfElementPresent= false;
+		//Checks if the invalid dates error message is present
+		if(driver.findElements(By.xpath("//*[@id=\"purchased-empty\"]")).size()!= 0) {
+		checkIfElementPresent = true;
+		}
+		assertTrue(checkIfElementPresent);
+    }
+    
+    @And("I select 1 week ago from the calendar picker for date purchased")
+    public void select_one_week_ago_calendar() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+			System.out.println("Exception in invalid 1 year date test.");
+		}
+    	
+    	WebElement purchaseDate = driver.findElement(By.xpath("//*[@id=\"date-purchased\"]"));
+    	purchaseDate.click();
+    	purchaseDate.sendKeys(Keys.TAB);
+    	purchaseDate.sendKeys(Keys.TAB);
+    	purchaseDate.sendKeys(Keys.TAB);
+    	purchaseDate.sendKeys(Keys.ENTER);
+    	purchaseDate.sendKeys(Keys.ARROW_UP);
+    	purchaseDate.sendKeys(Keys.ENTER);
+    }
+    
+    @Then("Then date purchased should equal 1 week ago")
+    public void date_purchased_should_equal_one_week_ago() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+			System.out.println("Exception in invalid 1 year date test.");
+		}
+    	
+    	WebElement purchaseDate = driver.findElement(By.xpath("//*[@id=\"date-purchased\"]"));
+    	assertTrue(!purchaseDate.getAttribute("value").isEmpty());
     }
 
 //    @After
