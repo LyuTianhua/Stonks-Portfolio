@@ -16,8 +16,8 @@ import java.util.logging.Level;
  * Run all the cucumber tests in the current package.
  */
 @RunWith(Cucumber.class)
-@CucumberOptions()
-//@CucumberOptions(features = {"src/test/resources/cucumber/addRemoveStock.feature"})
+//@CucumberOptions()
+@CucumberOptions(features = {"src/test/resources/cucumber/addRemoveStock.feature"})
 
 public class RunCucumberTests {
 
@@ -31,7 +31,10 @@ public class RunCucumberTests {
 		options = new ChromeOptions();
 		options.setHeadless(true);
 		//for the mobile acceptance tests
-		//options.addArguments("--window-size=360,640");
+		if(System.getProperty("mobile") != null && System.getProperty("mobile").equals("true")) {
+			System.out.println("Running with mobile resolution");
+			options.addArguments("--window-size=360,640");
+		}
 		System.setProperty("webdriver.chrome.silentOutput", "true");
 		java.util.logging.Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
 		driver = new ChromeDriver(RunCucumberTests.options);
