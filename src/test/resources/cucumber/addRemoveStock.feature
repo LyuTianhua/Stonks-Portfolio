@@ -27,7 +27,7 @@ Feature: add stock to portfolio
   Scenario Outline: Error message for stocks not on NYSE or NASDAQ (invalid ticker)
     Given I am signed in
     And I click on add stock modal
-    And I enter 'AZN' into 'ticker'
+    And I enter 'THLLY' into 'ticker'
     And I enter <quantity> into 'quantity'
     And I click on add stock
     Then I should see an error message stating that it is an invalid ticker
