@@ -7,8 +7,8 @@
             <div class="modal-body">
                 <form method="GET">
                     <div class="form-group">
-                        <label for="ticker">Ticker  <span class="text-danger" id="view-empty">This field is required.</span></label>
-                        <input type="text" class="form-control" id="ticker" placeholder="ex. AAPL">
+                        <label for="ticker-view">Ticker  <span class="text-danger" id="view-empty">This field is required.</span></label>
+                        <input type="text" class="form-control" id="ticker-view" placeholder="ex. AAPL">
                     </div>
                 </form>
             </div>
