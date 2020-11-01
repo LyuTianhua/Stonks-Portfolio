@@ -274,12 +274,12 @@
 				var dateCheck = checkDates();
 				var tickerEmpty = checkTicker();
 				if (res.trim() === "1") {
-					document.getElementById("invalid-ticker").style.visibility = "hidden";
+					document.getElementById("invalid-ticker").style.display = "none";
 					if(qtyCheck && dateCheck) {
 						add();
 					}
 				} else {
-					document.getElementById("invalid-ticker").style.visibility = "visible";
+					document.getElementById("invalid-ticker").style.display = "inline";
 
 				}
 			}
