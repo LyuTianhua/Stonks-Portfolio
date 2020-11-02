@@ -11,23 +11,18 @@ Feature: add stock to portfolio
     Examples:
       | quantity | shares |
       | '10'     | '10'   |
-      | '10'     | '20'   |
-      | '0'      | '20'   |
+      | '0'      | '10'   |
 
-  Scenario Outline: Remove stock from home page
+  Scenario: Remove stock from home page
     Given I am signed in
-    And I enter <quantity> into 'TSLA' remove input
-    And I click on the 'TSLA' remove button
-    Then I should see <shares> 'TSLA' stock on the portfolio
-    Examples:
-      | quantity | shares |
-      | '5'      | '15'   |
-      | '15'     | '0'    |
+    When I press the remove stock button
+    And I click confirm on the pop up modal
+    Then I should not see that stock in the portfolio
 
   Scenario Outline: Error message for stocks not on NYSE or NASDAQ (invalid ticker)
     Given I am signed in
     And I click on add stock modal
-    And I enter 'AZN' into 'ticker'
+    And I enter 'THLLY' into 'ticker'
     And I enter <quantity> into 'quantity'
     And I click on add stock
     Then I should see an error message stating that it is an invalid ticker
@@ -86,3 +81,24 @@ Feature: add stock to portfolio
       | quantity | purchased        |
       | '1'      | '01/15/2021'     |
       | '10'     | '08/20/2021'     |
+      
+  Scenario Outline: Adding date sold but not date purchased
+   	 Given I am signed in
+   	 And I click on add stock modal
+   	 And I enter 'AAPL' into 'ticker'
+   	 And I enter <quantity> into 'quantity'
+   	 And I enter <sold> into 'date-sold'
+   	 And I click on add stock
+   	 Then I should see an error message stating to enter a purchase date
+   	 Examples:
+   		 | quantity | sold             |
+      	 | '1'      | '01/15/2020'     |
+      	 | '10'     | '08/20/2020'     |
+      	 
+   Scenario Outline: Using calendar picker to select dates
+      Given I am signed in
+      And I click on add stock modal
+      And I enter 'AAPL' into 'ticker'
+      And I enter '1' into 'quantity'
+      And I select 1 week ago from the calendar picker for date purchased
+      Then date purchased should equal 1 week ago
