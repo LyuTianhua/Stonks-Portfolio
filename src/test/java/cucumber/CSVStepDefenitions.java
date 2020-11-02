@@ -32,7 +32,7 @@ public class CSVStepDefenitions {
 
     @Then("I should {string} on the profile")
     public void iShouldAsmOnTheProfile(String ticker) {
-        wait.until(ExpectedConditions.elementToBeClickable(By.id(ticker + "Rm"))).click();
-        assertTrue(driver.findElement(By.id(ticker + "Rm")).isDisplayed());
+        wait.until(ExpectedConditions.elementToBeClickable(By.id(ticker))).click();
+        assertTrue(driver.findElement(By.id(ticker)).isDisplayed());
     }
 }

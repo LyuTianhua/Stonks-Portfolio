@@ -14,15 +14,11 @@ Feature: add stock to portfolio
       | '10'     | '20'   |
       | '0'      | '20'   |
 
-  Scenario Outline: Remove stock from home page
+  Scenario: Remove stock from home page
     Given I am signed in
-    And I enter <quantity> into 'TSLA' remove input
-    And I click on the 'TSLA' remove button
-    Then I should see <shares> 'TSLA' stock on the portfolio
-    Examples:
-      | quantity | shares |
-      | '5'      | '15'   |
-      | '15'     | '0'    |
+    When I press the remove stock button
+    And I click confirm on the pop up modal
+    Then I should not see that stock in the portfolio
 
   Scenario Outline: Error message for stocks not on NYSE or NASDAQ (invalid ticker)
     Given I am signed in
