@@ -100,10 +100,19 @@ public class AddStockTest {
     public void TestGetCompanyId() { }
 
     @Test
+    public void TestGetGraphData() { }
+
+    @Test
+    public void TestMakeDate() { }
+
+    @Test
+    public void TestParseGraphResponse() { }
+
+    @Test
     public void TestAddStockToPortfolio() { }
 
     @Test
-    public void TestGetGraphData() { }
+    public void TestUpdateUserPortfolio() { }
 
     public void make_new_mock_objects() {
         mocReq = new MockHttpServletRequest();

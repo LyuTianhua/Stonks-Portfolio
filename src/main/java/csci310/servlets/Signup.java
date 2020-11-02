@@ -18,6 +18,7 @@ public class Signup extends HttpServlet {
 
     public static Database db;
     public static Connection con;
+
     public void doPost(HttpServletRequest req, HttpServletResponse res) throws IOException {
 
         PrintWriter pw = res.getWriter();

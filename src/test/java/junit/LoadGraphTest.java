@@ -34,10 +34,13 @@ public class LoadGraphTest {
     }
 
     @Test
-    public void testGraph() { }
+    public void testTimestamp() { }
 
     @Test
-    public void testAddValues() { }
+    public void testNthDay() { }
+
+    @Test
+    public void testGraph() { }
 
     public void make_new_mock_objects() {
         mocReq = new MockHttpServletRequest();

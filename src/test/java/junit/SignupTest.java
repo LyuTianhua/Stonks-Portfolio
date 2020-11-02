@@ -62,9 +62,6 @@ public class SignupTest {
     @Test
     public void testValidEmail() { }
 
-    @Test
-    public void getUserId() { }
-
     public void add_name_password_confirm(String name, String password, String confirm) {
         mocReq.addParameter("email", name);
         mocReq.addParameter("password", password);

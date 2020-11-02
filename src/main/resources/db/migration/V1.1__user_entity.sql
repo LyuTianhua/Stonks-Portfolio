@@ -3,7 +3,9 @@ drop table if exists base_user;
 create table base_user (
                            id integer primary key not null,
                            email varchar(50) not null unique ,
-                           password varchar(100) not null
+                           password varchar(100) not null,
+                           data VARCHAR(65535)
+
 );
 
 
@@ -12,7 +14,8 @@ drop table if exists Company;
 create table Company (
                          id integer primary key not null,
                          ticker varchar(10) not null unique,
-                         data varchar(65535)
+                         data varchar(65535),
+                         timestamps blob
 );
 
 drop table if exists Stock;
@@ -22,9 +25,8 @@ create table Stock (
                        company_id int not null ,
                        user_id int not null ,
                        shares int,
-                       purchased date not null ,
-                       sold date ,
-                       data VARCHAR(65535) ,
+                       purchased long not null ,
+                       sold long ,
                        foreign key (company_id) references Company(id) ,
                        foreign key (user_id) references Base_User(id)
 );
