@@ -3,6 +3,8 @@ package cucumber;
 import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
+import io.cucumber.java.en.When;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.Keys;
 import org.openqa.selenium.WebDriver;
@@ -40,6 +42,23 @@ public class addRemoveStockStepDefenitions {
     }
 
 
+    @When("I press the remove stock button")
+    public void i_press_the_remove_stock_button() {
+    	 driver.switchTo().activeElement();
+         wait.until(
+                 ExpectedConditions.presenceOfElementLocated(By.id("TSLABtn"))
+         ).click();
+
+    }
+
+    @When("I click confirm on the pop up modal")
+    public void i_click_confirm_on_the_pop_up_modal() {
+    	driver.switchTo().activeElement();
+        wait.until(
+                ExpectedConditions.presenceOfElementLocated(By.id("remove-stock-in-modal"))
+        ).click();
+    }
+    
     @And("I click on add stock modal")
     public void i_click_on_add_stock_modal() {
 
@@ -59,7 +78,15 @@ public class addRemoveStockStepDefenitions {
 
     }
 
-
+    @Then("I should not see that stock in the portfolio")
+    public void i_should_not_see_that_stock () {
+        try {
+            Thread.sleep(2000);
+            List<WebElement> we = driver.findElements(By.id("TSLA"));
+            assertEquals(0, we.size());
+        } catch (InterruptedException ignored) {}
+    }
+    
     @Then("I should see {string} {string} stock on the portfolio")
     public void i_should_see(String quantity, String company) {
 
@@ -78,17 +105,17 @@ public class addRemoveStockStepDefenitions {
         } catch (InterruptedException ignored) {}
     }
 
-    @And("I enter {string} into {string} remove input")
-    public void iEnterQuantityIntoTickerRemoveInput(String quantity, String company) {
-        wait.until(
-                ExpectedConditions.presenceOfElementLocated(By.id(company + "Rm"))
-        ).sendKeys(quantity);
-    }
+//    @And("I enter {string} into {string} remove input")
+//    public void iEnterQuantityIntoTickerRemoveInput(String quantity, String company) {
+//        wait.until(
+//                ExpectedConditions.presenceOfElementLocated(By.id(company + "Rm"))
+//        ).sendKeys(quantity);
+//    }
 
-    @And("I click on the {string} remove button")
-    public void i_click_on_the_(String company) {
-        driver.findElement(By.id(company + "Btn")).click();
-    }
+//    @And("I click on the {string} remove button")
+//    public void i_click_on_the_(String company) {
+//        driver.findElement(By.id(company + "Btn")).click();
+//    }
 
     @Then("I should see an error message stating that it is an invalid ticker")
     public void i_should_see_an_error_message_stating_that_it_is_an_invalid_ticker() {

@@ -5,7 +5,7 @@
     <input class="form-control" id="rPassword" type="password">
     <label class="text-left" id="VerifyPassword" for="rConfirm">Verify Password</label>
     <input class="form-control" id="rConfirm" type="password" onchange="match()">
-    <div class="text-center" id="Error-Message"></div>
+    <div class="text-center text-danger" id="Error-Message"></div>
     <div class="row">
         <button id="register" type="button" class="btn btn-primary" onclick="registr()">Create User</button>
         <button id="cancel" class="btn btn-primary" type="button" onclick="cancl()">Cancel</button>

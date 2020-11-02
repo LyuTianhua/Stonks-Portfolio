@@ -30,7 +30,7 @@
 			</button>
 			<button type="button" class="btn btn-dark" data-toggle="modal"
 					data-target="#upload-modal" id="upload-btn">
-				Upload CSV
+				Upload File
 			</button>
 		</div>
 	</div>
@@ -53,6 +53,8 @@
 		</div>
 	</div>
 </div>
+<!-- Remove Stock Modal -->
+<%@include file="partials/removeConfirmModal.jsp"%>
 
 <!-- Add Stock Modal -->
 <%@include file="partials/addStockModal.jsp"%>
@@ -64,6 +66,8 @@
 <%@include file="partials/uploadForm.jsp"%>
 
 <script>
+	var ticker_name = "";
+	var ticker_quantity = "";
 
 	const logout = () => $.ajax({
 		url : "Logout",
@@ -76,19 +80,26 @@
 		type: "Get",
 		data : {
 			ticker   : $("#ticker").val(),
-			purchased     : $("#date-purchased").val(),
+			purchased: $("#date-purchased").val(),
 			sold	 : $("#date-sold").val(),
 			quantity : $("#quantity").val()
 		},
 		success : () => location.reload()
 	})
 
-	const remove = (t, q) => $.ajax({
+	const remove = (t, q) => {
+		console.log(t);
+		console.log(q);
+		$("#ticker_name").val(t);		
+		$("#ticker_quantity").val(q);	
+	}
+
+	const remove_ajax_call = () => $.ajax({
 		url : "RemoveStock",
 		type : "Get",
 		data : {
-			ticker   : t,
-			quantity : $(q).val()
+			ticker   : $("#ticker_name").val(),
+			quantity : $("#ticker_quantity").val()
 		},
 		success : () => location.reload()
 	})
@@ -274,12 +285,12 @@
 				var dateCheck = checkDates();
 				var tickerEmpty = checkTicker();
 				if (res.trim() === "1") {
-					document.getElementById("invalid-ticker").style.visibility = "hidden";
+					document.getElementById("invalid-ticker").style.display = "none";
 					if(qtyCheck && dateCheck) {
 						add();
 					}
 				} else {
-					document.getElementById("invalid-ticker").style.visibility = "visible";
+					document.getElementById("invalid-ticker").style.display = "inline";
 
 				}
 			}
