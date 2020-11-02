@@ -11,8 +11,7 @@ Feature: add stock to portfolio
     Examples:
       | quantity | shares |
       | '10'     | '10'   |
-      | '10'     | '20'   |
-      | '0'      | '20'   |
+      | '0'      | '10'   |
 
   Scenario: Remove stock from home page
     Given I am signed in
