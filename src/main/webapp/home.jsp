@@ -12,9 +12,6 @@
 
 </head>
 <body>
-
-<%	if (request.getSession(false).getAttribute("id") == null) response.sendRedirect("index.jsp");	%>
-
 <%@include file="partials/nav.jsp"%>
 
 <div class="container">
@@ -30,7 +27,7 @@
 			</button>
 			<button type="button" class="btn btn-dark" data-toggle="modal"
 					data-target="#upload-modal" id="upload-btn">
-				Upload CSV
+				Upload File
 			</button>
 		</div>
 	</div>
@@ -46,10 +43,15 @@
 				<table id="portfolio-stocks" class="table table-hover">
 					<%--filled dynamically--%>
 				</table>
+				<table id="historical-stocks" class="table table-hover">
+					<%-- filled dynamically --%>
+				</table>
 			</div>
 		</div>
 	</div>
 </div>
+<!-- Remove Stock Modal -->
+<%@include file="partials/removeConfirmModal.jsp"%>
 
 <!-- Add Stock Modal -->
 <%@include file="partials/addStockModal.jsp"%>
@@ -61,6 +63,9 @@
 <%@include file="partials/uploadForm.jsp"%>
 
 <script>
+	<%if (request.getSession(false).getAttribute("id") == null) {%>
+		window.location.replace("index.jsp");
+	<%}%>
 
 	const logout = () => $.ajax({
 		url : "Logout",
@@ -73,19 +78,24 @@
 		type: "Get",
 		data : {
 			ticker   : $("#ticker").val(),
-			purchased     : $("#date-purchased").val(),
+			purchased: $("#date-purchased").val(),
 			sold	 : $("#date-sold").val(),
 			quantity : $("#quantity").val()
 		},
 		success : () => location.reload()
 	})
 
-	const remove = (t, q) => $.ajax({
+	const remove = (t, q) => {
+		$("#ticker_name").val(t);		
+		$("#ticker_quantity").val(q);	
+	}
+
+	const remove_ajax_call = () => $.ajax({
 		url : "RemoveStock",
 		type : "Get",
 		data : {
-			ticker   : t,
-			quantity : $(q).val()
+			ticker   : $("#ticker_name").val(),
+			quantity : $("#ticker_quantity").val()
 		},
 		success : () => location.reload()
 	})
@@ -261,12 +271,12 @@
 				var dateCheck = checkDates();
 				var tickerEmpty = checkTicker();
 				if (res.trim() === "1") {
-					document.getElementById("invalid-ticker").style.visibility = "hidden";
+					document.getElementById("invalid-ticker").style.display = "none";
 					if(qtyCheck && dateCheck) {
 						add();
 					}
 				} else {
-					document.getElementById("invalid-ticker").style.visibility = "visible";
+					document.getElementById("invalid-ticker").style.display = "inline";
 
 				}
 			}
