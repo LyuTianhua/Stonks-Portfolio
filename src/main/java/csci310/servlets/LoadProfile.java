@@ -35,7 +35,6 @@ public class LoadProfile  extends HttpServlet {
                     "<th>Stonk</th>\n" +
                     "<th>Shares</th>\n" +
                     "<th>Remove</th>\n" +
-                    "<th>Confirm</th>\n" +
                     "</tr>");
 
             while (rs.next()) {
@@ -46,15 +45,17 @@ public class LoadProfile  extends HttpServlet {
                 radio = ticker + "Radio";
 
                 pw.println("<tr>");
-                pw.println("<th id=\"" + ticker + "\">" + ticker + "</th>");
-                pw.println("<th id=\"" + shares + "\">" + rs.getInt("shares") + "</th>");
-                pw.println("<th> <input id=\"" + rm + "\" type =\"test\" ></th>");
-                pw.println("<th> " +
-                        "<button id=\"" + btn + "\" " +
+                pw.println("<td id=\"" + ticker + "\">" + ticker + "</td>");
+                pw.println("<td id=\"" + shares + "\">" + rs.getInt("shares") + "</td>");
+                pw.println("<td> " +
+                        "<button id=\"" + btn + "\" " + "class=\"btn btn-danger\"" +
                         "type=\"button\" " +
-                        "onclick=\"remove('" + ticker + "', '#" + rm + "')\" " +
-                        "style=\"color: black\">remove</button> " +
-                        "</th>");
+                        "data-toggle=\"modal\"" + 
+                        "data-target=\"#remove-stock-modal\"" +
+                        "onclick=\"remove('" + ticker + "', '" + rs.getInt("shares") + "')\">" +
+                        "Remove" +
+                        "</button>" +
+                        "</td>");
                 pw.println("</tr>");
             }
 
