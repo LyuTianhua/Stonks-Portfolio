@@ -12,9 +12,6 @@
 
 </head>
 <body>
-
-<%	if (request.getSession(false).getAttribute("id") == null) response.sendRedirect("index.jsp");	%>
-
 <%@include file="partials/nav.jsp"%>
 
 <div class="container">
@@ -66,8 +63,9 @@
 <%@include file="partials/uploadForm.jsp"%>
 
 <script>
-	var ticker_name = "";
-	var ticker_quantity = "";
+	<%if (request.getSession(false).getAttribute("id") == null) {%>
+		window.location.replace("index.jsp");
+	<%}%>
 
 	const logout = () => $.ajax({
 		url : "Logout",
@@ -88,8 +86,6 @@
 	})
 
 	const remove = (t, q) => {
-		console.log(t);
-		console.log(q);
 		$("#ticker_name").val(t);		
 		$("#ticker_quantity").val(q);	
 	}
