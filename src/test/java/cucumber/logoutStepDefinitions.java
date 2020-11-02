@@ -17,7 +17,7 @@ public class logoutStepDefinitions {
 
 	String name = "admin";
 	String password = "force_allow";
-	private static final String ROOT_URL = "http://localhost:8081/";
+	private static final String ROOT_URL = "https://localhost:8080/";
 	WebDriver driver = RunCucumberTests.driver;
 	WebDriverWait wait = RunCucumberTests.wait;
 
