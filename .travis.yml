@@ -10,4 +10,4 @@ scripts:
         - mvn flyway:migrate
         - mvn jetty:run &
         - sleep 30
-        - mvn -DrunCucumberTests test
+        - mvn -DrunCucumberTests=true -Dmobile=true test
