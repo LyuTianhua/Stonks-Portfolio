@@ -10,7 +10,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 import static org.junit.Assert.assertTrue;
 
 public class CSVStepDefenitions {
-    private static final String ROOT_URL = "http://localhost:8081/";
+    private static final String ROOT_URL = "https://localhost:8080/";
     WebDriver driver = RunCucumberTests.driver;
     WebDriverWait wait = RunCucumberTests.wait;
 
@@ -32,7 +32,7 @@ public class CSVStepDefenitions {
 
     @Then("I should {string} on the profile")
     public void iShouldAsmOnTheProfile(String ticker) {
-        wait.until(ExpectedConditions.elementToBeClickable(By.id(ticker + "Rm"))).click();
-        assertTrue(driver.findElement(By.id(ticker + "Rm")).isDisplayed());
+        wait.until(ExpectedConditions.elementToBeClickable(By.id(ticker))).click();
+        assertTrue(driver.findElement(By.id(ticker)).isDisplayed());
     }
 }

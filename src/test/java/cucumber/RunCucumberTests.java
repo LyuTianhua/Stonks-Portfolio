@@ -29,9 +29,13 @@ public class RunCucumberTests {
 	public static void setup() {
 		WebDriverManager.chromedriver().setup();
 		options = new ChromeOptions();
+		options.setAcceptInsecureCerts(true);
 		options.setHeadless(true);
 		//for the mobile acceptance tests
-		//options.addArguments("--window-size=360,640");
+		if(System.getProperty("mobile") != null && System.getProperty("mobile").equals("true")) {
+			System.out.println("Running with mobile resolution");
+			options.addArguments("--window-size=360,640");
+		}
 		System.setProperty("webdriver.chrome.silentOutput", "true");
 		java.util.logging.Logger.getLogger("org.openqa.selenium").setLevel(Level.OFF);
 		driver = new ChromeDriver(RunCucumberTests.options);
