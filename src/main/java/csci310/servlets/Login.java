@@ -74,7 +74,7 @@ public class Login extends HttpServlet {
             Date curr_date = new Date();
             java.sql.Date sql_date = new java.sql.Date(curr_date.getTime());
             // Set the initial time to 2 minutes before
-            long valid_start_time = sql_date.getTime() - 120000;
+            long valid_start_time = sql_date.getTime() - 60000;
 
             ps = con.prepareStatement("select Count(*) as size from UserLoginRecord where datetime_accessed>? and user_id=?");
             ps.setLong(1, valid_start_time);
