@@ -25,6 +25,18 @@ public class Helper extends Mockito {
         db.closeCon();
     }
 
+    public static void insert_historical_stock_company_user_shares(int company_id, int user_id) {
+        db = new Database();
+        con = db.getConn();
+        try {
+            ps = con.prepareStatement("insert into historicalStock (company_id, user_id) values (?, ?)");
+            ps.setInt(1, company_id);
+            ps.setInt(2, user_id);
+            ps.execute();
+        } catch (SQLException ignored) {}
+        db.closeCon();
+    }
+
     public static void insert_user_name_password(String user, String password) {
         db = new Database();
         con = db.getConn();
@@ -91,6 +103,18 @@ public class Helper extends Mockito {
         con = db.getConn();
         try {
             ps = con.prepareStatement("delete from stock where user_id=? and company_id=?");
+            ps.setInt(1, user_id);
+            ps.setInt(2, company_id);
+            ps.execute();
+        } catch (SQLException ignored) {}
+        db.closeCon();
+    }
+
+    public static void delete_from_historical_stock_user_company(int user_id, int company_id) {
+        db = new Database();
+        con = db.getConn();
+        try {
+            ps = con.prepareStatement("delete from historicalStock where user_id=? and company_id=?");
             ps.setInt(1, user_id);
             ps.setInt(2, company_id);
             ps.execute();

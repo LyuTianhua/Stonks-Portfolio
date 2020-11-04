@@ -52,11 +52,15 @@ public class addRemoveStockStepDefenitions {
     }
 
     @When("I click confirm on the pop up modal")
-    public void i_click_confirm_on_the_pop_up_modal() {
+    public void i_click_confirm_on_the_pop_up_modal() throws InterruptedException {
     	driver.switchTo().activeElement();
+//        System.out.println("\n\n\n\n\n\n\n\n here \n\n\n\n\n\n\n");
+////        Thread.sleep(10000);
         wait.until(
-                ExpectedConditions.presenceOfElementLocated(By.id("remove-stock-in-modal"))
-        ).click();
+                ExpectedConditions.elementToBeClickable(By.id("remove-stock-in-modal"))
+        );
+        driver.findElement(By.id("remove-stock-in-modal")).click();
+//        Thread.sleep(120000);
     }
     
     @And("I click on add stock modal")
@@ -212,7 +216,7 @@ public class addRemoveStockStepDefenitions {
     	purchaseDate.sendKeys(Keys.ENTER);
     }
     
-    @Then("Then date purchased should equal 1 week ago")
+    @Then("date purchased should equal 1 week ago")
     public void date_purchased_should_equal_one_week_ago() {
     	try {
 			Thread.sleep(2000);

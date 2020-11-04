@@ -52,7 +52,8 @@ public class LoadProfile  extends HttpServlet {
                         "type=\"button\" " +
                         "data-toggle=\"modal\"" + 
                         "data-target=\"#remove-stock-modal\"" +
-                        "onclick=\"remove('" + ticker + "', '" + rs.getInt("shares") + "')\">" +
+                        "data-ticker=\"" + ticker + "\"" +
+                        "onclick=\"remove('" + ticker + "')\">" +
                         "Remove" +
                         "</button>" +
                         "</td>");

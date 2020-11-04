@@ -62,16 +62,19 @@ public class LoginTest extends Mockito {
     }
 
     @Test
-    public void testHashPassword() { }
-
-    @Test
-    public void testValidate() { }
-
-    @Test
     public void testAddFootprintRecord() { }
 
     @Test
     public void testCheckForThreeAttempts() { }
+
+    @Test
+    public void testGetUserId() { }
+
+    @Test
+    public void testHashPassword() { }
+
+    @Test
+    public void testAuthenticate() { }
 
     public void make_new_mock_objects() {
         mocReq = new MockHttpServletRequest();

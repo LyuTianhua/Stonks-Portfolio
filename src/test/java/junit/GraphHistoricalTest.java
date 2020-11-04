@@ -7,14 +7,13 @@ import org.springframework.mock.web.MockHttpServletResponse;
 
 import static org.junit.Assert.assertTrue;
 
-public class LoadGraphTest {
+public class GraphHistoricalTest {
 
     MockHttpServletRequest mocReq;
     MockHttpServletResponse mocRes;
 
     @Test
     public void testDoGet() {
-
         int user_id = 369;
         int company_id = 88;
 
@@ -33,18 +32,8 @@ public class LoadGraphTest {
         Helper.delete_user_where_id(user_id);
     }
 
-    @Test
-    public void testTimestamp() { }
-
-    @Test
-    public void testNthDay() { }
-
-    @Test
-    public void testGraph() { }
-
     public void make_new_mock_objects() {
         mocReq = new MockHttpServletRequest();
         mocRes = new MockHttpServletResponse();
     }
-
 }

@@ -15,11 +15,14 @@ public class RemoveStock extends HttpServlet {
     static PreparedStatement ps;
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
-            String ticker = req.getParameter("ticker");
-            int companyId = getCompanyId(ticker);
-            int userId = (int) req.getSession().getAttribute("id");
-            double quantity = Double.parseDouble(req.getParameter("quantity"));
-            updateStock(userId, companyId, quantity);
+        System.out.println("\n\n\n\n\n\n\nin remove stock");
+
+        String ticker = req.getParameter("ticker");
+        int companyId = getCompanyId(ticker);
+        int userId = (int) req.getSession().getAttribute("id");
+        System.out.println("ticker: " + ticker);
+//            double quantity = Double.parseDouble(req.getParameter("quantity"));
+        updateStock(userId, companyId);
     }
 
     public static int getCompanyId(String ticker)  {
@@ -37,19 +40,21 @@ public class RemoveStock extends HttpServlet {
         return id;
     }
 
-    public static void updateStock(int userId, int companyId, double shares) {
+    public static void updateStock(int userId, int companyId) {
+
+        System.out.printf("user id: %d\ncompany id : %d\n", userId, companyId);
+
         db = new Database();
         con = db.getConn();
-        try {
-            ps = con.prepareStatement("update stock set shares = shares - ? where user_id=? and company_id=?");
-            ps.setDouble(1, shares);
-            ps.setInt(2, userId);
-            ps.setInt(3, companyId);
-            ps.executeUpdate();
 
-            ps = con.prepareStatement("delete from stock where shares <= 0");
+        try {
+            ps = con.prepareStatement("delete from Stock where company_id=? and user_id=?");
+            ps.setInt(1, userId);
+            ps.setInt(2, companyId);
             ps.execute();
-        } catch (SQLException ignored) {}
+
+            System.out.println("executed update stock query");
+        } catch (SQLException e) {e.printStackTrace();}
         db.closeCon();
     }
 
