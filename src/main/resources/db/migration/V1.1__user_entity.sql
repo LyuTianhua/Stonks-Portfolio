@@ -18,6 +18,12 @@ create table Company (
                          timestamps blob
 );
 
+drop table if exists historicalCompany;
+create table historicalCompany (
+                                   id integer primary key not null,
+                                   ticker varchar(10) not null unique
+);
+
 drop table if exists Stock;
 
 create table Stock (
@@ -29,6 +35,15 @@ create table Stock (
                        sold long ,
                        foreign key (company_id) references Company(id) ,
                        foreign key (user_id) references Base_User(id)
+);
+
+drop table if exists historicalStock;
+create table historicalStock (
+                                 id integer primary key not null ,
+                                 company_id int not null ,
+                                 user_id int not null ,
+                                 foreign key (company_id) references historicalCompany(id) ,
+                                 foreign key (user_id) references Base_User(id)
 );
 
 insert into base_user (email, password) values ('admin', 'force_allow');

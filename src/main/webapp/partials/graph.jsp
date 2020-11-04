@@ -23,18 +23,6 @@
 
     String formattedMonth = toMonth < 10 ? "0" + String.valueOf(toMonth) : String.valueOf(toMonth);
     String threeMonthsAgo = String.valueOf(yearNumber) + "-" + formattedMonth + "-" + day;
-
-
-//    SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
-//
-//    Date date = sdf.parse(threeMonthsAgo);
-//    long currentDateSeconds = date.getTime();
-//    System.out.println("currentDateSeconds:\t" + currentDateSeconds);
-//
-//    Date date3 = sdf.parse(now);
-//    long time3 = date3.getTime();
-//    System.out.println("threemonthsago\t" + time3);
-
 %>
 
 <div>
@@ -42,11 +30,11 @@
     <form class="d-flex justify-content-center" id="formGraph" onchange="loadGraph()">
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="date" name="fromGraph" id="fromGraph" value=<%= threeMonthsAgo %>>
-            <label class="form-check-label" for="fromGraph">Day</label>
+            <label class="form-check-label" for="fromGraph">From</label>
         </div>
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="date" name="toGraph" id="toGraph" value=<%= now %>>
-            <label class="form-check-label" for="toGraph">Week</label>
+            <label class="form-check-label" for="toGraph">To</label>
         </div>
     </form>
 </div>

@@ -45,12 +45,8 @@ public class LoadGraph extends HttpServlet {
             long startTimestamp = timestamp(startDate);
             long endTimestamp = timestamp(endDate);
 
-            int startNthDay = nthDay(startDate);
-            int endNthDay = nthDay(endDate);
-
-
             res.setContentType("application/json; charset=UTF-8");
-            pw.print(graph(id, startTimestamp, endTimestamp, startNthDay, endNthDay));
+            pw.print(graph(id, startTimestamp, endTimestamp));
 
             req.setAttribute("loaded", "true");
             pw.flush();
@@ -59,12 +55,12 @@ public class LoadGraph extends HttpServlet {
         } catch (IOException | ParseException ignored) { }
     }
 
-    public long timestamp(String date) throws ParseException {
+    public static long timestamp(String date) throws ParseException {
         Date newDate = sdf.parse(date);
         return newDate.getTime() / 1000;
     }
 
-    public int nthDay(String date) {
+    public static int nthDay(String date) {
         String[] dateParts = date.split("-", 3);
         int year = Integer.parseInt(dateParts[0]);
         int month = Integer.parseInt(dateParts[1]);
@@ -75,9 +71,7 @@ public class LoadGraph extends HttpServlet {
         return cal.get(Calendar.DAY_OF_YEAR) - 30;
     }
 
-    public static String graph(int id, long startTimestamp, long endTimestamp, int startNthDay, int endNthDay) {
-
-        System.out.println("in graph function");
+    public static String graph(int id, long startTimestamp, long endTimestamp) {
 
         String strValues = "";
         String strTimestamps = "";
@@ -90,18 +84,14 @@ public class LoadGraph extends HttpServlet {
             rs = ps.executeQuery();
 
             strValues = rs.getString("data");
-            System.out.println("strValues:\t" + strValues);
 
             ps = con.prepareStatement("select * from company where id=?");
             ps.setInt(1, 1);
             rs = ps.executeQuery();
             strTimestamps = rs.getString("timestamps");
-            System.out.println("strTimestamps:\t" + strTimestamps);
 
         } catch (SQLException ignored) {}
         db.closeCon();
-
-//        System.out.println("\n\n\n" + strValues + "\n\n\n");
 
         String[] splitValues = strValues.split(" ", -1);
         String[] splitTimestamps = strTimestamps.split(" ", -1);
@@ -148,15 +138,6 @@ public class LoadGraph extends HttpServlet {
             for (int j = 0; j < d.size(); j++)
                 dates[j] = d.get(j);
 
-        }
-    }
-
-    private static class DataSet {
-        public String label;
-        public Double[] data;
-        public DataSet(String l, Double[] d) {
-            label = l;
-            data = d;
         }
     }
 }

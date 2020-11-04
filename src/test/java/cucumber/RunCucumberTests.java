@@ -17,7 +17,7 @@ import java.util.logging.Level;
  */
 @RunWith(Cucumber.class)
 @CucumberOptions()
-//@CucumberOptions(features = {"src/test/resources/cucumber/addRemoveStock.feature"})
+//@CucumberOptions(features = {"src/test/resources/cucumber/loginpage.feature"})
 
 public class RunCucumberTests {
 
@@ -29,7 +29,7 @@ public class RunCucumberTests {
 	public static void setup() {
 		WebDriverManager.chromedriver().setup();
 		options = new ChromeOptions();
-		options.setHeadless(true);
+//		options.setHeadless(true);
 		//for the mobile acceptance tests
 		if(System.getProperty("mobile") != null && System.getProperty("mobile").equals("true")) {
 			System.out.println("Running with mobile resolution");

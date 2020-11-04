@@ -9,6 +9,9 @@
 	<title>Home</title>
 
 	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7"></script>
 
 </head>
 <body>
@@ -38,11 +41,12 @@
 	</div>
 	<div class="row justify-content-center">
 		<div class="col-12 col-md-8 mt-3 overflow-auto">
-			<h3>Portfolio Stocks</h3>
 			<div class="table-responsive">
+				<h3>Portfolio Stocks</h3>
 				<table id="portfolio-stocks" class="table table-hover">
 					<%--filled dynamically--%>
 				</table>
+				<h3>Historical Stocks</h3>
 				<table id="historical-stocks" class="table table-hover">
 					<%-- filled dynamically --%>
 				</table>
@@ -85,20 +89,78 @@
 		success : () => location.reload()
 	})
 
-	const remove = (t, q) => {
-		$("#ticker_name").val(t);		
-		$("#ticker_quantity").val(q);	
-	}
-
-	const remove_ajax_call = () => $.ajax({
-		url : "RemoveStock",
-		type : "Get",
+	const addHistorical = () => $.ajax({
+		url : "AddHistorical",
 		data : {
-			ticker   : $("#ticker_name").val(),
-			quantity : $("#ticker_quantity").val()
+			ticker : $("#ticker-view").val()
 		},
 		success : () => location.reload()
 	})
+
+	const loadHistorical = () => {
+		$.ajax({
+			url: "LoadHistorical",
+			success: (res) => $("#historical-stocks").html(res)
+		})
+	}
+
+	const graphHistorical = (ticker) => $.ajax({
+			url: "GraphHistorical",
+			data: {
+				ticker,
+				checked : document.getElementById(ticker + "Historical").checked,
+				fromGraph : $("#fromGraph").val(),
+				toGraph : $("#toGraph").val()
+			},
+			success: (res) => {
+
+				if (typeof res == "object") {
+					console.log("add dataset")
+					console.log(res)
+					myChart.data.datasets.push(res)
+					myChart.update()
+				} else {
+					console.log("remove dataset", res)
+
+					let removeIdx;
+					var i = 0;
+					myChart.data.datasets.forEach((dataset) => {
+						if (dataset.label === ticker) {
+							removeIdx = i;
+						}
+						i++;
+					})
+					console.log("found data set at ", removeIdx);
+					myChart.data.datasets.splice(removeIdx, 1);
+					myChart.update();
+
+				}
+			}
+		})
+
+	var ticker_to_be_deleted = ""
+	const remove = (t) => {
+		console.log("to be deleted ", t)
+		$("#ticker_name").text(t)
+		ticker_to_be_deleted = t
+	}
+
+	const remove_ajax_call = () => {
+		console.log("in remove ajax call ", $("#ticker_name").text())
+		$.ajax({
+			url: "RemoveStock",
+			type: "Get",
+			data: {
+				ticker: $("#ticker_name").text()
+			},
+			success: () => location.reload()
+		})
+	}
+
+	// $("#remove-stock-modal").on('show', (e) => {
+	// 	let ticker = $(e.relatedTarget).date('ticker')
+	// 	$(e.currentTarget).find('input[name="ticker_tobe_removed"]').val(ticker)
+	// })
 
 	const idleTimer = () => {
 		let t;
@@ -115,12 +177,6 @@
 		}
 	}
 	idleTimer();
-
-	// var labels = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 36, 37, 38, 39, 40, 41, 42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61, 62, 63, 64, 65, 66, 67, 68, 69, 70, 71, 72, 73, 74, 75, 76, 77, 78, 79, 80, 81, 82, 83, 84, 85, 86, 87, 88, 89, 90, 91, 92, 93, 94, 95, 96, 97, 98, 99, 100,
-	// 	101, 102, 103, 104, 105, 106, 107, 108, 109, 110, 111, 112, 113, 114, 115, 116, 117, 118, 119, 120, 121, 122, 123, 124, 125, 126, 127, 128, 129, 130, 131, 132, 133, 134, 135, 136, 137, 138, 139, 140, 141, 142, 143, 144, 145, 146, 147, 148, 149, 150, 151, 152, 153, 154, 155, 156, 157, 158, 159, 160, 161, 162, 163, 164, 165, 166, 167, 168, 169, 170, 171, 172, 173, 174, 175, 176, 177, 178, 179, 180, 181, 182, 183, 184, 185, 186, 187, 188, 189, 190, 191, 192, 193, 194, 195, 196, 197, 198, 199, 200,
-	// 	201, 202, 203, 204, 205, 206, 207, 208, 209, 210, 211, 212, 213, 214, 215, 216, 217, 218, 219, 220, 221, 222, 223, 224, 225, 226, 227, 228, 229, 230, 231, 232, 233, 234, 235, 236, 237, 238, 239, 240, 241, 242, 243, 244, 245, 246, 247, 248, 249, 250, 251, 252, 253, 254, 255, 256, 257, 258, 259, 260, 261, 262, 263, 264, 265, 266, 267, 268, 269, 270, 271, 272, 273, 274, 275, 276, 277, 278, 279, 280, 281, 282, 283, 284, 285, 286, 287, 288, 289, 290, 291, 292, 293, 294, 295, 296, 297, 298, 299, 300,
-	// 	301, 302, 303, 304, 305, 306, 307, 308, 309, 310, 311, 312, 313, 314, 315, 316, 317, 318, 319, 320, 321, 322, 323, 324, 325, 326, 327, 328, 329, 330, 331, 332, 333, 334, 335, 336, 337, 338, 339, 340, 341, 342, 343, 344, 345, 346, 347, 348, 349, 350, 351, 352, 353, 354, 355, 356, 357, 358, 359, 360, 361, 362, 362, 363, 364, 365]
-
 
 	var ctx = document.getElementById('myChart');
 	var myChart = new Chart(ctx, {
@@ -140,6 +196,18 @@
 						beginAtZero: true
 					}
 				}]
+			},
+			plugins: {
+				zoom: {
+					pan: {
+						enabled: true,
+						mode: 'xy'
+					},
+					zoom: {
+						enabled: true,
+						mode: 'xy',
+					}
+				}
 			}
 		}
 	});
@@ -151,6 +219,7 @@
 				success : (res) => {
 					$("#portfolio-stocks").html(res)
 					loadGraph();
+					loadHistorical();
 				}
 			})
 	)
@@ -172,8 +241,7 @@
 		})
 	}
 
-	const uploadCSV = () =>
-			$.ajax({
+	const uploadCSV = () => $.ajax({
 				url: "CSV",
 				data: {
 					path: document.getElementById("csv-file").files[0].name,
@@ -295,6 +363,27 @@
 			return false;
 		} else {
 			document.getElementById("view-empty").style.display = "none";
+			$.ajax({
+				url : "TickerChecking",
+				type: "Get",
+				data : {
+					ticker: $("#ticker-view").val()
+				},
+				success : (res) => {
+					var qtyCheck = checkQuantity();
+					var dateCheck = checkDates();
+					var tickerEmpty = checkTicker();
+					if (res.trim() === "1") {
+						document.getElementById("invalid-ticker").style.display = "none";
+						if(qtyCheck && dateCheck) {
+							addHistorical($("#ticker-view").val());
+						}
+					} else {
+						document.getElementById("invalid-ticker").style.display = "inline";
+
+					}
+				}
+			})
 		}
 		return true;
 	}

@@ -6,6 +6,7 @@ Feature: add stock to portfolio
     And I enter 'TSLA' into 'ticker'
     And I enter <quantity> into 'quantity'
     And I enter '10/11/2020' into 'date-purchased'
+    And I enter '10/21/2020' into 'date-sold'
     And I click on add stock
     Then I should see <shares> 'TSLA' stock on the portfolio
     Examples:
@@ -13,7 +14,7 @@ Feature: add stock to portfolio
       | '10'     | '10'   |
       | '0'      | '10'   |
 
-  Scenario: Remove stock from home page
+  Scenario: zRemove stock from home page
     Given I am signed in
     When I press the remove stock button
     And I click confirm on the pop up modal
@@ -94,11 +95,12 @@ Feature: add stock to portfolio
    		 | quantity | sold             |
       	 | '1'      | '01/15/2020'     |
       	 | '10'     | '08/20/2020'     |
-      	 
-   Scenario Outline: Using calendar picker to select dates
-      Given I am signed in
-      And I click on add stock modal
-      And I enter 'AAPL' into 'ticker'
-      And I enter '1' into 'quantity'
-      And I select 1 week ago from the calendar picker for date purchased
-      Then date purchased should equal 1 week ago
+
+  # Removed since purchase date is not shown in the home.jsp
+  #Scenario: Using calendar picker to select dates
+  #    Given I am signed in
+  #    And I click on add stock modal
+  #    And I enter 'AAPL' into 'ticker'
+  #    And I enter '1' into 'quantity'
+  #    And I select 1 week ago from the calendar picker for date purchased
+  #    Then date purchased should equal 1 week ago

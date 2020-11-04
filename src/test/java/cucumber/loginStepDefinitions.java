@@ -11,8 +11,6 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import static org.junit.Assert.assertTrue;
 
-import java.util.concurrent.TimeUnit;
-
 /**
  * Step definitions for Cucumber tests.
  */
@@ -32,11 +30,6 @@ public class loginStepDefinitions {
 		driver.get(ROOT_URL + "home.jsp");
 	}
 
-	@When("I click the Sign In tab")
-	public void iClickTheSignInTab() {
-		driver.findElement(By.linkText("Sign In")).click();
-	}
-	
 	@When("I click the Register tab")
 	public void iClickTheRegisterTab() {
 		driver.findElement(By.linkText("Register")).click();

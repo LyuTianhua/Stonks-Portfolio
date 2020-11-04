@@ -30,12 +30,10 @@ public class AddStock extends HttpServlet {
     public static PrintWriter pw;
     public static SimpleDateFormat sdf;
 
-
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
         try {
 
-            // initialize SimpleDateFormat used in makeDate
-            sdf = new SimpleDateFormat("yyyy-MM-dd");
+
 
             // get parameters from single add stock or get attributes from upload CSV servlet
             int userId = (int) req.getSession().getAttribute("id");
@@ -43,6 +41,9 @@ public class AddStock extends HttpServlet {
             double quantity = req.getParameter("quantity") == null ? Double.parseDouble((String) req.getAttribute("quantity")) : Double.parseDouble(req.getParameter("quantity"));
             String purchased = req.getParameter("purchased") == null ? (String) req.getAttribute("purchased") : req.getParameter("purchased");
             String sold = req.getParameter("sold") == null ? (String) req.getAttribute("sold") : req.getParameter("sold");
+
+
+            if (sold == null || sold.equals("")) sold = sdf.format(new Date());
 
             // format data for insertion into db
             JSONObject API_response = getGraphData(ticker);
@@ -67,7 +68,9 @@ public class AddStock extends HttpServlet {
 
             updateUserPortfolio(userId, quantity, purchasedDate, soldDate, timestamp, data);
 
+            req.setAttribute("loaded", true);
             pw.println(1);
+            pw.flush();
             pw.close();
         } catch (Exception ignored) {}
     }
@@ -119,8 +122,11 @@ public class AddStock extends HttpServlet {
     }
 
     public long makeDate(String date) throws ParseException {
+        // initialize SimpleDateFormat used in makeDate
+        sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date newDate = sdf.parse(date);
-        return newDate.getTime() / 1000;
+        long time = newDate.getTime()/1000;
+        return time;
     }
 
     public static String parseGraphResponse(String res) {
@@ -190,14 +196,6 @@ public class AddStock extends HttpServlet {
             doubleCompanyValues[i] = Double.parseDouble(splitCompanyValues[i]);
             longTimestamps[i] = Long.parseLong(splitTimestamps[i]);
         }
-
-//        System.out.println("double values");
-//        for (double d : doubleCompanyValues) System.out.print(d + " ");
-//
-//        System.out.println("\nlong timestamps");
-//        for (long l : longTimestamps) System.out.print(l + " ");
-
-
 
         db = new Database();
         con = db.getConn();
