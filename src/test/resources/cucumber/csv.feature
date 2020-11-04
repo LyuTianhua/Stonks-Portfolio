@@ -1,4 +1,4 @@
-Feature:
+Feature: Bulk upload stock with CSV file
 
   Scenario: Add CSV file
     Given I am signed in

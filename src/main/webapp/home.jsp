@@ -157,6 +157,15 @@
 		})
 	}
 
+	const removeHistorical = (ticker) => {
+		$.ajax({
+			url: "RemoveHistoricalStock",
+			type: "Get",
+			data: { ticker },
+			success: () => location.reload()
+		})
+	}
+
 	// $("#remove-stock-modal").on('show', (e) => {
 	// 	let ticker = $(e.relatedTarget).date('ticker')
 	// 	$(e.currentTarget).find('input[name="ticker_tobe_removed"]').val(ticker)
