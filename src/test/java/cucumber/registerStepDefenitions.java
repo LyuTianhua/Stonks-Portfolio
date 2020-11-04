@@ -22,7 +22,6 @@ public class registerStepDefenitions {
         driver.get(ROOT_URL + "register.jsp");
     }
 
-
     @And("I enter {string} in the {string} field")
     public void iEnterStringInField(String value, String key) {
         wait.until(ExpectedConditions.elementToBeClickable(By.id("r" + key))).sendKeys(value);
@@ -42,6 +41,12 @@ public class registerStepDefenitions {
     public void iShouldBeOnIndexJsp(String url) {
         wait.until(ExpectedConditions.urlContains(url));
         assertTrue(driver.getCurrentUrl().contains(url));
+    }
+    
+    @Then("I should see error message {string}")
+    public void i_should_see_error_message(String errMsg) {
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("Error-Message")));
+		assertTrue(driver.findElement(By.id("Error-Message")).getAttribute("innerHTML").contains(errMsg));
     }
 
 //    @After

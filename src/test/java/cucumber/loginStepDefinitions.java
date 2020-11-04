@@ -34,7 +34,7 @@ public class loginStepDefinitions {
 
 	@When("I click the Sign In tab")
 	public void iClickTheSignInTab() {
-		driver.findElement(By.linkText("Sign In")).click();
+		driver.findElement(By.id("link1")).click();
 	}
 	
 	@When("I click the Register tab")
