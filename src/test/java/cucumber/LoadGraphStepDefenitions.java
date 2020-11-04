@@ -46,7 +46,7 @@ public class LoadGraphStepDefenitions {
         wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("myChart")));
         assertTrue(driver.findElement(By.id("myChart")).isDisplayed());
     }
-    
+   
     @Then("I should see an error message stating that these are invalid dates below the graph")
     public void i_should_see_an_error_message_stating_that_these_are_invalid_dates_below() {
         try {
@@ -142,5 +142,4 @@ public class LoadGraphStepDefenitions {
     	assertTrue(!portfolioValue.getCssValue("color").equals("black"));
     }
 
-    
 }
