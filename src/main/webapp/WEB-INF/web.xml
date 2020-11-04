@@ -32,6 +32,26 @@
         <servlet-name>TickerChecking</servlet-name>
         <servlet-class>csci310.servlets.TickerChecking</servlet-class>
     </servlet>
+    <servlet>
+        <servlet-name>CSV</servlet-name>
+        <servlet-class>csci310.servlets.CSV</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoadGraph</servlet-name>
+        <servlet-class>csci310.servlets.LoadGraph</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>AddHistorical</servlet-name>
+        <servlet-class>csci310.servlets.AddHistorical</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>LoadHistorical</servlet-name>
+        <servlet-class>csci310.servlets.LoadHistorical</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>GraphHistorical</servlet-name>
+        <servlet-class>csci310.servlets.GraphHistorical</servlet-class>
+    </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
         <url-pattern>/Login</url-pattern>
@@ -59,5 +79,25 @@
     <servlet-mapping>
         <servlet-name>TickerChecking</servlet-name>
         <url-pattern>/TickerChecking</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>CSV</servlet-name>
+        <url-pattern>/CSV</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadGraph</servlet-name>
+        <url-pattern>/LoadGraph</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>AddHistorical</servlet-name>
+        <url-pattern>/AddHistorical</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>LoadHistorical</servlet-name>
+        <url-pattern>/LoadHistorical</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>GraphHistorical</servlet-name>
+        <url-pattern>/GraphHistorical</url-pattern>
     </servlet-mapping>
 </web-app>

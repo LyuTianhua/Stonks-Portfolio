@@ -8,52 +8,54 @@
 	<link rel="stylesheet" href="styles.css">
 	<title>Home</title>
 
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/2.9.4/Chart.min.js" integrity="sha512-d9xgZrVZpmmQlfonhQUvTR7lMPtO7NkZMkA0ABN3PHCbKA5nqylQ/yWlFAyY6hYgdF1Qh6nYiuADWwKB4C2WSw==" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
+	<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7"></script>
+
 </head>
 <body>
-
-<%
-	HttpSession sesh = request.getSession(false);
-
-	int id = sesh.getAttribute("id") == null ? 0 : (int)sesh.getAttribute("id");
-	if (id == 0) response.sendRedirect("index.jsp");
-%>
-
 <%@include file="partials/nav.jsp"%>
 
 <div class="container">
 	<div class="row justify-content-center">
 		<div class="btn-group col-12 col-md-6 col-lg-6 mt-3" role="group">
 			<button type="button" class="btn btn-dark" data-toggle="modal"
-				data-target="#add-stock-modal" id="add-stock-btn" name="add-stock-btn">
+					data-target="#add-stock-modal" id="add-stock-btn" name="add-stock-btn">
 				Add Stock
 			</button>
 			<button type="button" class="btn btn-dark" data-toggle="modal"
-				data-target="#view-stock-modal" id="view-stock-btn">
+					data-target="#view-stock-modal" id="view-stock-btn">
 				View Stock
 			</button>
 			<button type="button" class="btn btn-dark" data-toggle="modal"
-				data-target="#upload-modal" id="upload-btn">
-				Upload CSV
+					data-target="#upload-modal" id="upload-btn">
+				Upload File
 			</button>
 		</div>
 	</div>
 	<div class="row justify-content-center">
 		<div class="col-12 col-md-9 mt-3">
-			<img src="https://ak.picdn.net/shutterstock/videos/16504675/thumb/4.jpg"
-				class="img-fluid rounded shadow" alt="">
+			<%@include file="partials/graph.jsp"%>
 		</div>
 	</div>
 	<div class="row justify-content-center">
 		<div class="col-12 col-md-8 mt-3 overflow-auto">
-			<h3>Portfolio Stocks</h3>
 			<div class="table-responsive">
+				<h3>Portfolio Stocks</h3>
 				<table id="portfolio-stocks" class="table table-hover">
 					<%--filled dynamically--%>
+				</table>
+				<h3>Historical Stocks</h3>
+				<table id="historical-stocks" class="table table-hover">
+					<%-- filled dynamically --%>
 				</table>
 			</div>
 		</div>
 	</div>
 </div>
+<!-- Remove Stock Modal -->
+<%@include file="partials/removeConfirmModal.jsp"%>
 
 <!-- Add Stock Modal -->
 <%@include file="partials/addStockModal.jsp"%>
@@ -65,39 +67,100 @@
 <%@include file="partials/uploadForm.jsp"%>
 
 <script>
+	<%if (request.getSession(false).getAttribute("id") == null) {%>
+		window.location.replace("index.jsp");
+	<%}%>
 
-	const logout = () =>
-			$.ajax({
-				url : "Logout",
-				type : "Get",
-				success : () => window.location.href = "index.jsp"
-			})
+	const logout = () => $.ajax({
+		url : "Logout",
+		type : "Get",
+		success : () => window.location.href = "index.jsp"
+	})
 
+	const add = () => $.ajax({
+		url : "AddStock",
+		type: "Get",
+		data : {
+			ticker   : $("#ticker").val(),
+			purchased: $("#date-purchased").val(),
+			sold	 : $("#date-sold").val(),
+			quantity : $("#quantity").val()
+		},
+		success : () => location.reload()
+	})
 
-	const add = () =>
-			$.ajax({
-				url : "AddStock",
-				type: "Get",
-				data : {
-					ticker   : $("#ticker").val(),
-					date     : $("#date-purchased").val(),
-					quantity : $("#quantity").val()
-				},
-				success : () => location.reload()
-			})
+	const addHistorical = () => $.ajax({
+		url : "AddHistorical",
+		data : {
+			ticker : $("#ticker-view").val()
+		},
+		success : () => location.reload()
+	})
 
+	const loadHistorical = () => {
+		$.ajax({
+			url: "LoadHistorical",
+			success: (res) => $("#historical-stocks").html(res)
+		})
+	}
 
-	const remove = (t, q) =>
-			$.ajax({
-				url : "RemoveStock",
-				type : "Get",
-				data : {
-					ticker   : t,
-					quantity : $(q).val()
-				},
-				success : () => location.reload()
-			})
+	const graphHistorical = (ticker) => $.ajax({
+			url: "GraphHistorical",
+			data: {
+				ticker,
+				checked : document.getElementById(ticker + "Historical").checked,
+				fromGraph : $("#fromGraph").val(),
+				toGraph : $("#toGraph").val()
+			},
+			success: (res) => {
 
+				if (typeof res == "object") {
+					console.log("add dataset")
+					console.log(res)
+					myChart.data.datasets.push(res)
+					myChart.update()
+				} else {
+					console.log("remove dataset", res)
+
+					let removeIdx;
+					var i = 0;
+					myChart.data.datasets.forEach((dataset) => {
+						if (dataset.label === ticker) {
+							removeIdx = i;
+						}
+						i++;
+					})
+					console.log("found data set at ", removeIdx);
+					myChart.data.datasets.splice(removeIdx, 1);
+					myChart.update();
+
+				}
+			}
+		})
+
+	var ticker_to_be_deleted = ""
+	const remove = (t) => {
+		console.log("to be deleted ", t)
+		$("#ticker_name").text(t)
+		ticker_to_be_deleted = t
+	}
+
+	const remove_ajax_call = () => {
+		console.log("in remove ajax call ", $("#ticker_name").text())
+		$.ajax({
+			url: "RemoveStock",
+			type: "Get",
+			data: {
+				ticker: $("#ticker_name").text()
+			},
+			success: () => location.reload()
+		})
+	}
+
+	// $("#remove-stock-modal").on('show', (e) => {
+	// 	let ticker = $(e.relatedTarget).date('ticker')
+	// 	$(e.currentTarget).find('input[name="ticker_tobe_removed"]').val(ticker)
+	// })
 
 	const idleTimer = () => {
 		let t;
@@ -115,20 +178,83 @@
 	}
 	idleTimer();
 
+	var ctx = document.getElementById('myChart');
+	var myChart = new Chart(ctx, {
+		type: 'line',
+		data: {
+			labels: [],
+			datasets: [{
+				label: 'portfolio',
+				data: [],
+				borderWidth: 1
+			}]
+		},
+		options: {
+			scales: {
+				yAxes: [{
+					ticks: {
+						beginAtZero: true
+					}
+				}]
+			},
+			plugins: {
+				zoom: {
+					pan: {
+						enabled: true,
+						mode: 'xy'
+					},
+					zoom: {
+						enabled: true,
+						mode: 'xy',
+					}
+				}
+			}
+		}
+	});
+
 	window.addEventListener( "load", () =>
 			$.ajax( {
 				url : "LoadProfile",
 				type : "Get",
-				success : (res) => $("#portfolio-stocks").html(res)
+				success : (res) => {
+					$("#portfolio-stocks").html(res)
+					loadGraph();
+					loadHistorical();
+				}
 			})
 	)
+
+	const loadGraph = () => {
+	    console.log("calling load graph")
+		$.ajax({
+			url : "LoadGraph",
+			type: "Get",
+			data: {
+				fromGraph : $("#fromGraph").val(),
+				toGraph : $("#toGraph").val()
+			},
+			success: (res) => {
+				myChart.data.datasets[0].data = res.values;
+				myChart.data.labels = res.dates.map((d) => new Date(d*1000).toDateString().substring(3, 10));
+				myChart.update();
+			}
+		})
+	}
+
+	const uploadCSV = () => $.ajax({
+				url: "CSV",
+				data: {
+					path: document.getElementById("csv-file").files[0].name,
+				},
+				success: () => location.reload()
+			})
 
 </script>
 <script>
 	// Check for valid NYSE or NASDAQ ticker
 	// Todo: Accept API data to actually check valid ticker
 	function checkTicker() {
-		if(document.getElementById("ticker").value.length == 0) {
+		if(document.getElementById("ticker").value.length === 0) {
 			document.getElementById("ticker-empty").style.display = "inline";
 			return false;
 		} else {
@@ -140,9 +266,9 @@
 	// Check valid quantity
 	function checkQuantity() {
 		var quantity = document.getElementById("quantity");
-		if(isNaN(quantity.value) || quantity.value.length == 0 || quantity.value < 1) {
+		if(isNaN(quantity.value) || quantity.value.length === 0 || quantity.value < 1) {
 			document.getElementById("invalid-quantity").style.display = "inline";
-		    return false;
+			return false;
 		} else {
 			document.getElementById("invalid-quantity").style.display = "none";
 		}
@@ -152,51 +278,51 @@
 	// Check date sold before date purchased
 	// Todo: add check for date only 1 year in the past
 	function checkDates() {
-	    var datePurchased = new Date(document.getElementById("date-purchased").value);
-	    var dateSold = new Date(document.getElementById("date-sold").value);
-	    var rightNow = new Date();
-	    var oneYearAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
-	    var tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
-	    
-	    // Adjusting one year ago time for UTC offset
-	    oneYearAgo.setDate(rightNow.getDate()-1);
-	    oneYearAgo.setHours(23);
-	    oneYearAgo.setMinutes(59);
-	    oneYearAgo.setSeconds(59);
-	    oneYearAgo.setMilliseconds(999);
-	    
-	    // Adjusting tomorrow's date for UTC offset and making it midnight
-	    tomorrow.setHours(0);
-	    tomorrow.setMinutes(0);
-	    tomorrow.setSeconds(0);
-	    tomorrow.setMilliseconds(1);
-	    
-	    // Adjusting datePurchased for UTC offset
-	    datePurchased.setDate(datePurchased.getDate()+1);
+		var datePurchased = new Date(document.getElementById("date-purchased").value);
+		var dateSold = new Date(document.getElementById("date-sold").value);
+		var rightNow = new Date();
+		var oneYearAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
+		var tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
 
-	    if(datePurchased < oneYearAgo || datePurchased >= tomorrow){
-	    	document.getElementById("one-year-error").style.display = "inline";
-	    	return false;
-	    } else {
-	    	document.getElementById("one-year-error").style.display = "none";
-	    }
-	    
-	    if(document.getElementById("date-purchased").value.length == 0) {
-	    	document.getElementById("purchased-empty").style.display = "inline";
-	    	return false;
-	    } else {
-	    	document.getElementById("purchased-empty").style.display = "none";
-	    }
-	    
-	    if(document.getElementById("date-sold").value.length > 0){
-	    	if((dateSold - datePurchased) < 0) {
-	    		document.getElementById("invalid-date-sold").style.display = "inline";
-	    		return false;
-	    	} else {
-	    		document.getElementById("invalid-date-sold").style.display = "none";
-	    	}
-	    }
-	    
+		// Adjusting one year ago time for UTC offset
+		oneYearAgo.setDate(rightNow.getDate()-1);
+		oneYearAgo.setHours(23);
+		oneYearAgo.setMinutes(59);
+		oneYearAgo.setSeconds(59);
+		oneYearAgo.setMilliseconds(999);
+
+		// Adjusting tomorrow's date for UTC offset and making it midnight
+		tomorrow.setHours(0);
+		tomorrow.setMinutes(0);
+		tomorrow.setSeconds(0);
+		tomorrow.setMilliseconds(1);
+
+		// Adjusting datePurchased for UTC offset
+		datePurchased.setDate(datePurchased.getDate()+1);
+
+		if(datePurchased < oneYearAgo || datePurchased >= tomorrow){
+			document.getElementById("one-year-error").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("one-year-error").style.display = "none";
+		}
+
+		if(document.getElementById("date-purchased").value.length === 0) {
+			document.getElementById("purchased-empty").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("purchased-empty").style.display = "none";
+		}
+
+		if(document.getElementById("date-sold").value.length > 0){
+			if((dateSold - datePurchased) < 0) {
+				document.getElementById("invalid-date-sold").style.display = "inline";
+				return false;
+			} else {
+				document.getElementById("invalid-date-sold").style.display = "none";
+			}
+		}
+
 		return true;
 	}
 
@@ -212,31 +338,52 @@
 				var qtyCheck = checkQuantity();
 				var dateCheck = checkDates();
 				var tickerEmpty = checkTicker();
-				if (res.trim() == "1") {
-					document.getElementById("invalid-ticker").style.visibility = "hidden";
+				if (res.trim() === "1") {
+					document.getElementById("invalid-ticker").style.display = "none";
 					if(qtyCheck && dateCheck) {
 						add();
 					}
 				} else {
-					document.getElementById("invalid-ticker").style.visibility = "visible";
-					
+					document.getElementById("invalid-ticker").style.display = "inline";
+
 				}
 			}
 		})
 	}
-	
+
 	// Performs ticker check before submitting view stock form
 	// TODO: Check valid ticker before adding to view stock
 	function checkViewStockForm() {
 		// Insert AJAX call for checking valid ticker from API
-		
+
 		// Checking if ticker is empty
-		if(document.getElementById("ticker").value.length == 0) {
+		if(document.getElementById("ticker").value.length === 0) {
 			console.log("View ticker empty.");
 			document.getElementById("view-empty").style.display = "inline";
 			return false;
 		} else {
 			document.getElementById("view-empty").style.display = "none";
+			$.ajax({
+				url : "TickerChecking",
+				type: "Get",
+				data : {
+					ticker: $("#ticker-view").val()
+				},
+				success : (res) => {
+					var qtyCheck = checkQuantity();
+					var dateCheck = checkDates();
+					var tickerEmpty = checkTicker();
+					if (res.trim() === "1") {
+						document.getElementById("invalid-ticker").style.display = "none";
+						if(qtyCheck && dateCheck) {
+							addHistorical($("#ticker-view").val());
+						}
+					} else {
+						document.getElementById("invalid-ticker").style.display = "inline";
+
+					}
+				}
+			})
 		}
 		return true;
 	}

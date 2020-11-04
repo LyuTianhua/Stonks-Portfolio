@@ -1,84 +1,76 @@
 package junit;
 
-import csci310.servlets.Login;
 import csci310.servlets.Signup;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.ServletException;
 import java.io.IOException;
-import java.sql.*;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertTrue;
 
 public class SignupTest {
 
-    @Before
-    public void setUp() throws SQLException {
-        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
-//        PreparedStatement ps = con.prepareStatement("DELETE FROM base_user WHERE email <> 'tu1@email.com'" );
-//        ps.execute();
-        con.close();
-    }
+    Signup signup;
+    MockHttpServletRequest mocReq;
+    MockHttpServletResponse mocRes;
 
     @Test
-    public void testDoPost() throws ServletException, IOException {
+    public void testDoPost() throws IOException {
 
-        MockHttpServletResponse mocRes = new MockHttpServletResponse();
-        Signup signup = new Signup();
+        signup = new Signup();
 
-        MockHttpServletRequest mocReq = newMockRequest("tu2@email.com", "tu2pass", "tu2pass");
+        Helper.delete_user_where_name("signupTestNewUser");
+
+        make_new_mock_objects();
+        add_name_password_confirm("signupTestNewUser", "password", "password");
         signup.doPost(mocReq, mocRes);
-        boolean passed = (Boolean) mocReq.getAttribute("authenticated");
-        assertTrue(passed);
+        assertTrue((boolean) mocReq.getAttribute("authenticated"));
 
-        mocReq = newMockRequest("tu1@email.com", "tu1pass", "tu1pass");
+        Helper.delete_user_where_name("signupTestNewUser");
+
+
+        Helper.insert_user_name_password("existingUser", "password");
+
+        make_new_mock_objects();
+        add_name_password_confirm("existingUser", "password", "password");
         signup.doPost(mocReq, mocRes);
-        boolean failEmailExists = (Boolean) mocReq.getAttribute("authenticated");
-        assertFalse(failEmailExists);
+        assertFalse((boolean) mocReq.getAttribute("authenticated"));
 
-        mocReq = newMockRequest("tu2@email.com", "tu2pass", "");
+        Helper.delete_user_where_name("existingUser");
+
+
+        make_new_mock_objects();
+        add_name_password_confirm("missingConfirm", "password", "");
         signup.doPost(mocReq, mocRes);
-        boolean failMissingParam = (Boolean) mocReq.getAttribute("authenticated");
-        assertFalse(failMissingParam);
+        assertFalse((boolean) mocReq.getAttribute("authenticated"));
 
-        mocReq = newMockRequest("tu2@email.com", "password1", "password2");
+        make_new_mock_objects();
+        add_name_password_confirm("passwordsDontMatch", "dont", "match");
         signup.doPost(mocReq, mocRes);
-        boolean failPasswordsDontMatch = (Boolean) mocReq.getAttribute("authenticated");
-        assertFalse(failPasswordsDontMatch);
+        assertFalse((Boolean) mocReq.getAttribute("authenticated"));
 
     }
 
     @Test
-    public void testHashPassword() {
-        String unhashed = "unhashed";
-        String hashed = unhashed;
-        hashed = Login.hashPassword(hashed);
-        assertFalse(unhashed.equalsIgnoreCase(hashed));
-    }
+    public void testHashPassword() { }
 
     @Test
-    public void testNewUserInserted() throws SQLException {
-        assertTrue(Signup.newUserInserted("insertUserTest", "insertUserPass"));
-    }
+    public void testNewUserInserted() { }
 
     @Test
-    public void testValidEmail() throws SQLException {
-        assertTrue(Signup.validEmail("validEmailTest"));
+    public void testValidEmail() { }
+
+    public void add_name_password_confirm(String name, String password, String confirm) {
+        mocReq.addParameter("email", name);
+        mocReq.addParameter("password", password);
+        mocReq.addParameter("confirm", confirm);
     }
 
-    @Test
-    public void getUserId() throws SQLException {
-        assertEquals(Signup.getUserId("tu1@email.com"), 1);
+    public void make_new_mock_objects() {
+        mocReq = new MockHttpServletRequest();
+        mocRes = new MockHttpServletResponse();
     }
 
-    public MockHttpServletRequest newMockRequest(String email, String password, String confirm) {
-        MockHttpServletRequest mockRequest = new MockHttpServletRequest();
-        mockRequest.addParameter("email", email);
-        mockRequest.addParameter("password", password);
-        mockRequest.addParameter("confirm", confirm);
-        return mockRequest;
-    }
 }

@@ -9,48 +9,52 @@ import java.sql.*;
 @WebServlet("/RemoveStock")
 public class RemoveStock extends HttpServlet {
 
-    public void doGet(HttpServletRequest req, HttpServletResponse res) {
-        Database db = new Database();
-        Connection con = db.getConn();
-        try {
-            String ticker = req.getParameter("ticker");
-            int companyId = getCompanyId(ticker);
-            int userId = (int) req.getSession().getAttribute("id");
-            double quantity = Double.parseDouble(req.getParameter("quantity"));
-            updateStock(userId, companyId, quantity);
+    static Database db;
+    static Connection con;
+    static ResultSet rs;
+    static PreparedStatement ps;
 
-        } catch (Exception ignored) {}
-        db.closeCon();
+    public void doGet(HttpServletRequest req, HttpServletResponse res) {
+        System.out.println("\n\n\n\n\n\n\nin remove stock");
+
+        String ticker = req.getParameter("ticker");
+        int companyId = getCompanyId(ticker);
+        int userId = (int) req.getSession().getAttribute("id");
+        System.out.println("ticker: " + ticker);
+//            double quantity = Double.parseDouble(req.getParameter("quantity"));
+        updateStock(userId, companyId);
     }
 
-    public static int getCompanyId(String ticker) throws SQLException {
-        Database db = new Database();
-        Connection con = db.getConn();
-        PreparedStatement ps = con.prepareStatement("select * from company where ticker=?");
-        ps.setString(1, ticker);
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        Integer id = rs.getInt("id");
+    public static int getCompanyId(String ticker)  {
+        db = new Database();
+        con = db.getConn();
+        int id = 0;
+        try {
+            ps = con.prepareStatement("select * from company where ticker=?");
+            ps.setString(1, ticker);
+            rs = ps.executeQuery();
+            rs.next();
+            id = rs.getInt("id");
+        } catch (SQLException ignored) {}
         db.closeCon();
         return id;
     }
 
-    public static void updateStock(int userId, int companyId, double shares) throws SQLException {
-        Database db = new Database();
-        Connection con = db.getConn();
-        PreparedStatement ps = con.prepareStatement("select shares from stock where user_id=? and company_id=?");
-        ps.setInt(1, userId);
-        ps.setInt(2, companyId);
-        ResultSet rs = ps.executeQuery();
+    public static void updateStock(int userId, int companyId) {
 
-        ps = con.prepareStatement("update stock set shares = shares - ? where user_id=? and company_id=?");
-        ps.setDouble(1, shares);
-        ps.setInt(2, userId );
-        ps.setInt(3, companyId);
-        ps.executeUpdate();
+        System.out.printf("user id: %d\ncompany id : %d\n", userId, companyId);
 
-        ps = con.prepareStatement("delete from stock where shares <= 0");
-        ps.execute();
+        db = new Database();
+        con = db.getConn();
+
+        try {
+            ps = con.prepareStatement("delete from Stock where company_id=? and user_id=?");
+            ps.setInt(1, userId);
+            ps.setInt(2, companyId);
+            ps.execute();
+
+            System.out.println("executed update stock query");
+        } catch (SQLException e) {e.printStackTrace();}
         db.closeCon();
     }
 

@@ -4,10 +4,8 @@ import io.cucumber.java.en.And;
 import io.cucumber.java.en.Given;
 import io.cucumber.java.en.Then;
 import io.cucumber.java.en.When;
-import org.junit.After;
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
-import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -15,15 +13,14 @@ import static org.junit.Assert.assertTrue;
 
 public class registerStepDefenitions {
 
-    private static final String ROOT_URL = "http://localhost:8081/";
-    private final WebDriver driver = new ChromeDriver(RunCucumberTests.options);
-    private final WebDriverWait wait = new WebDriverWait(driver, 3);
+    private static final String ROOT_URL = "https://localhost:8080/";
+    WebDriver driver = RunCucumberTests.driver;
+    WebDriverWait wait = RunCucumberTests.wait;
 
     @Given("I am on the register page")
     public void iAmOnTheRegisterPage() {
         driver.get(ROOT_URL + "register.jsp");
     }
-
 
     @And("I enter {string} in the {string} field")
     public void iEnterStringInField(String value, String key) {
@@ -45,7 +42,13 @@ public class registerStepDefenitions {
         wait.until(ExpectedConditions.urlContains(url));
         assertTrue(driver.getCurrentUrl().contains(url));
     }
+    
+    @Then("I should see error message {string}")
+    public void i_should_see_error_message(String errMsg) {
+		wait.until(ExpectedConditions.elementToBeClickable(By.id("Error-Message")));
+		assertTrue(driver.findElement(By.id("Error-Message")).getAttribute("innerHTML").contains(errMsg));
+    }
 
-    @After
-    public void tearDown() { driver.quit(); }
+//    @After
+//    public void tearDown() { driver.quit(); }
 }

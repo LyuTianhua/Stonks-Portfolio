@@ -1,150 +1,250 @@
 package csci310.servlets;
-import javax.servlet.annotation.WebServlet;
-import javax.servlet.http.HttpServlet;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 
-import java.io.PrintWriter;
-import java.sql.*;
-
-import org.json.*;
 import com.mashape.unirest.http.HttpResponse;
 import com.mashape.unirest.http.JsonNode;
 import com.mashape.unirest.http.Unirest;
 import com.mashape.unirest.http.exceptions.UnirestException;
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import javax.servlet.annotation.WebServlet;
+import javax.servlet.http.HttpServlet;
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.io.PrintWriter;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 @WebServlet("/AddStock")
 public class AddStock extends HttpServlet {
+
+    public static PreparedStatement ps;
+    public static ResultSet rs;
+    public static Database db;
+    public static Connection con;
     public static PrintWriter pw;
+    public static SimpleDateFormat sdf;
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
-        Database db = new Database();
-        Connection con = db.getConn();
         try {
+
+
+
+            // get parameters from single add stock or get attributes from upload CSV servlet
             int userId = (int) req.getSession().getAttribute("id");
-            String ticker = req.getParameter("ticker").toUpperCase();
-            double quantity = Double.parseDouble(req.getParameter("quantity"));
-            String fullDate = req.getParameter("date");
+            String ticker = req.getParameter("ticker") == null ? (String) req.getAttribute("ticker") : req.getParameter("ticker").toUpperCase();
+            double quantity = req.getParameter("quantity") == null ? Double.parseDouble((String) req.getAttribute("quantity")) : Double.parseDouble(req.getParameter("quantity"));
+            String purchased = req.getParameter("purchased") == null ? (String) req.getAttribute("purchased") : req.getParameter("purchased");
+            String sold = req.getParameter("sold") == null ? (String) req.getAttribute("sold") : req.getParameter("sold");
 
-            fullDate = "1970-01-01";
 
-            String[] dateParts = fullDate.split("-", 3);
-            int year = Integer.parseInt(dateParts[0]);
-            int month = Integer.parseInt(dateParts[1]);
-            int day = Integer.parseInt(dateParts[2]);
-            int companyId = getCompanyId(ticker);
-            
+            if (sold == null || sold.equals("")) sold = sdf.format(new Date());
+
+            // format data for insertion into db
+            JSONObject API_response = getGraphData(ticker);
+
+            // parse the data to get values for stock
+            String data = parseGraphResponse(API_response.toString());
+
+            // get an array of the timestamp
+            String timestamp = API_response.getJSONArray("timestamp").toString();
+            timestamp = timestamp.replace(",", " ");
+            timestamp = timestamp.replace("[", "");
+            timestamp = timestamp.replace("]", "");
+
+
+            int companyId = getCompanyId(ticker, data, timestamp);
+            long purchasedDate = makeDate(purchased);
+            long soldDate = makeDate(sold);
+
             pw = res.getWriter();
-            
-            // Updated for graph data
-            addStockToPortfolio(userId, companyId, quantity, new Date(year, month, day), getGraphData(ticker));            
-            pw.println(1);            
+
+            addStockToPortfolio(userId, companyId, quantity, purchasedDate, soldDate);
+
+            updateUserPortfolio(userId, quantity, purchasedDate, soldDate, timestamp, data);
+
+            req.setAttribute("loaded", true);
+            pw.println(1);
+            pw.flush();
             pw.close();
         } catch (Exception ignored) {}
-        db.closeCon();
     }
 
-    public static int getUserId(String email) throws SQLException {
-        Database db = new Database();
-        Connection con = db.getConn();
-        PreparedStatement ps = con.prepareStatement("SELECT id FROM base_user WHERE email=?");
-        ps.setString(1, email);
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        Integer id = rs.getInt("id");
-        db.closeCon();
-        return id;
-    }
-
-    public static int getCompanyId(String ticker) throws SQLException {
-        Database db = new Database();
-        Connection con = db.getConn();
-
-        //Statement to check if the company exists
-        PreparedStatement ps = con.prepareStatement(
-                "select id from company where ticker=?"
-        );
-        ps.setString(1, ticker);
-        ResultSet rs = ps.executeQuery();
-
-        //If does not exists, Get company id
-        if(rs.next()) {
-            Integer id = rs.getInt("id");
-            db.closeCon();
-            return id;
-        } else {
-            ps = con.prepareStatement(
-                    "INSERT INTO company (ticker) VALUES (?)"
-            );
-            ps.setString(1, ticker);
-            ps.execute();
-            ps = con.prepareStatement(
-                    "select id from company where ticker=?"
-            );
+    public static int getCompanyId(String ticker, String data, String timestamp)  {
+        db = new Database();
+        con = db.getConn();
+        int id = 0;
+        try {
+            //Statement to check if the company exists
+            ps = con.prepareStatement("select id from company where ticker=?");
             ps.setString(1, ticker);
             rs = ps.executeQuery();
-            rs.next();
-            Integer id = rs.getInt("id");
-            db.closeCon();
-            return id;
-        }
 
+            //If company is not in database insert it;
+            if (!rs.next()) {
 
-//        PreparedStatement ps = con.prepareStatement(
-//                "with i as (INSERT INTO company (ticker) VALUES (?) ON CONFLICT (ticker) DO NOTHING RETURNING id) select id from i union all select id from company where ticker = ? limit 1;");
-//        ps.setString(1, ticker);
-//        ps.setString(2, ticker);
-//
-//        ResultSet rs = ps.executeQuery();
-//        rs.next();
+                ps = con.prepareStatement("INSERT INTO company (ticker, data, timestamps) VALUES (?, ?, ?)");
+                ps.setString(1, ticker);
+                ps.setString(2, data);
+                ps.setString(3, timestamp);
+                ps.execute();
+                ps = con.prepareStatement("select id from company where ticker=?");
+                ps.setString(1, ticker);
+                rs = ps.executeQuery();
+                rs.next();
+            }
+
+            id = rs.getInt("id");
+
+        } catch (SQLException ignored) { }
+
+        db.closeCon();
+        return id;
+
     }
 
+    public static JSONObject getGraphData(String ticker) throws UnirestException {
+        HttpResponse<JsonNode> response = Unirest.get("https://yahoo-finance-low-latency.p.rapidapi.com/v8/finance/chart/" + ticker + "?lang=en&range=1y&region=US&interval=1d")
+                .header("x-rapidapi-host", "yahoo-finance-low-latency.p.rapidapi.com")
+                .header("x-rapidapi-key", "f1e55eb2c9msh2690eb51d13f30ap1d7cdajsn96819c5a1864")
+                .asJson();
 
-    public static void addStockToPortfolio(int userId, int companyId, double shares, Date date, String jsonData) throws SQLException {
-        Database db = new Database();
-        Connection con = db.getConn();
-        PreparedStatement ps = con.prepareStatement("select * from stock where company_id=? and user_id=?");
-        ps.setInt(1, userId);
-        ps.setInt(2, companyId);
+        JSONObject json = response.getBody().getObject();
+        JSONObject chart = json.getJSONObject("chart");
+        JSONArray result = chart.getJSONArray("result");
 
-        ResultSet rs = ps.executeQuery();
+        return response.getStatus() == 200? (JSONObject) result.get(0) : null;
+    }
 
-        if (rs.next()) {
-            ps = con.prepareStatement("update stock set shares = shares + ?, purchased = ?, data = ? where user_id = ? and company_id = ?");
-            ps.setDouble(1, shares);
-            ps.setDate(2, date);
+    public long makeDate(String date) throws ParseException {
+        // initialize SimpleDateFormat used in makeDate
+        sdf = new SimpleDateFormat("yyyy-MM-dd");
+        Date newDate = sdf.parse(date);
+        long time = newDate.getTime()/1000;
+        return time;
+    }
 
-            // Updated graph data
-            ps.setString(3, jsonData);
-            
-            ps.setInt(4, userId);
-            ps.setInt(5, companyId);
-            ps.executeUpdate();
-        } else {
-            ps = con.prepareStatement("insert into stock (company_id, user_id, shares, purchased, data) values (?, ?, ?, ?, ?)");
-            ps.setInt(1, companyId);
-            ps.setInt(2, userId);
-            ps.setDouble(3, shares);
-            ps.setDate(4, date);
-            
-            // Added graph data
-            ps.setString(5, jsonData);
-            
-            ps.execute();
-        }
+    public static String parseGraphResponse(String res) {
+
+        String offset = "\"adjclose\":[";
+        String data = res.substring(res.lastIndexOf(offset) + offset.length() , res.lastIndexOf("]}]},"));
+
+        String[] individuals = data.split(",", -1);
+        String ret = "";
+        for (String s : individuals)
+            ret += s.substring(0, s.indexOf(".") + 2) + " ";
+
+        return ret;
+    }
+
+    public static void addStockToPortfolio(int userId, int companyId, double shares, long purchased, long sold) {
+        db = new Database();
+        con = db.getConn();
+
+        try {
+            ps = con.prepareStatement("select * from stock where company_id=? and user_id=?");
+            ps.setInt(1, userId);
+            ps.setInt(2, companyId);
+
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+                ps = con.prepareStatement("update stock set shares = shares + ?, purchased = ?, sold = ? where user_id = ? and company_id = ?");
+                ps.setDouble(1, shares);
+                ps.setLong(2, purchased);
+
+                // Updated graph data
+                ps.setLong(3, sold);
+
+                ps.setInt(4, userId);
+                ps.setInt(5, companyId);
+                ps.executeUpdate();
+            } else {
+                ps = con.prepareStatement("insert into stock (company_id, user_id, shares, purchased, sold) values (?, ?, ?, ?, ?)");
+                ps.setInt(1, companyId);
+                ps.setInt(2, userId);
+                ps.setDouble(3, shares);
+                ps.setLong(4, purchased);
+
+                // Added graph data
+                ps.setLong(5, sold);
+
+                ps.execute();
+            }
+        } catch (SQLException ignored) {}
+
         db.closeCon();
     }
-    
-    public static String getGraphData(String ticker) {
-		try {
-			HttpResponse<JsonNode> response = Unirest.get("https://yahoo-finance-low-latency.p.rapidapi.com/v8/finance/chart/" + ticker + "?lang=en&range=1y&region=US&interval=1d")
-					.header("x-rapidapi-host", "yahoo-finance-low-latency.p.rapidapi.com")
-					.header("x-rapidapi-key", "f1e55eb2c9msh2690eb51d13f30ap1d7cdajsn96819c5a1864")
-					.asJson();
-			if (response.getStatus() == 200) {
-				return response.getBody().getObject().toString();
-			}
-		} catch (Exception ignored) {}
-		return "";
+
+    private void updateUserPortfolio(int userId, double quantity, long purchasedDate, long soldDate, String timestamp, String companyValues) {
+
+        String[] splitTimestamps = timestamp.split(" ", -1);
+        String[] splitCompanyValues = companyValues.split(" ", -1);
+
+        int N = splitTimestamps.length - 1;
+
+        double[] doubleCompanyValues = new double[N];
+        long[] longTimestamps = new long[N];
+        double[] data = new double[N];
+
+        for (int i = 0; i < N; i++) {
+            doubleCompanyValues[i] = Double.parseDouble(splitCompanyValues[i]);
+            longTimestamps[i] = Long.parseLong(splitTimestamps[i]);
+        }
+
+        db = new Database();
+        con = db.getConn();
+
+        try {
+
+            ps = con.prepareStatement("select * from base_user where id=?");
+            ps.setInt(1, userId);
+            rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                String userData = rs.getString("data");
+                if (userData != null) {
+
+                    String[] splitUserData = userData.split(" ", -1);
+                    for (int i = 0; i < N; i++)
+                        data[i] = Double.parseDouble(splitUserData[i]);
+
+                } else {
+
+                    for (int i = 0; i < N; i++ )
+                        data[i] = 0;
+                }
+
+
+                int k = 0;
+                while (purchasedDate >= longTimestamps[k])
+                    k++;
+
+
+                while (soldDate >= longTimestamps[k]) {
+                    data[k] += doubleCompanyValues[k];
+                    k++;
+                }
+
+                StringBuilder newUserData = new StringBuilder();
+                for (int i = 0; i < N; i++)
+                    newUserData.append(data[i]).append(" ");
+
+                ps = con.prepareStatement("update base_user set data=? where id=?");
+                ps.setString(1, newUserData.toString());
+                ps.setInt(2, userId);
+                ps.executeUpdate();
+            }
+
+
+        } catch (SQLException e) {e.printStackTrace();}
+        db.closeCon();
+
     }
 }

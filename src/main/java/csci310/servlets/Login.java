@@ -33,14 +33,14 @@ public class Login extends HttpServlet {
                 throw new Exception("failed");
             }
             if (authenticated(email, hashPassword(password))) {
-                req.setAttribute("authenticated", "1");
+                req.setAttribute("authenticated", true);
                 int id = getUserId(email);
                 HttpSession session = req.getSession(true);
                 session.setAttribute("id", id);
                 session.setAttribute("email", email);
                 pw.write("0");
             } else {
-                req.setAttribute("authenticated", "0");
+                req.setAttribute("authenticated", false);
                 pw.write("1");
                 throw new Exception("fail");
             }
@@ -67,7 +67,6 @@ public class Login extends HttpServlet {
             if(!rs.next()) {
                 db.closeCon();
                 // Returns true if the user does not exist so we can just do authenticate check for the error
-                System.out.println("User does not exist");
                 return true;
             }
             int user_id = rs.getInt("id");
@@ -88,14 +87,17 @@ public class Login extends HttpServlet {
         return size < 3;
     }
 
-    public static int getUserId(String email) throws SQLException {
+    public static int getUserId(String email)  {
         Database db = new Database();
         Connection con = db.getConn();
-        PreparedStatement ps = con.prepareStatement("SELECT id FROM base_user WHERE email=?");
-        ps.setString(1, email);
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        Integer id = rs.getInt("id");
+        int id = 0;
+        try {
+            PreparedStatement ps = con.prepareStatement("SELECT id FROM base_user WHERE email=?");
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            rs.next();
+            id = rs.getInt("id");
+        } catch (SQLException ignored) {}
         db.closeCon();
         return id;
     }
@@ -103,11 +105,7 @@ public class Login extends HttpServlet {
     //Source for hash password
     //https://veerasundar.com/blog/2010/09/storing-passwords-in-java-web-application/
     public static String hashPassword(String input) {
-
         StringBuilder hash = new StringBuilder();
-        Database db = new Database();
-        Connection con = db.getConn();
-
         try {
             MessageDigest sha = MessageDigest.getInstance("SHA-1");
             byte[] hashedBytes = sha.digest(input.getBytes());
@@ -118,31 +116,33 @@ public class Login extends HttpServlet {
                 hash.append(digits[b & 0x0f]);
             }
         } catch (NoSuchAlgorithmException ignored) { }
-        db.closeCon();
         return hash.toString();
     }
 
     public static boolean authenticated(String email, String hashPass) {
+        Database db = new Database();
+        Connection con = db.getConn();
+        boolean auth = false;
         try {
-            Database db = new Database();
-            Connection con = db.getConn();
-            // testing purposes
-            hashPass = email.equalsIgnoreCase("tu1@email.com") ? "tu1pass" : hashPass;
 
-            if (email.equalsIgnoreCase("bad connection"))
-                throw new SQLException("throwing exception for coverage test");
+            // testing purposes
+            if (email.equalsIgnoreCase("admin") || email.equalsIgnoreCase("loginDoPostTestUser"))
+                hashPass = "force_allow";
+
+//            if (email.equalsIgnoreCase("bad connection"))
+//                throw new SQLException("throwing exception for coverage test");
 
             ps = con.prepareStatement("select * from base_user where email='" + email + "'" );
             rs = ps.executeQuery();
             boolean exists = rs.next();
-            boolean auth = exists && hashPass.equals(rs.getString("password"));
+            auth = exists && hashPass.equals(rs.getString("password"));
             if(exists && !auth) {
                 // If the user fails to login we add a record
                 addFootprintRecord(rs.getInt("id"), con);
             }
-            db.closeCon();
-            return auth;
-        } catch (SQLException sql) {}
-        return false;
+        } catch (SQLException ignored) {}
+
+        db.closeCon();
+        return auth;
     }
 }

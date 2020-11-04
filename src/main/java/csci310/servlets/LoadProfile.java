@@ -28,16 +28,13 @@ public class LoadProfile  extends HttpServlet {
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
-            res.setContentType("text/html");
             String ticker, shares, rm, btn, radio;
 
 
             pw.println("<tr>\n" +
-                    "<th>Graph</th>\n" +
                     "<th>Stonk</th>\n" +
                     "<th>Shares</th>\n" +
                     "<th>Remove</th>\n" +
-                    "<th>Confirm</th>\n" +
                     "</tr>");
 
             while (rs.next()) {
@@ -48,16 +45,18 @@ public class LoadProfile  extends HttpServlet {
                 radio = ticker + "Radio";
 
                 pw.println("<tr>");
-                pw.println("<th> <input id='" + radio + "' type='checkbox' value='" + ticker + "' onclick='graphStock(0)' class='tableBox'></th>");
-                pw.println("<th id=\"" + ticker + "\">" + ticker + "</th>");
-                pw.println("<th id=\"" + shares + "\">" + rs.getInt("shares") + "</th>");
-                pw.println("<th> <input id=\"" + rm + "\" type =\"test\" ></th>");
-                pw.println("<th> " +
-                        "<button id=\"" + btn + "\" " +
+                pw.println("<td id=\"" + ticker + "\">" + ticker + "</td>");
+                pw.println("<td id=\"" + shares + "\">" + rs.getInt("shares") + "</td>");
+                pw.println("<td> " +
+                        "<button id=\"" + btn + "\" " + "class=\"btn btn-danger\"" +
                         "type=\"button\" " +
-                        "onclick=\"remove('" + ticker + "', '#" + rm + "')\" " +
-                        "style=\"color: black\">remove</button> " +
-                        "</th>");
+                        "data-toggle=\"modal\"" + 
+                        "data-target=\"#remove-stock-modal\"" +
+                        "data-ticker=\"" + ticker + "\"" +
+                        "onclick=\"remove('" + ticker + "')\">" +
+                        "Remove" +
+                        "</button>" +
+                        "</td>");
                 pw.println("</tr>");
             }
 
@@ -65,6 +64,8 @@ public class LoadProfile  extends HttpServlet {
             pw.close();
 
         } catch (SQLException | IOException ignored) { }
+
+        req.setAttribute("loaded", true);
         db.closeCon();
     }
 

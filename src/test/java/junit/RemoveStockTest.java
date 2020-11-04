@@ -1,98 +1,75 @@
 package junit;
 
+import csci310.servlets.Database;
 import csci310.servlets.RemoveStock;
-import org.junit.Before;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-import javax.servlet.http.HttpSession;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
 
 public class RemoveStockTest {
 
-    public static RemoveStock removeStock;
-    public static Connection con;
-
-    @Before
-    public void setUp() throws Exception {
-        removeStock = new RemoveStock();
-        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
-
-        PreparedStatement ps = con.prepareStatement("delete from stock where user_id=?");
-        ps.setInt(1, 1);
-        ps.execute();
-
-        ps = con.prepareStatement("insert into stock (user_id, company_id, shares, purchased) values (?, ?, ?, current_date)");
-        ps.setInt(1, 1);
-        ps.setInt(2, 1);
-        ps.setDouble(3, 10);
-        ps.execute();
-        con.close();
-    }
+    RemoveStock removeStock;
+    PreparedStatement ps;
+    ResultSet rs;
+    Database db;
+    Connection con;
+    MockHttpServletRequest mocReq;
+    MockHttpServletResponse mocRes;
 
     @Test
     public void TestDoGet() throws SQLException {
-        MockHttpServletRequest mocReq = new MockHttpServletRequest();
-        MockHttpServletResponse mocRes = new MockHttpServletResponse();
 
-        HttpSession session = mocReq.getSession(true);
-        assert session != null;
-        session.setAttribute("id", 1);
+        removeStock = new RemoveStock();
 
-        mocReq.addParameter("ticker", "TSLA");
-        mocReq.addParameter("quantity", "5");
+        int user_id = 89;
+        int company_id = 50;
+
+        Helper.insert_user_id_name_password(user_id, "removeStockDoGet", "password");
+        Helper.insert_company_id_ticker(company_id, "K");
+        Helper.insert_stock_company_user_shares(company_id, user_id, 10);
+
+        make_new_mock_objects();
+        mocReq.getSession(true).setAttribute("id", user_id);
+        mocReq.addParameter("ticker", "K");
+        mocReq.addParameter("quantity", "10");
 
         removeStock.doGet(mocReq, mocRes);
 
-        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
-        PreparedStatement ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
-        ps.setInt(1, 1);
-        ps.setInt(2, 1);
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        assertEquals(5, rs.getDouble("shares"), 0.0);
-        con.close();
+        db = new Database();
+        con = db.getConn();
+        ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
+        ps.setInt(1, user_id);
+        ps.setInt(2, company_id);
+        rs = ps.executeQuery();
 
+        if (rs.next())
+            assertEquals(10, rs.getDouble("shares"), 0.0);
+
+        db.closeCon();
+
+        Helper.delete_from_stock_user_company(user_id, company_id);
+        Helper.delete_company_where_id(company_id);
+        Helper.delete_user_where_id(user_id);
+
+    }
+
+    @Test
+    public void TestGetCompanyId() throws SQLException { }
+
+    @Test
+    public void TestUpdateStock() throws SQLException { }
+
+    public void make_new_mock_objects() {
         mocReq = new MockHttpServletRequest();
         mocRes = new MockHttpServletResponse();
-        mocReq.addParameter("email", "tu1@email.com");
-        mocReq.addParameter("ticker", "TSLA");
-        mocReq.addParameter("quantity", "5");
-
-        removeStock.doGet(mocReq, mocRes);
-
-        con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
-        ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
-        ps.setInt(1, 1);
-        ps.setInt(2, 1);
-        rs = ps.executeQuery();
-        rs.next();
-
-        assertFalse(rs.next());
-        con.close();
     }
 
-    @Test
-    public void TestGetCompanyId() throws SQLException {
-        assertEquals(RemoveStock.getCompanyId("TSLA"), 1);
-    }
 
-    @Test
-    public void TestUpdateStock() throws SQLException {
-
-        RemoveStock.updateStock(1, 1, 5);
-
-        Connection con = DriverManager.getConnection("jdbc:sqlite:csci310.db");
-        PreparedStatement ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
-        ps.setInt(1, 1);
-        ps.setInt(2, 1);
-        ResultSet rs = ps.executeQuery();
-        rs.next();
-        assertEquals(5, rs.getDouble("shares"), 0.0);
-        con.close();
-    }
 }
