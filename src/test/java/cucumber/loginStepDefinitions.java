@@ -16,7 +16,7 @@ import static org.junit.Assert.assertTrue;
  */
 public class loginStepDefinitions {
 
-	private static final String ROOT_URL = "http://localhost:8081/";
+	private static final String ROOT_URL = "https://localhost:8080/";
 	WebDriver driver = RunCucumberTests.driver;
 	WebDriverWait wait = RunCucumberTests.wait;
 

@@ -12,7 +12,14 @@ Feature: Register for siteFeature: Register for site
       | 'tu3'    | 'tu3pass' | 'tu3pass' | 'index.jsp'    |
       | 'tu3'    | 'tu3pass' | ''        | 'register.jsp' |
       | 'tu3'    | 'tu3pass' | 'wrong'   | 'register.jsp' |
-      | 'admin'  | 'tu1pass' | 'tu1pass' | 'register.jsp' |
+
+  Scenario: Trying to register for site with duplicated user name
+    Given I am on the register page
+    And I enter 'admin' in the 'Email' field
+    And I enter 'tu1pass' in the 'Password' field
+    And I enter 'tu1pass' in the 'Confirm' field
+    And I click the Register link
+    Then I should see error message 'Username already exists.'
 
   Scenario: Pressing cancel button takes you to login page
     Given I am on the register page

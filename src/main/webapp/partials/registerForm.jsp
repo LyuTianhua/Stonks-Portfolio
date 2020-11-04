@@ -1,14 +1,14 @@
 <form id="login-fields">
-    <label class="text-left" id="email" for="exampleInputEmail1">Username</label>
-    <input class="form-control" id="exampleInputEmail1" type="email" name="email">
-    <label class="text-left" id="password" for="exampleInputPassword1">Password</label>
-    <input class="form-control" id="exampleInputPassword1" type="password" name="password">
-    <label class="text-left" id="VerifyPassword" for="exampleInputPassword2">Verify Password</label>
-    <input class="form-control" id="exampleInputPassword2" type="password" name="verifyPassword">
+    <label class="text-left" id="email" for="rEmail">Username</label>
+    <input class="form-control" id="rEmail" type="email" required>
+    <label class="text-left" id="password" for="rPassword">Password</label>
+    <input class="form-control" id="rPassword" type="password" required>
+    <label class="text-left" id="VerifyPassword" for="rConfirm">Verify Password</label>
+    <input class="form-control" id="rConfirm" type="password" onchange="match()" required>
     <div class="text-center text-danger" id="Error-Message"></div>
     <div class="row">
-        <button id="register" class="btn btn-primary" type="submit" name="registerButton">Create User</button>
-        <button id="cancel" class="btn btn-primary" type="button" name="cancelButton">Cancel</button>
+        <button id="register" type="button" class="btn btn-primary" onclick="registr()">Create User</button>
+        <button id="cancel" class="btn btn-primary" type="button" onclick="cancl()">Cancel</button>
     </div>
 </form>
 
