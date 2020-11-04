@@ -21,7 +21,7 @@
 				<a class="col-6" id="link2" href="register.jsp">Register</a>
 			</div>
 
-			<%@include file="partials/registerFrom.jsp"%>
+			<%@include file="partials/registerForm.jsp"%>
 
 		</div>
 		<div class="col-0 col-sm-3 col-md-3 col-lg-3"></div>
@@ -43,8 +43,14 @@
 								confirm: $("#rConfirm").val()
 							},
 							success: (res) => {
-								if (res === "1") window.location.href = "index.jsp"
-								else $("#Error-Message").innerHTML("Invalid email or password")
+								if (res == "1") {
+									$("#Error-Message").html("")
+									window.location.href = "index.jsp";
+								} else if (res == "-1") {
+									$("#Error-Message").html("Username already exists.")
+								} else {
+									$("#Error-Message").html("Username and Password invalid.")									
+								}
 							}
 						})
 

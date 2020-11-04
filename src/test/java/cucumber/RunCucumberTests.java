@@ -29,7 +29,8 @@ public class RunCucumberTests {
 	public static void setup() {
 		WebDriverManager.chromedriver().setup();
 		options = new ChromeOptions();
-//		options.setHeadless(true);
+		options.setAcceptInsecureCerts(true);
+		options.setHeadless(true);
 		//for the mobile acceptance tests
 		if(System.getProperty("mobile") != null && System.getProperty("mobile").equals("true")) {
 			System.out.println("Running with mobile resolution");

@@ -47,6 +47,13 @@ public class Signup extends HttpServlet {
                 pw.close();
                 db.closeCon();
                 return;
+            } else {
+            	req.setAttribute("authenticated", false);
+                pw.write("-1");
+                pw.flush();
+                pw.close();
+                db.closeCon();
+                return;
             }
         } catch (SQLException ignored) { }
 
