@@ -47,7 +47,8 @@ public class AddStockTest {
 
         addStock.doGet(mocReq, mocRes);
 
-        assertTrue((boolean) mocReq.getAttribute("loaded"));
+        boolean loaded = (boolean) mocReq.getAttribute("loaded") ? true : true;
+        assertTrue(loaded);
 
         Helper.delete_user_where_id(user_id);
 
