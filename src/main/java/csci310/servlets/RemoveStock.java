@@ -55,9 +55,12 @@ public class RemoveStock extends HttpServlet {
             // Get required stock value
             ps = con.prepareStatement("select * from Company where id=?");
             ps.setInt(1, companyID);
+                        
+            // Debug
+            System.out.println("companyID: " + companyID);
+            
             rs = ps.executeQuery();
-            Blob blob = rs.getBlob("timestamps");
-            String companyTimestamp = new String(blob.getBytes(1, (int) blob.length()));
+            String companyTimestamp = rs.getString("timestamps");
             String companyData = rs.getString("data");
             
             String[] splitTimestamps = companyTimestamp.split(" ", -1);
