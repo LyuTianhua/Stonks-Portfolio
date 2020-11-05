@@ -9,4 +9,4 @@ Feature: 3 Failed login attempts
     And I clear the password field to fail
     And I enter 'password' in Password input field to fail
     And I click the Sign In button to fail
-    Then I see the error message 'Already attempted to login 3 times in the last 2 minutes. Account is locked temporarily'
+    Then I see the error message 'Already attempted to login 3 times in the last 1 minutes. Account is locked temporarily'
