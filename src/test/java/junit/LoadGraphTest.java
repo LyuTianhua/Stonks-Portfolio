@@ -22,7 +22,7 @@ public class LoadGraphTest {
 
         AddStock as = new AddStock();
         mocReq.getSession(true).setAttribute("id", user_id);
-        mocReq.addParameter("ticker", "FB");
+        mocReq.addParameter("ticker", "DIS");
         mocReq.addParameter("quantity", "10");
         mocReq.addParameter("purchased", "2020-10-10");
         mocReq.addParameter("sold", "2020-10-20");
