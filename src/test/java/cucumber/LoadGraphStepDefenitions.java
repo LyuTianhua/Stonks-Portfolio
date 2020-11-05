@@ -139,7 +139,7 @@ public class LoadGraphStepDefenitions {
 		}
     	
     	WebElement portfolioValue = driver.findElement(By.xpath("//*[@id=\"portfolio-value-number\"]"));
-    	assertTrue(!portfolioValue.getCssValue("color").equals("black"));
+    	assertTrue(!portfolioValue.getCssValue("color").equals("rgba(0,0,0,1)"));
     }
 
 }
