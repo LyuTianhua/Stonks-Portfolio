@@ -122,4 +122,82 @@ public class graphDateStepDefinitions {
     	assertTrue(!portfolioValue.getCssValue("color").equals("rgba(1,0,0,1)"));
     }
     
+    @And("I click one week below the graph")
+    public void i_click_one_week() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+		}
+    	
+    	Boolean checkIfElementPresent= false;
+        //Checks if the invalid dates error message is present
+        if(driver.findElements(By.xpath("/html/body/div[1]/div[3]/div/label[1]")).size()!= 0) {
+            checkIfElementPresent = true;
+        }
+        assertTrue(checkIfElementPresent);
+    }
+    
+    @And("I click three months below the graph")
+    public void i_click_three_months() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+		}
+    	
+    	Boolean checkIfElementPresent= false;
+        //Checks if the invalid dates error message is present
+        if(driver.findElements(By.xpath("/html/body/div[1]/div[3]/div/label[2]")).size()!= 0) {
+            checkIfElementPresent = true;
+        }
+        assertTrue(checkIfElementPresent);
+    }
+    
+    @And("I click one year below the graph")
+    public void i_click_one_year() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+		}
+    	
+    	Boolean checkIfElementPresent= false;
+        //Checks if the invalid dates error message is present
+        if(driver.findElements(By.xpath("/html/body/div[1]/div[3]/div/label[3]")).size()!= 0) {
+            checkIfElementPresent = true;
+        }
+        assertTrue(checkIfElementPresent);
+    }
+    
+    @Then("the graph should display a one week date range from today")
+    public void the_graph_should_display_a_one_week() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+		}
+    	
+    	driver.findElement(By.xpath("/html/body/div[1]/div[3]/div/label[1]")).click();
+    	assertTrue(!driver.findElement(By.xpath("//*[@id=\"fromGraph\"]")).getAttribute("value").isEmpty());
+    }
+    
+    @Then("the graph should display a three month date range from today")
+    public void the_graph_should_display_a_three_month() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+		}
+    	
+    	driver.findElement(By.xpath("/html/body/div[1]/div[3]/div/label[2]")).click();
+    	assertTrue(!driver.findElement(By.xpath("//*[@id=\"fromGraph\"]")).getAttribute("value").isEmpty());
+    }
+    
+    @Then("the graph should display a one year date range from today")
+    public void the_graph_should_display_a_one_year() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+		}
+    	
+    	driver.findElement(By.xpath("/html/body/div[1]/div[3]/div/label[3]")).click();
+    	assertTrue(!driver.findElement(By.xpath("//*[@id=\"fromGraph\"]")).getAttribute("value").isEmpty());
+    }
+    
 }

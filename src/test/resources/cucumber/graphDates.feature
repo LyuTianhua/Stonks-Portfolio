@@ -42,3 +42,18 @@ Feature: Graph dates and portfolio value
 	  	Given I am signed in
 	  	And I see my portfolio value
 	  	Then the portfolio value should be green or red with an up or down arrow by it
+	  	
+	  Scenario: Click one week predetermined date range
+	  	Given I am signed in
+	  	And I click one week below the graph
+	  	Then the graph should display a one week date range from today
+	  	
+	  Scenario: Click three month predetermined date range
+	  	Given I am signed in
+	  	And I click three months below the graph
+	  	Then the graph should display a three month date range from today
+	  
+	  Scenario: Click one year predetermined date range
+	  	Given I am signed in
+	  	And I click one year below the graph
+	  	Then the graph should display a one year date range from today
