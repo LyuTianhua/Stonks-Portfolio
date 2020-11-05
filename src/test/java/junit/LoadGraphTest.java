@@ -1,5 +1,6 @@
 package junit;
 
+import csci310.servlets.LoadGraph;
 import csci310.servlets.LoadProfile;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -24,7 +25,7 @@ public class LoadGraphTest {
 
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
-        LoadProfile lp = new LoadProfile();
+        LoadGraph lp = new LoadGraph();
         lp.doGet(mocReq, mocRes);
         assertTrue((boolean) mocReq.getAttribute("loaded"));
 

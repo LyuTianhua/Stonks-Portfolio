@@ -98,7 +98,7 @@ public class AddStock extends HttpServlet {
                 rs = ps.executeQuery();
                 rs.next();
             }
-
+            
             id = rs.getInt("id");
 
         } catch (SQLException ignored) { }
@@ -153,18 +153,19 @@ public class AddStock extends HttpServlet {
 
             rs = ps.executeQuery();
 
-            if (rs.next()) {
-                ps = con.prepareStatement("update stock set shares = shares + ?, purchased = ?, sold = ? where user_id = ? and company_id = ?");
-                ps.setDouble(1, shares);
-                ps.setLong(2, purchased);
-
-                // Updated graph data
-                ps.setLong(3, sold);
-
-                ps.setInt(4, userId);
-                ps.setInt(5, companyId);
-                ps.executeUpdate();
-            } else {
+// Always add new entry for each stock
+//            if (rs.next()) {
+//                ps = con.prepareStatement("update stock set shares = shares + ?, purchased = ?, sold = ? where user_id = ? and company_id = ?");
+//                ps.setDouble(1, shares);
+//                ps.setLong(2, purchased);
+//
+//                // Updated graph data
+//                ps.setLong(3, sold);
+//
+//                ps.setInt(4, userId);
+//                ps.setInt(5, companyId);
+//                ps.executeUpdate();
+//            } else {
                 ps = con.prepareStatement("insert into stock (company_id, user_id, shares, purchased, sold) values (?, ?, ?, ?, ?)");
                 ps.setInt(1, companyId);
                 ps.setInt(2, userId);
@@ -175,7 +176,7 @@ public class AddStock extends HttpServlet {
                 ps.setLong(5, sold);
 
                 ps.execute();
-            }
+//            }
         } catch (SQLException ignored) {}
 
         db.closeCon();
