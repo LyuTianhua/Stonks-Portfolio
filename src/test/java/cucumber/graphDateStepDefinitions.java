@@ -103,8 +103,12 @@ public class graphDateStepDefinitions {
 		} catch(Exception ie) {
 		}
     	
-    	WebElement portfolioValue = driver.findElement(By.xpath("//*[@id=\"portfolio-value-number\"]"));
-    	assertTrue(!portfolioValue.getAttribute("value").isEmpty());
+    	Boolean checkIfElementPresent= false;
+        //Checks if the invalid dates error message is present
+        if(driver.findElements(By.xpath("//*[@id=\"portfolio-value\"]")).size()!= 0) {
+            checkIfElementPresent = true;
+        }
+        assertTrue(checkIfElementPresent);
     }
     
     @Then("the portfolio value should be green or red with an up or down arrow by it")
