@@ -54,9 +54,9 @@ public class RemoveStockTest {
 
         db.closeCon();
 
-        //Helper.delete_from_stock_user_company(user_id, company_id);
-        //Helper.delete_company_where_id(company_id);
-        //Helper.delete_user_where_id(user_id);
+        Helper.delete_from_stock_user_company(user_id, company_id);
+        Helper.delete_company_where_id(company_id);
+        Helper.delete_user_where_id(user_id);
 
     }
 
