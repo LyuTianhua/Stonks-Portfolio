@@ -39,6 +39,19 @@
 			<%@include file="partials/graph.jsp"%>
 		</div>
 	</div>
+	<div class="row justify-content-center">
+		<div class="btn-group btn-group-toggle" data-toggle="buttons">
+  			<label class="btn btn-secondary active">
+    		<input type="radio" name="options" id="week" autocomplete="off" onclick="oneWeek()">1 Week
+ 			</label>
+  			<label class="btn btn-secondary">
+    		<input type="radio" name="options" id="month" autocomplete="off" onclick="threeMonths()" checked>3 Months
+  			</label>
+  			<label class="btn btn-secondary">
+  			<input type="radio" name="options" id="year" autocomplete="off" onclick="oneYear()">1 Year
+  			</label>
+		</div>
+	</div>
 	<div class="text-center">
 		<%@include file="partials/portfolioValue.jsp"%>
 	</div>
@@ -483,6 +496,34 @@
 			document.getElementById("down-arrow").style.display = "inline";
 		}
 		
+	}
+	
+	var today = new Date();
+	
+	function oneWeek() {
+		var oneWeekAgo = new Date(today.getTime() - 7*86400000);
+		document.getElementById("fromGraph").value = oneWeekAgo.getFullYear().toString() + '-' + (oneWeekAgo.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + oneWeekAgo.getDate().toString().padStart(2, 0);
+		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + today.getDate().toString().padStart(2, 0);
+	}
+	
+	function threeMonths() {
+		var earlier = new Date(today);
+		earlier.setMonth(earlier.getMonth()-3);
+		document.getElementById("fromGraph").value = earlier.getFullYear().toString() + '-' + (earlier.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + earlier.getDate().toString().padStart(2, 0);
+		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + today.getDate().toString().padStart(2, 0);
+	}
+	
+	function oneYear() {
+		var earlier = new Date(today);
+		earlier.setFullYear(earlier.getFullYear()-1);
+		document.getElementById("fromGraph").value = earlier.getFullYear().toString() + '-' + (earlier.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + earlier.getDate().toString().padStart(2, 0);
+		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + today.getDate().toString().padStart(2, 0);
 	}
 
 </script>
