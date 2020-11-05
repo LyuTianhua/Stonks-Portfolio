@@ -16,7 +16,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
@@ -43,6 +42,8 @@ public class AddStock extends HttpServlet {
             String sold = req.getParameter("sold") == null ? (String) req.getAttribute("sold") : req.getParameter("sold");
 
 
+            System.out.printf("\n\n\nin add stock\npurchased: %s\nsold: %s\n", purchased, sold);
+
             if (sold == null || sold.equals("")) sold = sdf.format(new Date());
 
             // format data for insertion into db
@@ -59,8 +60,12 @@ public class AddStock extends HttpServlet {
 
 
             int companyId = getCompanyId(ticker, data, timestamp);
-            long purchasedDate = makeDate(purchased);
-            long soldDate = makeDate(sold);
+            long purchasedDate = LoadGraph.timestamp(purchased);
+            long soldDate = LoadGraph.timestamp(sold);
+
+
+            System.out.printf("\n\n\nin add stock\npurchased: %d\nsold: %d\n", purchasedDate, soldDate);
+
 
             pw = res.getWriter();
 
@@ -121,14 +126,6 @@ public class AddStock extends HttpServlet {
         return response.getStatus() == 200? (JSONObject) result.get(0) : null;
     }
 
-    public long makeDate(String date) throws ParseException {
-        // initialize SimpleDateFormat used in makeDate
-        sdf = new SimpleDateFormat("yyyy-MM-dd");
-        Date newDate = sdf.parse(date);
-        long time = newDate.getTime()/1000;
-        return time;
-    }
-
     public static String parseGraphResponse(String res) {
 
         String offset = "\"adjclose\":[";
@@ -153,29 +150,16 @@ public class AddStock extends HttpServlet {
 
             rs = ps.executeQuery();
 
-            if (rs.next()) {
-                ps = con.prepareStatement("update stock set shares = shares + ?, purchased = ?, sold = ? where user_id = ? and company_id = ?");
-                ps.setDouble(1, shares);
-                ps.setLong(2, purchased);
+            ps = con.prepareStatement("insert into stock (company_id, user_id, shares, purchased, sold) values (?, ?, ?, ?, ?)");
+            ps.setInt(1, companyId);
+            ps.setInt(2, userId);
+            ps.setDouble(3, shares);
+            ps.setLong(4, purchased);
 
-                // Updated graph data
-                ps.setLong(3, sold);
+            // Added graph data
+            ps.setLong(5, sold);
 
-                ps.setInt(4, userId);
-                ps.setInt(5, companyId);
-                ps.executeUpdate();
-            } else {
-                ps = con.prepareStatement("insert into stock (company_id, user_id, shares, purchased, sold) values (?, ?, ?, ?, ?)");
-                ps.setInt(1, companyId);
-                ps.setInt(2, userId);
-                ps.setDouble(3, shares);
-                ps.setLong(4, purchased);
-
-                // Added graph data
-                ps.setLong(5, sold);
-
-                ps.execute();
-            }
+            ps.execute();
         } catch (SQLException ignored) {}
 
         db.closeCon();
@@ -227,10 +211,7 @@ public class AddStock extends HttpServlet {
                     k++;
 
 
-                while (soldDate >= longTimestamps[k]) {
-                    data[k] += doubleCompanyValues[k];
-                    k++;
-                }
+                while (soldDate >= longTimestamps[k]) { data[k] += doubleCompanyValues[k]; k++; }
 
                 StringBuilder newUserData = new StringBuilder();
                 for (int i = 0; i < N; i++)

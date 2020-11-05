@@ -32,15 +32,18 @@ public class GraphHistorical extends HttpServlet {
             String ticker = req.getParameter("ticker");
             boolean graph = Boolean.parseBoolean(req.getParameter("checked"));
 
-            System.out.printf("in load graph, graph: %b\n", graph);
+            System.out.printf("in graph historical: %s, graph: %b\n", ticker, graph);
 
             if (graph) {
 
-                res.setContentType("application/json; charset=UTF-8");
-                res.setHeader("content-type", "application/json; charset=UTF-8");
+//                res.setContentType("application/json; charset=UTF-8");
+//                res.setHeader("content-type", "application/json; charset=UTF-8");
 
                 String startDate = req.getParameter("fromGraph");
                 String endDate = req.getParameter("toGraph");
+
+                System.out.println("start: " + startDate);
+                System.out.println("end: " + endDate);
 
                 long startTimestamp = LoadGraph.timestamp(startDate);
                 long endTimestamp = LoadGraph.timestamp(endDate);
@@ -80,12 +83,13 @@ public class GraphHistorical extends HttpServlet {
                 }
 
                 Gson gson = new Gson();
+                if (!ticker.equals("LULU")) res.setContentType("application/json; charset=UTF-8");
                 pw.println(gson.toJson(new DataSet(ticker, values, timestamps, startTimestamp, endTimestamp)));
                 pw.flush();
                 pw.close();
 
             } else {
-                res.setContentType("text/html");
+                if (!ticker.equals("LULU")) res.setContentType("text/html");
                 pw.println(ticker);
                 pw.flush();
                 pw.close();
