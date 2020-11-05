@@ -160,6 +160,15 @@
 		})
 	}
 
+	const removeHistorical = (ticker) => {
+		$.ajax({
+			url: "RemoveHistoricalStock",
+			type: "Get",
+			data: { ticker },
+			success: () => location.reload()
+		})
+	}
+
 	// $("#remove-stock-modal").on('show', (e) => {
 	// 	let ticker = $(e.relatedTarget).date('ticker')
 	// 	$(e.currentTarget).find('input[name="ticker_tobe_removed"]').val(ticker)
@@ -204,11 +213,27 @@
 				zoom: {
 					pan: {
 						enabled: true,
-						mode: 'xy'
+						mode: 'xy',
+						rangeMin: {
+							y: 0,
+							x: null
+						},
+						rangeMax: {
+							y: 10000,
+							x: null
+						}
 					},
 					zoom: {
 						enabled: true,
 						mode: 'xy',
+						rangeMin: {
+							y: 0,
+							x: null
+						},
+						rangeMax: {
+							y: 10000,
+							x: null
+						}
 					}
 				}
 			}
