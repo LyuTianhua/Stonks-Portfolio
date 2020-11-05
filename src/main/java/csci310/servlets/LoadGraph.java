@@ -87,6 +87,7 @@ public class LoadGraph extends HttpServlet {
             rs.next();
             strTimestamps = rs.getString("timestamps");
             System.out.println("\n\n\n\nin load graph timestamp: " + strTimestamps + "\n\n\n");
+            if (strTimestamps.equals("")) return "";
         } catch (SQLException ignored) {}
         db.closeCon();
 
