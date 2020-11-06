@@ -138,11 +138,10 @@
 			}
 		})
 
-	var ticker_to_be_deleted = ""
-	const remove = (t) => {
-		console.log("to be deleted ", t)
-		$("#ticker_name").text(t)
-		ticker_to_be_deleted = t
+
+	const remove = (id) => {
+		console.log("to be deleted ", id)
+		$("#ticker_id").text(id)
 	}
 
 	const remove_ajax_call = () => {
@@ -151,7 +150,7 @@
 			url: "RemoveStock",
 			type: "Get",
 			data: {
-				ticker: $("#ticker_name").text()
+				ticker_id: $("#ticker_id").text()
 			},
 			success: () => location.reload()
 		})
