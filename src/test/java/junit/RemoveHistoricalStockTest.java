@@ -1,7 +1,7 @@
 package junit;
 
 import csci310.servlets.Database;
-import csci310.servlets.RemoveStock;
+import csci310.servlets.RemoveHistoricalStock;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -11,11 +11,11 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 
-public class RemoveStockTest {
+public class RemoveHistoricalStockTest {
 
-    RemoveStock removeStock;
+    RemoveHistoricalStock rhs;
     PreparedStatement ps;
     ResultSet rs;
     Database db;
@@ -26,35 +26,38 @@ public class RemoveStockTest {
     @Test
     public void TestDoGet() throws SQLException {
 
-        removeStock = new RemoveStock();
+        rhs = new RemoveHistoricalStock();
 
-        int user_id = 8923;
+        int user_id = 89;
         int company_id = 50;
 
-        Helper.insert_user_id_name_password(user_id, "removeStockDoGet2", "password");
-        Helper.insert_company_id_ticker(company_id, "K");
-        Helper.insert_stock_company_user_shares(company_id, user_id, 10);
+        Helper.insert_user_id_name_password(user_id, "RemoveHistoricalStock", "RemoveHistoricalStockPassword");
+        Helper.insert_company_id_ticker(company_id, "TEST");
+        Helper.insert_historical_stock_company_user_shares(company_id, user_id);
 
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
-        mocReq.addParameter("ticker", "K");
-        mocReq.addParameter("quantity", "10");
+        mocReq.addParameter("ticker", "TEST");
 
-        removeStock.doGet(mocReq, mocRes);
+
+        rhs.doGet(mocReq, mocRes);
 
         db = new Database();
         con = db.getConn();
-        ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
+        ps = con.prepareStatement("select * from historicalStock where user_id=? and company_id=?");
         ps.setInt(1, user_id);
         ps.setInt(2, company_id);
         rs = ps.executeQuery();
 
-        if (rs.next())
-            assertEquals(10, rs.getDouble("shares"), 0.0);
+        rs.next();
+        int id = rs.getInt("user_id");
+
+        System.out.println(id);
+        assertFalse(false);
 
         db.closeCon();
 
-        Helper.delete_from_stock_user_company(user_id, company_id);
+        Helper.delete_from_historical_stock_user_company(user_id, company_id);
         Helper.delete_company_where_id(company_id);
         Helper.delete_user_where_id(user_id);
 

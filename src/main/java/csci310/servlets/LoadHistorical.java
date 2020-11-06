@@ -49,14 +49,16 @@ public class LoadHistorical extends HttpServlet {
                 pw.println("<td> <input id='" + ticker + "Historical" + "' type='checkbox' onchange='graphHistorical(\"" + ticker + "\")'></td>");
                 pw.println("<td id=\"" + ticker + "Historical" + "\">" + ticker + "</td>");
                 pw.println("<td> " +
-                        "<button id= " + "class=\"btn btn-danger\"" +
+                        "<button class=\"btn btn-danger\" + id\"" + ticker + "Historical" + "\"" +
                         "type=\"button\" " +
                         "data-toggle=\"modal\"" +
                         "data-target=\"#remove-stock-modal\"" +
-                        "onclick=\"remove('" + ticker + "', '" + rs.getInt("shares") + "')\">" +
+                        "data-ticker=\"" + ticker + "\"" +
+                        "onclick=\"removeHistorical('" + ticker + "')\">" +
                         "Remove" +
                         "</button>" +
-                        "</td>" + "</tr>");
+                        "</td>");
+                pw.println("</tr>");
             }
 
 

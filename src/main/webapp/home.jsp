@@ -157,10 +157,14 @@
 		})
 	}
 
-	// $("#remove-stock-modal").on('show', (e) => {
-	// 	let ticker = $(e.relatedTarget).date('ticker')
-	// 	$(e.currentTarget).find('input[name="ticker_tobe_removed"]').val(ticker)
-	// })
+	const removeHistorical = (ticker) => {
+		$.ajax({
+			url: "RemoveHistoricalStock",
+			type: "Get",
+			data: { ticker },
+			success: () => location.reload()
+		})
+	}
 
 	const idleTimer = () => {
 		let t;
@@ -201,11 +205,27 @@
 				zoom: {
 					pan: {
 						enabled: true,
-						mode: 'xy'
+						mode: 'xy',
+						rangeMin: {
+							y: 0,
+							x: null
+						},
+						rangeMax: {
+							y: 10000,
+							x: null
+						}
 					},
 					zoom: {
 						enabled: true,
 						mode: 'xy',
+						rangeMin: {
+							y: 0,
+							x: null
+						},
+						rangeMax: {
+							y: 10000,
+							x: null
+						}
 					}
 				}
 			}
@@ -225,18 +245,33 @@
 	)
 
 	const loadGraph = () => {
+		var fromGraph = $("#fromGraph").val();
+		var toGraph = $("#toGraph").val();
+
 	    console.log("calling load graph")
 		$.ajax({
 			url : "LoadGraph",
 			type: "Get",
 			data: {
-				fromGraph : $("#fromGraph").val(),
-				toGraph : $("#toGraph").val()
+				fromGraph,
+				toGraph
 			},
 			success: (res) => {
 				myChart.data.datasets[0].data = res.values;
 				myChart.data.labels = res.dates.map((d) => new Date(d*1000).toDateString().substring(3, 10));
 				myChart.update();
+
+				var table = document.getElementById("historical-stocks");
+
+				for (var i = 1; i < table.rows.length; i++) {
+				    var box = table.rows[i].cells[0]
+					box.click(()=> {
+						$("input[type=checkbox]").attr("checked", true)
+					})
+					console.log(table.rows[i].cells[1].textContent);
+					graphHistorical(table.rows[i].cells[1].textContent)
+				}
+
 			}
 		})
 	}
