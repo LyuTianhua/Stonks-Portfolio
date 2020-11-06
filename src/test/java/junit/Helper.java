@@ -96,7 +96,7 @@ public class Helper extends Mockito {
                 ps.setString(2, ticker);         	
             }
             ps.execute();
-        } catch (SQLException ignored) {}
+        } catch (SQLException ignored) {ignored.printStackTrace();}
         db.closeCon();
     }
 

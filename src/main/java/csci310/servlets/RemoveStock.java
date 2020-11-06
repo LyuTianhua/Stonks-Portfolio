@@ -60,6 +60,7 @@ public class RemoveStock extends HttpServlet {
             System.out.println("companyID: " + companyID);
             
             rs = ps.executeQuery();
+
             String companyTimestamp = rs.getString("timestamps");
             String companyData = rs.getString("data");
             
