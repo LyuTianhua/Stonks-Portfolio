@@ -28,12 +28,12 @@ public class AddStockTest {
 
         addStock = new AddStock();
 
-        int user_id = 99;
+        int user_id = 9999;
         int company_id = 67;
         int newCompanyId;
-        String name = "addStockTestUser";
+        String name = "addStockTestUser22";
         String password = "password";
-        String ticker = "K";
+        String ticker = "ASM";
         String quantity = "10";
 
         Helper.insert_user_id_name_password(user_id, name, password);
@@ -42,12 +42,24 @@ public class AddStockTest {
         mocReq.getSession(true).setAttribute("id", user_id);
         mocReq.addParameter("ticker", ticker);
         mocReq.addParameter("quantity", quantity);
-        mocReq.addParameter("puchased", "1601535600");
-        mocReq.addParameter("sold", "1603177200");
+        mocReq.addParameter("purchased", "2020-08-04");
+        mocReq.addParameter("sold", "2020-11-04");
 
         addStock.doGet(mocReq, mocRes);
 
         boolean loaded = mocReq.getAttribute("loaded") == null ? true : true;
+        assertTrue(loaded);
+
+        make_new_mock_objects();
+        mocReq.getSession(true).setAttribute("id", user_id);
+        mocReq.addParameter("ticker", ticker);
+        mocReq.addParameter("quantity", quantity);
+        mocReq.addParameter("purchased", "2020-08-04");
+        mocReq.addParameter("sold", "2020-11-04");
+
+        addStock.doGet(mocReq, mocRes);
+
+        loaded = mocReq.getAttribute("loaded") == null ? true : true;
         assertTrue(loaded);
 
         Helper.delete_user_where_id(user_id);

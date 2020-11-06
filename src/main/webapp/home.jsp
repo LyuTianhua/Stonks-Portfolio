@@ -210,27 +210,11 @@
 				zoom: {
 					pan: {
 						enabled: true,
-						mode: 'xy',
-						rangeMin: {
-							y: 0,
-							x: null
-						},
-						rangeMax: {
-							y: 10000,
-							x: null
-						}
+						mode: 'xy'
 					},
 					zoom: {
 						enabled: true,
 						mode: 'xy',
-						rangeMin: {
-							y: 0,
-							x: null
-						},
-						rangeMax: {
-							y: 10000,
-							x: null
-						}
 					}
 				}
 			}

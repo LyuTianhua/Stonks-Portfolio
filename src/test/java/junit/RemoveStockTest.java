@@ -28,10 +28,10 @@ public class RemoveStockTest {
 
         removeStock = new RemoveStock();
 
-        int user_id = 89;
+        int user_id = 8923;
         int company_id = 50;
 
-        Helper.insert_user_id_name_password(user_id, "removeStockDoGet", "password");
+        Helper.insert_user_id_name_password(user_id, "removeStockDoGet2", "password");
         Helper.insert_company_id_ticker(company_id, "K");
         Helper.insert_stock_company_user_shares(company_id, user_id, 10);
 
