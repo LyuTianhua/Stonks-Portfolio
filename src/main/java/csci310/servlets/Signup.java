@@ -46,21 +46,14 @@ public class Signup extends HttpServlet {
                 pw.flush();
                 pw.close();
                 db.closeCon();
-                return;
             } else {
             	req.setAttribute("authenticated", false);
                 pw.write("-1");
                 pw.flush();
                 pw.close();
                 db.closeCon();
-                return;
             }
         } catch (SQLException ignored) { }
-
-        db.closeCon();
-        req.setAttribute("authenticated", false);
-        pw.println(0);
-        pw.close();
     }
 
     private static String hashPassword(String input) {
