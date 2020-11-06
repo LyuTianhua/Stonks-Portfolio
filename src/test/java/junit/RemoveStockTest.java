@@ -34,6 +34,7 @@ public class RemoveStockTest {
 
         Helper.insert_user_id_name_password(user_id, "removeStockDoGet", "password");
         Helper.insert_company_id_ticker(company_id, "NET");
+
         Helper.insert_stock_company_user_shares(company_id, user_id, 10);
 
         make_new_mock_objects();

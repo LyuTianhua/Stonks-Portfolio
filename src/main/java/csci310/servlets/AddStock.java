@@ -42,6 +42,8 @@ public class AddStock extends HttpServlet {
 
             System.out.printf("\n\n\nin add stock\npurchased: %s\nsold: %s\n", purchased, sold);
 
+            System.out.printf("\n\n\nin add stock\npurchased: %s\nsold: %s\n", purchased, sold);
+
             if (sold == null || sold.equals("")) sold = sdf.format(new Date());
 
             // format data for insertion into db
@@ -148,7 +150,6 @@ public class AddStock extends HttpServlet {
             ps.setInt(2, userId);
             ps.setDouble(3, shares);
             ps.setLong(4, purchased);
-
             // Added graph data
             ps.setLong(5, sold);
 
