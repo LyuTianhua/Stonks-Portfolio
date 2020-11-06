@@ -2,12 +2,12 @@
     <div class="modal-dialog modal-sm modal-dialog-centered" role="document">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="upload-modal-label">Upload a CSV</h5>
+                <h5 class="modal-title" id="upload-modal-label">Upload a File</h5>
             </div>
             <div class="modal-body">
                 <form action="/home.jsp" id="upload-form">
                     <div class="form-group">
-                        <label for="csv-file">Choose CSV File  <a class="text-info small-text" href="../resources/example.csv" download>Download an Example CSV</a></label>
+                        <label for="csv-file">Choose a File  <a class="text-info small-text" href="../resources/example.csv" download>Download an Example File</a></label>
                         <input type="file" class="form-control" id="csv-file" accept=".csv,text/csv">
                     </div>
                 </form>
