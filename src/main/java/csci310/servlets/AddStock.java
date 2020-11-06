@@ -40,6 +40,8 @@ public class AddStock extends HttpServlet {
 
             System.out.printf("\n\n\nin add stock\npurchased: %s\nsold: %s\n", purchased, sold);
 
+            System.out.printf("\n\n\nin add stock\npurchased: %s\nsold: %s\n", purchased, sold);
+
             if (sold == null || sold.equals("")) sold = sdf.format(new Date());
 
             // format data for insertion into db
@@ -58,7 +60,6 @@ public class AddStock extends HttpServlet {
             long purchasedDate = LoadGraph.timestamp(purchased);
             long soldDate = LoadGraph.timestamp(sold);
 
-            System.out.printf("\n\n\nin add stock\npurchased: %d\nsold: %d\n", purchasedDate, soldDate);
 
             pw = res.getWriter();
 
