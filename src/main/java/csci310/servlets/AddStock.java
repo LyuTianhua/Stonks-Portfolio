@@ -31,9 +31,6 @@ public class AddStock extends HttpServlet {
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
         try {
-
-
-
             // get parameters from single add stock or get attributes from upload CSV servlet
             int userId = (int) req.getSession().getAttribute("id");
             String ticker = req.getParameter("ticker") == null ? (String) req.getAttribute("ticker") : req.getParameter("ticker").toUpperCase();
@@ -41,6 +38,7 @@ public class AddStock extends HttpServlet {
             String purchased = req.getParameter("purchased") == null ? (String) req.getAttribute("purchased") : req.getParameter("purchased");
             String sold = req.getParameter("sold") == null ? (String) req.getAttribute("sold") : req.getParameter("sold");
 
+            System.out.printf("\n\n\nin add stock\npurchased: %s\nsold: %s\n", purchased, sold);
 
             System.out.printf("\n\n\nin add stock\npurchased: %s\nsold: %s\n", purchased, sold);
 
@@ -58,19 +56,14 @@ public class AddStock extends HttpServlet {
             timestamp = timestamp.replace("[", "");
             timestamp = timestamp.replace("]", "");
 
-
             int companyId = getCompanyId(ticker, data, timestamp);
             long purchasedDate = LoadGraph.timestamp(purchased);
             long soldDate = LoadGraph.timestamp(sold);
 
 
-            System.out.printf("\n\n\nin add stock\npurchased: %d\nsold: %d\n", purchasedDate, soldDate);
-
-
             pw = res.getWriter();
 
             addStockToPortfolio(userId, companyId, quantity, purchasedDate, soldDate);
-
             updateUserPortfolio(userId, quantity, purchasedDate, soldDate, timestamp, data);
 
             req.setAttribute("loaded", true);
@@ -166,7 +159,6 @@ public class AddStock extends HttpServlet {
     }
 
     private void updateUserPortfolio(int userId, double quantity, long purchasedDate, long soldDate, String timestamp, String companyValues) {
-
         String[] splitTimestamps = timestamp.split(" ", -1);
         String[] splitCompanyValues = companyValues.split(" ", -1);
 
@@ -200,7 +192,6 @@ public class AddStock extends HttpServlet {
                         data[i] = Double.parseDouble(splitUserData[i]);
 
                 } else {
-
                     for (int i = 0; i < N; i++ )
                         data[i] = 0;
                 }

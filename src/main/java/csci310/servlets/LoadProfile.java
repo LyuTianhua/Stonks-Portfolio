@@ -24,11 +24,11 @@ public class LoadProfile  extends HttpServlet {
             pw = res.getWriter();
             int id = (int) req.getSession().getAttribute("id");
 
-            ps = con.prepareStatement("select company.id as compId, company.ticker, shares, purchased from stock left join company on stock.company_id = company.id where user_id=?");
+            ps = con.prepareStatement("select company.id as compId, company.ticker, shares, purchased, stock.id as stockID from stock left join company on stock.company_id = company.id where user_id=?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
-            String ticker, shares, rm, btn, radio;
+            String ticker, shares, rm, btn, radio, stockID;
 
 
             pw.println("<tr>\n" +
@@ -39,6 +39,7 @@ public class LoadProfile  extends HttpServlet {
                     "</tr>");
 
             while (rs.next()) {
+            	stockID = rs.getString("stockID");
                 ticker = rs.getString("ticker");
                 shares = ticker + "Shares";
                 rm = ticker + "Rm";
@@ -55,7 +56,7 @@ public class LoadProfile  extends HttpServlet {
                         "data-toggle=\"modal\"" + 
                         "data-target=\"#remove-stock-modal\"" +
                         "data-ticker=\"" + ticker + "\"" +
-                        "onclick=\"remove('" + ticker + "')\">" +
+                        "onclick=\"remove('" + stockID + "')\">" +
                         "Remove" +
                         "</button>" +
                         "</td>");
@@ -65,7 +66,7 @@ public class LoadProfile  extends HttpServlet {
             pw.flush();
             pw.close();
 
-        } catch (SQLException | IOException ignored) { }
+        } catch (SQLException | IOException e) { e.printStackTrace();}
 
         req.setAttribute("loaded", true);
         db.closeCon();

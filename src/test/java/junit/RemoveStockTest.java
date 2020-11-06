@@ -11,6 +11,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
+
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.assertEquals;
 
 public class RemoveStockTest {
@@ -25,38 +27,34 @@ public class RemoveStockTest {
 
     @Test
     public void TestDoGet() throws SQLException {
-
         removeStock = new RemoveStock();
 
-        int user_id = 8923;
-        int company_id = 50;
+        int user_id = 92;
+        int company_id = 93;
 
-        Helper.insert_user_id_name_password(user_id, "removeStockDoGet2", "password");
-        Helper.insert_company_id_ticker(company_id, "K");
+        Helper.insert_user_id_name_password(user_id, "removeStockDoGet", "password");
+        Helper.insert_company_id_ticker(company_id, "NET");
         Helper.insert_stock_company_user_shares(company_id, user_id, 10);
 
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
-        mocReq.addParameter("ticker", "K");
-        mocReq.addParameter("quantity", "10");
+        mocReq.addParameter("ticker_id", Helper.get_stock_id(company_id, user_id));
 
         removeStock.doGet(mocReq, mocRes);
 
         db = new Database();
         con = db.getConn();
-        ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
-        ps.setInt(1, user_id);
-        ps.setInt(2, company_id);
+        ps = con.prepareStatement("select * from stock where id=?");
+        ps.setString(1, Helper.get_stock_id(company_id, user_id));
         rs = ps.executeQuery();
 
-        if (rs.next())
-            assertEquals(10, rs.getDouble("shares"), 0.0);
+        assertTrue(!rs.next());
 
         db.closeCon();
 
-        Helper.delete_from_stock_user_company(user_id, company_id);
-        Helper.delete_company_where_id(company_id);
-        Helper.delete_user_where_id(user_id);
+//        Helper.delete_from_stock_user_company(user_id, company_id);
+//        Helper.delete_company_where_id(company_id);
+//        Helper.delete_user_where_id(user_id);
 
     }
 
