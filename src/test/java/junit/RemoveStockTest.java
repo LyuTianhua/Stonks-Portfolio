@@ -27,7 +27,6 @@ public class RemoveStockTest {
 
     @Test
     public void TestDoGet() throws SQLException {
-
         removeStock = new RemoveStock();
 
         int user_id = 92;
@@ -39,15 +38,14 @@ public class RemoveStockTest {
 
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
-        mocReq.addParameter("ticker_id", "1");
+        mocReq.addParameter("ticker_id", Helper.get_stock_id(company_id, user_id));
 
         removeStock.doGet(mocReq, mocRes);
 
         db = new Database();
         con = db.getConn();
-        ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
-        ps.setInt(1, user_id);
-        ps.setInt(2, company_id);
+        ps = con.prepareStatement("select * from stock where id=?");
+        ps.setString(1, Helper.get_stock_id(company_id, user_id));
         rs = ps.executeQuery();
 
         assertTrue(!rs.next());
