@@ -1,0 +1,20 @@
+Sprint Backlog:
+
+2. Ability to add or remove stocks from the portfolio
+3. Track and visualize changes in value over time of user’s portfolio
+4. View and compare the historical performance of a stock
+6. The application must be secure and protect confidentiality of users’ data.
+14. Bulk import of stocks via a CSV file
+15. Attempting to go to home.jsp without logging in acceptance tests
+16. Separate tables for historical and portfolio stocks
+17. Fixing view stock modal for adding stocks
+
+We added 2, 14 because we got feedback from the CPs that we needed to have a test for when  a user uploads a malformed CSV file. 
+
+We added 3,4, 16 because the CPs said we should differentiate between the portfolio stocks and historical stocks on our graph. We also need to get the graph to adjust properly when users add and remove stocks from their portfolio. Another portion that we need to fix for feature 4 is that we need to ensure there is the same error checking for when users view a stock and when they add a stock.
+
+We added 6, 15 because of the feedback received from our sprint review that we needed to have an acceptance test for when the user tries to access our home.jsp page without logging in. 
+
+We added 17, because we need to make the view stock modal the same as the modal for when we add stocks to our portfolio.
+
+List of Meeting Participants: Harshil Shah, Dariya Khojasteh, Richard Hernandez, Tianhua Lyu, John Marshall

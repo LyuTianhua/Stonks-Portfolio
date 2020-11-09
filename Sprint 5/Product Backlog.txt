@@ -1,0 +1,12 @@
+General Description: A web application that can help users track the value of their stock portfolio over time and make investment decisions.
+
+Product Backlog:
+
+2. Ability to add or remove stocks from the portfolio
+3. Track and visualize changes in value over time of user’s portfolio
+4. View and compare the historical performance of a stock
+6. The application must be secure and protect confidentiality of users’ data.
+14. Malformed CSV Files acceptance tests
+15. Attempting to go to home.jsp without logging in acceptance tests
+16. Separate tables for historical and portfolio stocks
+17. Fixing view stock modal for adding stocks
