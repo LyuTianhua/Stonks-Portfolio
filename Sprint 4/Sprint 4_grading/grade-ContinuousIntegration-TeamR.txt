@@ -1,0 +1,12 @@
+Best Practice ContinuousIntegration Report
+Owner: TeamR
+Grade: 4/10
+Comments: 
+Develop branch check failed: https://github.com/CSCI310/project-20203b-groupr-20203/commit/32e0b0bf418efdb03f81a68208d429ab01af8f74
+Develop branch check failed: https://github.com/CSCI310/project-20203b-groupr-20203/commit/ba28dbc4425a43cf330712c5a0fba8953234f5bd
+Develop branch check failed: https://github.com/CSCI310/project-20203b-groupr-20203/commit/f29261f84ed3886a8626c3f7de3878bb930c3de2
+Develop branch check failed: https://github.com/CSCI310/project-20203b-groupr-20203/commit/67fc9f0f41cf7d7fc2d62a4a7f013e7bec77b8fb
+Develop branch check failed: https://github.com/CSCI310/project-20203b-groupr-20203/commit/e251f33ee72a65c14f4860351bf71bfce9148332
+Develop branch check failed: https://github.com/CSCI310/project-20203b-groupr-20203/commit/22fc6f87da15aa5f6d9d030f5c59037452e30856
+Total successful commits: 9
+Total failing commits: 6
