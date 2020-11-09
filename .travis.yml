@@ -1,9 +1,11 @@
 language: java
+os: linux
+dist: bionic
 branches:
   only:
   - develop 
 
-scripts:
+script:
         - mvn flyway:migrate
         - mvn test || true
         - rm csci310.db

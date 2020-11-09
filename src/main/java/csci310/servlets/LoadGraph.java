@@ -154,4 +154,3 @@ public class LoadGraph extends HttpServlet {
         }
     }
 }
-

@@ -30,7 +30,7 @@ public class Signup extends HttpServlet {
             String password = req.getParameter("password");
             String confirm = req.getParameter("confirm");
 
-            if (email.isEmpty() | password.isEmpty() | confirm.isEmpty() | !password.equalsIgnoreCase(confirm)) {
+            if (email.isEmpty() || password.isEmpty() || confirm.isEmpty() || !password.equalsIgnoreCase(confirm)) {
                 req.setAttribute("authenticated", false);
                 pw.write("0");
                 pw.flush();
@@ -54,6 +54,7 @@ public class Signup extends HttpServlet {
                 db.closeCon();
             }
         } catch (SQLException ignored) { }
+        db.closeCon();
     }
 
     private static String hashPassword(String input) {
