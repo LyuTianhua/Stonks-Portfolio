@@ -6,7 +6,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.servlet.http.HttpSession;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.sql.Connection;
@@ -17,6 +16,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Random;
 
 
 @WebServlet("/LoadGraph")
@@ -30,45 +30,26 @@ public class LoadGraph extends HttpServlet {
 //    public static SimpleDateFormat sdf;
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
-
-        System.out.println("in load graph");
         try {
-
-//            sdf = new SimpleDateFormat("yyyy-MM-dd");
-//            sdf.setLenient(false);
+            int id = (int) req.getSession().getAttribute("id");
 
             pw = res.getWriter();
-            HttpSession session = req.getSession();
-            int id = (int) session.getAttribute("id");
-
-            String startDate = req.getParameter("fromGraph");
-            String endDate = req.getParameter("toGraph");
-
-
-            System.out.printf("from: %s\n to: %s\n", startDate, endDate);
-
-            long startTimestamp = timestamp(startDate);
-            long endTimestamp = timestamp(endDate);
-
-            if (id != 369) res.setContentType("application/json; charset=UTF-8");
-            pw.print(graph(id, startTimestamp, endTimestamp));
-
-            req.setAttribute("loaded", true);
+            pw.print(graph(id));
             pw.flush();
             pw.close();
 
-        } catch (IOException | ParseException ignored) { }
+            req.setAttribute("loaded", true);
+
+        } catch (IOException ignored) { }
     }
 
     public static long timestamp(String date) throws ParseException {
-        System.out.println("\n\n\n\n date: " + date);
-        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-mm-dd");
-        sdf.setLenient(false);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
         Date newDate = sdf.parse(date);
         return newDate.getTime() / 1000;
     }
 
-    public static String graph(int id, long startTimestamp, long endTimestamp) {
+    public static String graph(int id) {
 
         String strValues = "";
         String strTimestamps = "";
@@ -79,18 +60,20 @@ public class LoadGraph extends HttpServlet {
             ps = con.prepareStatement("select * from base_user where id=?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
-
             strValues = rs.getString("data");
 
             ps = con.prepareStatement("select * from company ");
             rs = ps.executeQuery();
             rs.next();
             strTimestamps = rs.getString("timestamps");
-            System.out.println("\n\n\n\nin load graph timestamp: " + strTimestamps + "\n\n\n");
+
         } catch (SQLException ignored) {}
         db.closeCon();
 
-        String[] splitValues = strValues.split(" ", -1);
+        strValues = strValues.replace("[", "").replace("]", "");
+
+        String[] splitValues = strValues.split(", ", -1);
+
         String[] splitTimestamps = strTimestamps.split(" ", -1);
 
         int N = splitTimestamps.length - 1;
@@ -103,32 +86,71 @@ public class LoadGraph extends HttpServlet {
             timestamps[i] = Long.parseLong(splitTimestamps[i]);
         }
 
-        Gson gson = new Gson();
+        ArrayList<DataSet> datasets = new ArrayList<>();
 
-        return gson.toJson(new Graph(values, timestamps, startTimestamp, endTimestamp));
+        datasets.add(new DataSet("portfolio", values, false, "rgba(130, 195, 100, 1)"));
+
+        db = new Database();
+        con = db.getConn();
+        try {
+
+            ps = con.prepareStatement("select Company.ticker as ticker, Company.data as data from historicalStock left join Company on historicalStock.company_id=Company.id where user_id=?");
+            ps.setInt(1, id);
+            rs = ps.executeQuery();
+
+            Random rand = new Random();
+            int r, g, b;
+            String ticker, strHistoricalData;
+            String[] splitHistoricalData;
+            double[] historicalData;
+            while (rs.next()) {
+
+                r = rand.nextInt(255);
+                b = rand.nextInt(255);
+
+                ticker = rs.getString("ticker");
+                strHistoricalData = rs.getString("data");
+
+                splitHistoricalData = strHistoricalData.split(" ", -1);
+                historicalData = new double[splitHistoricalData.length - 1];
+
+                for (int i = 0; i < splitHistoricalData.length - 1; i++)
+                    historicalData[i] = Double.parseDouble(splitHistoricalData[i]);
+
+                datasets.add(new DataSet(ticker, historicalData, true, String.format("rgba(%d, 0, %d, 1)\n", r, b)));
+            }
+
+        } catch (SQLException ignored) {}
+        db.closeCon();
+
+        Gson gson = new Gson();
+        return gson.toJson(new Data(datasets, timestamps));
     }
 
-    private static class Graph {
-        double[] values;
-        long[] dates;
-        public Graph(double[] v, long[] timestamps, long startTimestamp, long endTimestamp) {
+    private static class Data {
+        DataSet[] datasets;
+        long[] timestamps;
+        public Data(ArrayList<DataSet> ds, long[] ts) {
+            timestamps = ts;
+            datasets = new DataSet[ds.size()];
+            for (int i = 0; i < ds.size(); i++)
+                datasets[i] = ds.get(i);
+        }
+    }
 
-            ArrayList<Double> vals = new ArrayList<>();
-            ArrayList<Long> d = new ArrayList<>();
-
-            int i = 0;
-            while (timestamps[i] < startTimestamp)
-                i++;
-
-            while (timestamps[i] < endTimestamp && i < timestamps.length-1) { vals.add(v[i]);d.add(timestamps[i]);i++; }
-
-            values = new double[vals.size()];
-            dates = new long[d.size()];
-
-            for (int j = 0; j < vals.size(); j++) values[j] = vals.get(j);
-
-            for (int j = 0; j < d.size(); j++) dates[j] = d.get(j);
-
+    private static class DataSet {
+        public String label;
+        public double[] data;
+        public int borderWidth = 2;
+        public boolean hidden;
+        public String borderColor = "";
+        public String backgroundColor = "rgba(0, 0, 0, 0)";
+        public DataSet(String ticker, double[] values, boolean h, String bc) {
+            borderColor = bc;
+            hidden = h;
+            label = ticker;
+            data = new double[values.length];
+            System.arraycopy(values, 0, data, 0, data.length);
         }
     }
 }

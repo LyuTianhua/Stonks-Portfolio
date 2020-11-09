@@ -110,13 +110,12 @@ public class Helper extends Mockito {
         db.closeCon();
     }
 
-    public static void delete_from_historical_stock_user_company(int user_id, int company_id) {
+    public static void delete_from_historical_stock_user(int user_id) {
         db = new Database();
         con = db.getConn();
         try {
-            ps = con.prepareStatement("delete from historicalStock where user_id=? and company_id=?");
+            ps = con.prepareStatement("delete from historicalStock where user_id=?");
             ps.setInt(1, user_id);
-            ps.setInt(2, company_id);
             ps.execute();
         } catch (SQLException ignored) {}
         db.closeCon();

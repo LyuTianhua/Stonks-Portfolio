@@ -1,11 +1,11 @@
 package junit;
 
-import csci310.servlets.LoadProfile;
+import csci310.servlets.LoadPortfolio;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-public class LoadProfileTest {
+public class LoadPortfolioTest {
 
     MockHttpServletRequest mocReq;
     MockHttpServletResponse mocRes;
@@ -22,7 +22,7 @@ public class LoadProfileTest {
 
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
-        LoadProfile lp = new LoadProfile();
+        LoadPortfolio lp = new LoadPortfolio();
         lp.doGet(mocReq, mocRes);
 
         Helper.delete_from_stock_where_id(user_id);

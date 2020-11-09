@@ -12,11 +12,9 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.sql.*;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
 
 @WebServlet("/AddStock")
@@ -27,12 +25,9 @@ public class AddStock extends HttpServlet {
     public static Database db;
     public static Connection con;
     public static PrintWriter pw;
-    public static SimpleDateFormat sdf;
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
         try {
-
-
 
             // get parameters from single add stock or get attributes from upload CSV servlet
             int userId = (int) req.getSession().getAttribute("id");
@@ -41,10 +36,8 @@ public class AddStock extends HttpServlet {
             String purchased = req.getParameter("purchased") == null ? (String) req.getAttribute("purchased") : req.getParameter("purchased");
             String sold = req.getParameter("sold") == null ? (String) req.getAttribute("sold") : req.getParameter("sold");
 
-
-            System.out.printf("\n\n\nin add stock\npurchased: %s\nsold: %s\n", purchased, sold);
-
-            if (sold == null || sold.equals("")) sold = sdf.format(new Date());
+            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
+            if (sold.length() < 1) sold = sdf.format(new Date());
 
             // format data for insertion into db
             JSONObject API_response = getGraphData(ticker);
@@ -58,25 +51,33 @@ public class AddStock extends HttpServlet {
             timestamp = timestamp.replace("[", "");
             timestamp = timestamp.replace("]", "");
 
-
             int companyId = getCompanyId(ticker, data, timestamp);
             long purchasedDate = LoadGraph.timestamp(purchased);
             long soldDate = LoadGraph.timestamp(sold);
 
+            String[] splitData = data.split(" ", -1);
+            String[] splitTimestamps = timestamp.split(" ", -1);
 
-            System.out.printf("\n\n\nin add stock\npurchased: %d\nsold: %d\n", purchasedDate, soldDate);
+            double[] stockData = new double[splitData.length];
+            double[] values = new double[splitData.length];
+            long[] times = new long[splitTimestamps.length];
+
+            for (int i = 0; i < splitData.length; i++) {
+                stockData[i] = 0d;
+                values[i] = Double.parseDouble(splitData[i]);
+                times[i] = Long.parseLong(splitTimestamps[i]);
+            }
+
+            for (int i = 0; i < splitData.length; i++)
+                if (purchasedDate <= times[i] && times[i] <= soldDate)
+                    stockData[i] = values[i];
 
 
-            pw = res.getWriter();
+            addStockToPortfolio(userId, companyId, quantity, purchasedDate, soldDate, stockData);
 
-            addStockToPortfolio(userId, companyId, quantity, purchasedDate, soldDate);
-
-            updateUserPortfolio(userId, quantity, purchasedDate, soldDate, timestamp, data);
+            updateUserPortfolio(userId, purchasedDate, soldDate, timestamp.split(" ", -1), data.split(" ", -1));
 
             req.setAttribute("loaded", true);
-            pw.println(1);
-            pw.flush();
-            pw.close();
         } catch (Exception ignored) {}
     }
 
@@ -132,32 +133,27 @@ public class AddStock extends HttpServlet {
         String data = res.substring(res.lastIndexOf(offset) + offset.length() , res.lastIndexOf("]}]},"));
 
         String[] individuals = data.split(",", -1);
-        String ret = "";
+        StringBuilder ret = new StringBuilder();
         for (String s : individuals)
-            ret += s.substring(0, s.indexOf(".") + 2) + " ";
+            ret.append(s, 0, s.indexOf(".") + 2).append(" ");
 
-        return ret;
+        ret.deleteCharAt(ret.length()-1);
+
+        return ret.toString();
     }
 
-    public static void addStockToPortfolio(int userId, int companyId, double shares, long purchased, long sold) {
+    public static void addStockToPortfolio(int userId, int companyId, double shares, long purchased, long sold, double[] stockData) {
         db = new Database();
         con = db.getConn();
 
         try {
-            ps = con.prepareStatement("select * from stock where company_id=? and user_id=?");
-            ps.setInt(1, userId);
-            ps.setInt(2, companyId);
-
-            rs = ps.executeQuery();
-
-            ps = con.prepareStatement("insert into stock (company_id, user_id, shares, purchased, sold) values (?, ?, ?, ?, ?)");
+            ps = con.prepareStatement("insert into stock (company_id, user_id, shares, purchased, sold, data) values (?, ?, ?, ?, ?, ?)");
             ps.setInt(1, companyId);
             ps.setInt(2, userId);
             ps.setDouble(3, shares);
             ps.setLong(4, purchased);
-
-            // Added graph data
             ps.setLong(5, sold);
+            ps.setString(6, Arrays.toString(stockData).replace("[", "").replace("]", ""));
 
             ps.execute();
         } catch (SQLException ignored) {}
@@ -165,67 +161,56 @@ public class AddStock extends HttpServlet {
         db.closeCon();
     }
 
-    private void updateUserPortfolio(int userId, double quantity, long purchasedDate, long soldDate, String timestamp, String companyValues) {
+    private void updateUserPortfolio(int userId, long purchasedDate, long soldDate, String[] strTimestamp, String[] strData) {
 
-        String[] splitTimestamps = timestamp.split(" ", -1);
-        String[] splitCompanyValues = companyValues.split(" ", -1);
+        int N = strTimestamp.length - 1;
 
-        int N = splitTimestamps.length - 1;
+        String userData = "";
+        String[] splitUserData;
+        String[] oldData = new String[N];
+        Arrays.fill(oldData, "0.0");
 
-        double[] doubleCompanyValues = new double[N];
-        long[] longTimestamps = new long[N];
+
         double[] data = new double[N];
+        Arrays.fill(data, 0d);
 
+        long ts;
         for (int i = 0; i < N; i++) {
-            doubleCompanyValues[i] = Double.parseDouble(splitCompanyValues[i]);
-            longTimestamps[i] = Long.parseLong(splitTimestamps[i]);
+            ts = Long.parseLong(strTimestamp[i]);
+            if (purchasedDate < ts && ts <= soldDate)
+                data[i] += Double.parseDouble(strData[i]);
         }
 
         db = new Database();
         con = db.getConn();
-
         try {
 
             ps = con.prepareStatement("select * from base_user where id=?");
             ps.setInt(1, userId);
             rs = ps.executeQuery();
+            if (rs.next())
+                userData = rs.getString("data");
 
-            if (rs.next()) {
-
-                String userData = rs.getString("data");
-                if (userData != null) {
-
-                    String[] splitUserData = userData.split(" ", -1);
-                    for (int i = 0; i < N; i++)
-                        data[i] = Double.parseDouble(splitUserData[i]);
-
-                } else {
-
-                    for (int i = 0; i < N; i++ )
-                        data[i] = 0;
-                }
-
-
-                int k = 0;
-                while (purchasedDate >= longTimestamps[k])
-                    k++;
-
-
-                while (soldDate >= longTimestamps[k]) { data[k] += doubleCompanyValues[k]; k++; }
-
-                StringBuilder newUserData = new StringBuilder();
-                for (int i = 0; i < N; i++)
-                    newUserData.append(data[i]).append(" ");
-
-                ps = con.prepareStatement("update base_user set data=? where id=?");
-                ps.setString(1, newUserData.toString());
-                ps.setInt(2, userId);
-                ps.executeUpdate();
-            }
-
-
-        } catch (SQLException e) {e.printStackTrace();}
+        } catch (SQLException ignored) {}
         db.closeCon();
 
+        if (userData == null)
+            splitUserData = oldData;
+        else
+            splitUserData = userData.split(", ", -1);
+
+
+        for (int i = 0; i < N; i++)
+            data[i] += Double.parseDouble(splitUserData[i]);;
+
+        db = new Database();
+        con = db.getConn();
+        try {
+            ps = con.prepareStatement("update base_user set data=? where id=?");
+            ps.setString(1, Arrays.toString(data).replace("[", "").replace("]", ""));
+            ps.setInt(2, userId);
+            ps.executeUpdate();
+        } catch (SQLException ignored) {}
+        db.closeCon();
     }
 }
