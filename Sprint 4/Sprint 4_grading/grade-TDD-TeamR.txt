@@ -1,0 +1,9 @@
+Best Practice TDD Report
+Owner: TeamR
+Grade: 9.0/10
+Comments: 
+	No test method found for: addhistorical.inserthistoricalstock
+		Commit: https://github.com/CSCI310/project-20203b-groupr-20203/commit/c14165d09162e75554968d699df993cf7eaeedd0
+Correct TDD methods: 9
+Incorrect TDD methods: 1
+Total methods evaluated for TDD: 10
