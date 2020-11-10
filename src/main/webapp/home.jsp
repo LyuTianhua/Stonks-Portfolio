@@ -270,9 +270,16 @@
 			$.ajax({
 				url: "CSV",
 				data: {
-					path: document.getElementById("csv-file").files[0].name,
+					path: document.getElementById("csv-file").files[0]?.name,
 			},
-				success: () => location.reload()
+				success: (response) => {
+					console.log(response);
+					// location.reload();
+				},
+				error: (error) => {
+					console.log(error);
+					document.getElementById("uploadCSVError").textContent = error.statusText;
+				}
 			})
 
 	window.addEventListener( "load", () => {
