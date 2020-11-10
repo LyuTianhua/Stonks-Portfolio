@@ -22,7 +22,6 @@ public class LoadHistorical extends HttpServlet {
     public void doGet(HttpServletRequest req, HttpServletResponse res) throws IOException {
         Database db = new Database();
         Connection con = db.getConn();
-        pw = res.getWriter();
 
         try {
             int id = (int) req.getSession().getAttribute("id");
@@ -31,45 +30,39 @@ public class LoadHistorical extends HttpServlet {
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
+            String ticker, checkbox, remove;
+
+            pw = res.getWriter();
             pw.println("<tr>\n" +
                     "<th>Graph</th>\n" +
                     "<th>Stonk</th>\n" +
                     "<th>Remove</th>\n" +
                     "</tr>");
 
-            String ticker;
             while (rs.next()) {
-
                 ticker = rs.getString("ticker");
-                System.out.printf("ticker: %s\n", ticker);
+                checkbox = ticker + "Historical";
+                remove = ticker + "RemoveHistorical";
 
-                System.out.println("\n\n\n\n" + ticker + "\n\n\n");
-
-                pw.println("<tr>");
-                pw.println("<td> <input id='" + ticker + "Historical" + "' type='checkbox' onchange='graphHistorical(\"" + ticker + "\")'></td>");
-                pw.println("<td id=\"" + ticker + "Historical" + "\">" + ticker + "</td>");
-                pw.println("<td> " +
-                        "<button class=\"btn btn-danger\" + id\"" + ticker + "Historical" + "\"" +
-                        "type=\"button\" " +
-                        "data-toggle=\"modal\"" +
-                        "data-target=\"#remove-stock-modal\"" +
-                        "data-ticker=\"" + ticker + "\"" +
-                        "onclick=\"removeHistorical('" + ticker + "')\">" +
+                pw.format("<tr>");
+                pw.format("<td> <input id=%s type=checkbox onclick=\"modifyGraph('%s', 'Historical')\" > </td>\n", checkbox, ticker);
+                pw.format("<td id=%s > %s </td>\n", ticker, ticker);
+                pw.format("<td>\n" +
+                        "<button id=%s class='btn btn-danger' type='button'" +
+                        "data-toggle='modal'" +
+                        "data-target='#remove-stock-modal'" +
+                        "data-ticker='ticker'" +
+                        "onclick=\"remove('%s', 'RemoveHistoricalStock')\">" +
                         "Remove" +
                         "</button>" +
-                        "</td>");
-                pw.println("</tr>");
+                        "</td>\n", remove, ticker);
+                pw.format("</tr>\n");
             }
-
+            pw.flush();
+            pw.close();
 
         } catch (SQLException ignored) { }
-
-        req.setAttribute("loaded", true);
-        pw.flush();
-        pw.close();
-        req.setAttribute("loaded", true);
         db.closeCon();
+        req.setAttribute("loaded", true);
     }
-
-
 }

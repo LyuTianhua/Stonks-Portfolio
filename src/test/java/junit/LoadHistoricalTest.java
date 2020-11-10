@@ -39,7 +39,7 @@ public class LoadHistoricalTest {
         assertTrue((boolean) mocReq.getAttribute("loaded"));
 
         Helper.delete_company_where_id(671);
-        Helper.delete_from_historical_stock_user_company(user_id, 671);
+        Helper.delete_from_historical_stock_user(user_id);
         Helper.delete_from_stock_where_id(user_id);
         Helper.delete_company_where_id(company_id);
         Helper.delete_user_where_id(user_id);

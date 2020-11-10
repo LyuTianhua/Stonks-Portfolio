@@ -9,7 +9,6 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
 
 import static org.junit.Assert.assertTrue;
 
@@ -24,7 +23,7 @@ public class CSVTest {
     MockHttpServletResponse mocRes;
 
     @Test
-    public void TestDoGet() throws SQLException {
+    public void TestDoGet() {
 
         csv = new CSV();
 

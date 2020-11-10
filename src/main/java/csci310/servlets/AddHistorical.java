@@ -38,6 +38,7 @@ public class AddHistorical extends HttpServlet {
             timestamp = timestamp.replace("]", "");
 
 
+            System.out.println("timestamp: " + timestamp);
             int companyId = AddStock.getCompanyId(ticker, data, timestamp);
 
             insertHistoricalStock(userId, companyId);
@@ -58,5 +59,4 @@ public class AddHistorical extends HttpServlet {
         } catch (SQLException ignored) {}
         db.closeCon();
     }
-
 }

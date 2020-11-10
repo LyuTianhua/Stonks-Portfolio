@@ -1,10 +1,14 @@
 package csci310.servlets;
+
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.util.Arrays;
 
 @WebServlet("/RemoveStock")
 public class RemoveStock extends HttpServlet {
@@ -15,98 +19,84 @@ public class RemoveStock extends HttpServlet {
     static PreparedStatement ps;
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
-        System.out.println("in remove stock");
 
-        int userId = (int) req.getSession().getAttribute("id");
-        int stockID = Integer.parseInt(req.getParameter("ticker_id"));
+        String ticker = req.getParameter("ticker");
+        int user_id = (int) req.getSession().getAttribute("id");
+        int company_id = 0;
 
-        System.out.println("stock: " + stockID);
-//            double quantity = Double.parseDouble(req.getParameter("quantity"));
-        updateStock(userId, stockID);
-    }
+        String strData = "";
+        String strCmpData = "";
+        String strTimestamps = "";
 
-    public static void updateStock(int userId, int stockId) {
+        String[] splitData;
+        String[] splitCmpData;
+        String[] splitTimestamps;
 
-        System.out.printf("user id: %d\nstock id : %d\n", userId, stockId);
+        Double[] data;
+
+        long purchased = 0;
+        long sold = 0;
 
         db = new Database();
         con = db.getConn();
-
         try {
-        	// Get info from stock entry
-            ps = con.prepareStatement("select * from Stock where id=?");
-            ps.setInt(1, stockId);
-            rs = ps.executeQuery();
-            
-            int companyID = rs.getInt("company_id");
-            long purchasedDate = rs.getLong("purchased");
-            long soldDate = rs.getLong("sold");
-        	
-            // Get user portfolio value
             ps = con.prepareStatement("select * from base_user where id=?");
-            ps.setInt(1, userId);
+            ps.setInt(1, user_id);
             rs = ps.executeQuery();
+            rs.next();
+            strData = rs.getString("data");
 
-            String userData = rs.getString("data");
-
-            String[] splitUserData = userData.split(" ", -1);
-            int N = splitUserData.length - 1;
-            
-            // Get required stock value
-            ps = con.prepareStatement("select * from Company where id=?");
-            ps.setInt(1, companyID);
-                        
-            // Debug
-            System.out.println("companyID: " + companyID);
-            
+            ps = con.prepareStatement("select * from company where ticker=?");
+            ps.setString(1, ticker);
             rs = ps.executeQuery();
+            rs.next();
+            company_id = rs.getInt("id");
+            strCmpData = rs.getString("data");
+            strTimestamps = rs.getString("timestamps");
 
-            String companyTimestamp = rs.getString("timestamps");
-            String companyData = rs.getString("data");
-            
-            String[] splitTimestamps = companyTimestamp.split(" ", -1);
-            String[] splitCompanyValues = companyData.split(" ", -1);
-            
-            double[] doubleCompanyValues = new double[N];
-            long[] longTimestamps = new long[N];
-            
-            for (int i = 0; i < N; i++) {
-                doubleCompanyValues[i] = Double.parseDouble(splitCompanyValues[i]);
-                longTimestamps[i] = Long.parseLong(splitTimestamps[i]);
-            }
+            ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
+            ps.setInt(1, user_id);
+            ps.setInt(2, company_id);
+            rs = ps.executeQuery();
+            rs.next();
+            purchased = rs.getLong("purchased");
+            sold = rs.getLong("sold");
 
-            // Update user data
-            double[] data = new double[N];
-            for (int i = 0; i < N; i++) data[i] = Double.parseDouble(splitUserData[i]);
-
-            int k = 0;
-            while (purchasedDate >= longTimestamps[k]) k++;
-
-
-            while (soldDate >= longTimestamps[k]) {
-                data[k] -= doubleCompanyValues[k];
-                k++;
-            }
-
-            StringBuilder newUserData = new StringBuilder();
-            for (int i = 0; i < N; i++) newUserData.append(data[i]).append(" ");
-            
-            // Apply the change to the database
-            ps = con.prepareStatement("update base_user set data=? where id=?");
-            ps.setString(1, newUserData.toString());
-            ps.setInt(2, userId);
-            ps.executeUpdate();
-            
-
-        	// Delete stock entry
-            ps = con.prepareStatement("delete from Stock where id=? and user_id=?");
-            ps.setInt(1, stockId);
-            ps.setInt(2, userId);
+            ps = con.prepareStatement("delete from Stock where company_id=? and user_id=?");
+            ps.setInt(1, company_id);
+            ps.setInt(2, user_id);
             ps.execute();
-            
-            System.out.println("executed update stock query");
-        } catch (SQLException e) {e.printStackTrace();}
-        db.closeCon();
-    }
 
+        } catch (SQLException ignored) {}
+        db.closeCon();
+
+        splitData = strData.split(", ", -1);
+        splitCmpData = strCmpData.split(" ", -1);
+        splitTimestamps = strTimestamps.split(" ", -1);
+
+        data = new Double[splitData.length];
+        Arrays.fill(data, 0d);
+
+        for (int i = 0; i < splitData.length - 1; i++)
+            data[i] = Double.parseDouble(splitData[i]);
+
+        long ts;
+        for (int i = 0; i < splitCmpData.length - 1; i++) {
+            ts = Long.parseLong(splitTimestamps[i]);
+            if (purchased < ts && ts <= sold)
+                data[i] -= Double.parseDouble(splitCmpData[i]);
+        }
+
+        db = new Database();
+        con = db.getConn();
+        try {
+            ps = con.prepareStatement("update base_user set data=? where id=?");
+            ps.setString(1, Arrays.toString(data).replace("[", "").replace("]", ""));
+            ps.setInt(2, user_id);
+            ps.executeUpdate();
+        } catch (SQLException ignored) {}
+        db.closeCon();
+
+        req.setAttribute("removed", true);
+    }
 }

@@ -19,42 +19,25 @@ public class RemoveHistoricalStock extends HttpServlet {
     static PreparedStatement ps;
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
-
         String ticker = req.getParameter("ticker");
-        int companyId = getCompanyId(ticker);
-        int userId = (int) req.getSession().getAttribute("id");
-        System.out.println("ticker: " + ticker);
-        updateStock(userId, companyId);
+        int user_id = (int) req.getSession().getAttribute("id");
 
-    }
-
-    public static int getCompanyId(String ticker)  {
         db = new Database();
         con = db.getConn();
-        int id = 0;
+        int company_id = 0;
         try {
             ps = con.prepareStatement("select * from company where ticker=?");
             ps.setString(1, ticker);
             rs = ps.executeQuery();
             rs.next();
-            id = rs.getInt("id");
-        } catch (SQLException ignored) {}
-        db.closeCon();
-        return id;
-    }
+            company_id = rs.getInt("id");
 
-    public static void updateStock(int userId, int companyId) {
-
-        db = new Database();
-        con = db.getConn();
-
-        try {
             ps = con.prepareStatement("delete from historicalStock where company_id=? and user_id=?");
-            ps.setInt(1, userId);
-            ps.setInt(2, companyId);
+            ps.setInt(1, company_id);
+            ps.setInt(2, user_id);
             ps.execute();
 
-        } catch (SQLException e) {e.printStackTrace();}
+        } catch (SQLException ignored) {}
         db.closeCon();
     }
 
