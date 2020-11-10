@@ -1,5 +1,6 @@
 package junit;
 
+import csci310.servlets.AddStock;
 import csci310.servlets.Database;
 import csci310.servlets.RemoveStock;
 import org.junit.Test;
@@ -9,11 +10,8 @@ import org.springframework.mock.web.MockHttpServletResponse;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
-import java.sql.SQLException;
-
 
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.assertEquals;
 
 public class RemoveStockTest {
 
@@ -26,49 +24,35 @@ public class RemoveStockTest {
     MockHttpServletResponse mocRes;
 
     @Test
-    public void TestDoGet() throws SQLException {
-        removeStock = new RemoveStock();
+    public void TestDoGet() {
 
-        int user_id = 92;
-        int company_id = 93;
-
-        Helper.insert_user_id_name_password(user_id, "removeStockDoGet", "password");
-        Helper.insert_company_id_ticker(company_id, "NET");
-
-        Helper.insert_stock_company_user_shares(company_id, user_id, 10);
+        //using admin user
+        int user_id = 1;
+        int company_id = 921;
+        String ticker = "F";
+        String quantity = "10";
+        String purchased = "2020-10-10";
+        String sold = "2020-10-20";
 
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
-        mocReq.addParameter("ticker_id", Helper.get_stock_id(company_id, user_id));
+        mocReq.addParameter("ticker", ticker);
+        mocReq.addParameter("quantity", quantity);
+        mocReq.addParameter("purchased", purchased);
+        mocReq.addParameter("sold", sold);
+        AddStock as = new AddStock();
+        as.doGet(mocReq, mocRes);
 
-        removeStock.doGet(mocReq, mocRes);
-
-        db = new Database();
-        con = db.getConn();
-        ps = con.prepareStatement("select * from stock where id=?");
-        ps.setString(1, Helper.get_stock_id(company_id, user_id));
-        rs = ps.executeQuery();
-
-        assertTrue(!rs.next());
-
-        db.closeCon();
-
-//        Helper.delete_from_stock_user_company(user_id, company_id);
-//        Helper.delete_company_where_id(company_id);
-//        Helper.delete_user_where_id(user_id);
-
+        make_new_mock_objects();
+        mocReq.getSession(true).setAttribute("id", user_id);
+        mocReq.addParameter("ticker", ticker);
+        RemoveStock rs = new RemoveStock();
+        rs.doGet(mocReq, mocRes);
+        assertTrue((boolean) mocReq.getAttribute("removed"));
     }
-
-    @Test
-    public void TestGetCompanyId() throws SQLException { }
-
-    @Test
-    public void TestUpdateStock() throws SQLException { }
 
     public void make_new_mock_objects() {
         mocReq = new MockHttpServletRequest();
         mocRes = new MockHttpServletResponse();
     }
-
-
 }

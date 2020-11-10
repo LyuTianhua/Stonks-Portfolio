@@ -1,11 +1,12 @@
 package junit;
 
-import csci310.servlets.LoadProfile;
+import csci310.servlets.AddStock;
+import csci310.servlets.LoadPortfolio;
 import org.junit.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 
-public class LoadProfileTest {
+public class LoadPortfolioTest {
 
     MockHttpServletRequest mocReq;
     MockHttpServletResponse mocRes;
@@ -15,14 +16,21 @@ public class LoadProfileTest {
 
         int user_id = 791;
         int company_id = 888;
-
-        Helper.insert_user_id_name_password(user_id, "LoadProfileUser", "LoadProfilePass");
-        Helper.insert_company_id_ticker(company_id, "LULU");
-        Helper.insert_stock_company_user_shares(company_id, user_id, 10d);
+        String ticker = "LULU";
+        double quantity = 10d;
 
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
-        LoadProfile lp = new LoadProfile();
+        mocReq.addParameter("ticker", ticker);
+        mocReq.addParameter("quantity", String.valueOf(quantity));
+        mocReq.addParameter("purchased", "2020-08-04");
+        mocReq.addParameter("sold", "2020-11-04");
+        AddStock addStock = new AddStock();
+        addStock.doGet(mocReq, mocRes);
+
+        make_new_mock_objects();
+        mocReq.getSession(true).setAttribute("id", user_id);
+        LoadPortfolio lp = new LoadPortfolio();
         lp.doGet(mocReq, mocRes);
 
         Helper.delete_from_stock_where_id(user_id);

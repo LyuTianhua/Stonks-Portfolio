@@ -44,7 +44,4 @@ public class inactiveStepDefinition {
 		assertTrue(driver.getCurrentUrl().contains(url));
 	}
 
-//	@After
-//	public void tearDown() { driver.quit(); }
-
 }

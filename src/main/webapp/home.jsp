@@ -42,7 +42,7 @@
 	<div class="row justify-content-center">
 		<div class="col-12 col-md-8 mt-3 overflow-auto">
 			<div class="table-responsive">
-				<h3>Portfolio Stocks</h3>
+				<h3> Portfolio Stocks </h3>
 				<table id="portfolio-stocks" class="table table-hover">
 					<%--filled dynamically--%>
 				</table>
@@ -71,115 +71,9 @@
 		window.location.replace("index.jsp");
 	<%}%>
 
-	const logout = () => $.ajax({
-		url : "Logout",
-		type : "Get",
-		success : () => window.location.href = "index.jsp"
-	})
 
-	const add = () => $.ajax({
-		url : "AddStock",
-		type: "Get",
-		data : {
-			ticker   : $("#ticker").val(),
-			purchased: $("#date-purchased").val(),
-			sold	 : $("#date-sold").val(),
-			quantity : $("#quantity").val()
-		},
-		success : () => location.reload()
-	})
-
-	const addHistorical = () => $.ajax({
-		url : "AddHistorical",
-		data : {
-			ticker : $("#ticker-view").val()
-		},
-		success : () => location.reload()
-	})
-
-	const loadHistorical = () => {
-		$.ajax({
-			url: "LoadHistorical",
-			success: (res) => $("#historical-stocks").html(res)
-		})
-	}
-
-	const graphHistorical = (ticker) => $.ajax({
-			url: "GraphHistorical",
-			data: {
-				ticker,
-				checked : document.getElementById(ticker + "Historical").checked,
-				fromGraph : $("#fromGraph").val(),
-				toGraph : $("#toGraph").val()
-			},
-			success: (res) => {
-
-				if (typeof res == "object") {
-					console.log("add dataset")
-					console.log(res)
-					myChart.data.datasets.push(res)
-					myChart.update()
-				} else {
-					console.log("remove dataset", res)
-
-					let removeIdx;
-					var i = 0;
-					myChart.data.datasets.forEach((dataset) => {
-						if (dataset.label === ticker) {
-							removeIdx = i;
-						}
-						i++;
-					})
-					console.log("found data set at ", removeIdx);
-					myChart.data.datasets.splice(removeIdx, 1);
-					myChart.update();
-
-				}
-			}
-		})
-
-
-	const remove = (id) => {
-		console.log("to be deleted ", id)
-		$("#ticker_id").text(id)
-	}
-
-	const remove_ajax_call = () => {
-		console.log("in remove ajax call ", $("#ticker_name").text())
-		$.ajax({
-			url: "RemoveStock",
-			type: "Get",
-			data: {
-				ticker_id: $("#ticker_id").text()
-			},
-			success: () => location.reload()
-		})
-	}
-
-	const removeHistorical = (ticker) => {
-		$.ajax({
-			url: "RemoveHistoricalStock",
-			type: "Get",
-			data: { ticker },
-			success: () => location.reload()
-		})
-	}
-
-	const idleTimer = () => {
-		let t;
-		window.onload = resetTimer;
-		window.onmousemove = resetTimer; // catches mouse movements
-		window.onmousedown = resetTimer; // catches mouse movements
-		window.onclick = resetTimer;     // catches mouse clicks
-		window.onscroll = resetTimer;    // catches scrolling
-		window.onkeypress = resetTimer;  //catches keyboard actions
-
-		function resetTimer() {
-			clearTimeout(t);
-			t = setTimeout(logout, 120000);  // time is in milliseconds (1000 is 1 second)
-		}
-	}
-	idleTimer();
+	var fullDatasets = [{}]
+	var fullLabels = []
 
 	var ctx = document.getElementById('myChart');
 	var myChart = new Chart(ctx, {
@@ -231,57 +125,162 @@
 		}
 	});
 
-	window.addEventListener( "load", () =>
-			$.ajax( {
-				url : "LoadProfile",
-				type : "Get",
-				success : (res) => {
-					$("#portfolio-stocks").html(res)
-					loadGraph();
-					loadHistorical();
+	const loadPortfolio = () =>
+			$.ajax({
+				url: "LoadPortfolio",
+				success: (res) => $("#portfolio-stocks").html(res)
+			})
+
+	const loadHistorical = () =>
+			$.ajax({
+				url: "LoadHistorical",
+				success: (res) => $("#historical-stocks").html(res)
+			})
+
+	var start
+	var end
+	const loadGraph = () =>
+			$.ajax({
+				url: "LoadGraph",
+				success: (res) => {
+					var data = JSON.parse(res)
+				    var labels = data.timestamps.map( d => new Date( d * 1000 ).getTime())
+					var datasets = data.datasets
+
+					var from = new Date( $("#fromGraph").val() ).getTime()
+					var to =  new Date( $("#toGraph").val() ).getTime()
+
+					start = 0;
+				    while (labels[start] < from) start++;
+
+				    end = labels.length - 1;
+				    while (to <= labels[end]) end--
+
+					labels = labels.map( l => new Date(l).toDateString().substr(3, 12))
+
+					myChart.data.labels = labels.slice(start, end)
+
+					for (var i = 0; i < datasets.length; i++)
+						datasets[i].data = datasets[i].data.slice(start, end)
+
+					myChart.data.datasets = datasets
+					myChart.update()
 				}
 			})
-	)
 
-	const loadGraph = () => {
-		var fromGraph = $("#fromGraph").val();
-		var toGraph = $("#toGraph").val();
+	const add = () =>
+			$.ajax({
+				url : "AddStock",
+				type: "Get",
+				data : {
+					ticker   : $("#ticker").val(),
+					purchased: $("#date-purchased").val(),
+					sold	 : $("#date-sold").val(),
+					quantity : $("#quantity").val()
+				},
+				success : () => location.reload()
+			})
 
-	    console.log("calling load graph")
-		$.ajax({
-			url : "LoadGraph",
-			type: "Get",
-			data: {
-				fromGraph,
-				toGraph
-			},
-			success: (res) => {
-				myChart.data.datasets[0].data = res.values;
-				myChart.data.labels = res.dates.map((d) => new Date(d*1000).toDateString().substring(3, 10));
-				myChart.update();
+	const view = () =>
+			$.ajax({
+				url : "AddHistorical",
+				type: "Get",
+				data : {
+					ticker   : $("#ticker-view").val(),
+				},
+				success : () => location.reload()
+			})
 
-				var table = document.getElementById("historical-stocks");
-
-				for (var i = 1; i < table.rows.length; i++) {
-				    var box = table.rows[i].cells[0]
-					box.click(()=> {
-						$("input[type=checkbox]").attr("checked", true)
-					})
-					console.log(table.rows[i].cells[1].textContent);
-					graphHistorical(table.rows[i].cells[1].textContent)
-				}
-
-			}
-		})
+	const remove = (ticker, url) =>
+	{
+		$("#tickerToBeRemoved").val(ticker)
+		$("#urlToRemove").val(url);
 	}
 
-	const uploadCSV = () => $.ajax({
+	const confirmRemove = () =>
+			$.ajax({
+				url: $("#urlToRemove").val(),
+				data: {
+					ticker: $("#tickerToBeRemoved").val(),
+				},
+				success: () => {
+					location.reload()
+				}
+			})
+
+	const modifyGraph = (ticker, label) => {
+		var checked = $("#" + ticker + label).is(":checked")
+
+		if (label === 'Historical') {
+			for (var i = 0; i < myChart.data.datasets.length; i++)
+				if (myChart.data.datasets[i].label === ticker)
+					myChart.data.datasets[i].hidden = !checked
+			myChart.update()
+		} else {
+			$.ajax({
+				url: 'ModifyGraph',
+				data: {
+					ticker
+				},
+				success: (res) => {
+					var data = JSON.parse(res)
+					var sliced = data.slice(start, end+1)
+					var sign = checked ? 1 : -1
+
+					var oldPortfolio = myChart.data.datasets[0].data
+
+					console.log("before", oldPortfolio)
+					for (var i = 0; i < oldPortfolio.length; i++) {
+						if (isNaN(oldPortfolio[i])) oldPortfolio[i] = 0
+						oldPortfolio[i] += sign * sliced[i]
+						if (oldPortfolio[i] < 0) oldPortfolio[i] = 0
+					}
+					console.log("after", oldPortfolio)
+
+					myChart.data.datasets[0].data.pop()
+					myChart.data.datasets[0].data = oldPortfolio
+					myChart.update()
+				}
+			})
+		}
+	}
+
+	const logout = () =>
+			$.ajax({
+				url : "Logout",
+				type : "Get",
+				success : () => window.location.href = "index.jsp"
+			})
+
+	const idleTimer = () => {
+		let t;
+		window.onload = resetTimer;
+		window.onmousemove = resetTimer; // catches mouse movements
+		window.onmousedown = resetTimer; // catches mouse movements
+		window.onclick = resetTimer;     // catches mouse clicks
+		window.onscroll = resetTimer;    // catches scrolling
+		window.onkeypress = resetTimer;  //catches keyboard actions
+		function resetTimer() {
+			clearTimeout(t);
+			t = setTimeout(logout, 120000);  // time is in milliseconds (1000 is 1 second)
+		}
+	}
+
+	const uploadCSV = () =>
+			$.ajax({
 				url: "CSV",
 				data: {
 					path: document.getElementById("csv-file").files[0].name,
-				},
+			},
 				success: () => location.reload()
 			})
+
+	window.addEventListener( "load", () => {
+		loadPortfolio()
+		loadHistorical()
+		loadGraph()
+		idleTimer()
+	})
 
 </script>
 <script>

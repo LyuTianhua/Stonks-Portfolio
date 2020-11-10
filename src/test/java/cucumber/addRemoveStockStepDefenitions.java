@@ -29,9 +29,9 @@ public class addRemoveStockStepDefenitions {
         driver.findElement(By.id("iEmail")).sendKeys("admin");
         driver.findElement(By.id("iPassword")).sendKeys("force_pass");
         driver.findElement(By.id("signin")).click();
-    }
 
-    @And("I enter {string} into {string}")
+      }
+@And("I enter {string} into {string}")
     public void i_enter(String key, String value) {
 
         driver.switchTo().activeElement();
@@ -46,7 +46,7 @@ public class addRemoveStockStepDefenitions {
     public void i_press_the_remove_stock_button() {
     	 driver.switchTo().activeElement();
          wait.until(
-                 ExpectedConditions.presenceOfElementLocated(By.id("TSLABtn"))
+                 ExpectedConditions.presenceOfElementLocated(By.id("TSLARemove"))
          ).click();
 
     }

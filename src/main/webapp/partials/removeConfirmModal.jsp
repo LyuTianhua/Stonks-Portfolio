@@ -7,11 +7,12 @@
       </div>
       <div class="modal-body">
         Are you sure you want to remove?
-        <input name="ticker_tobe_removed" id="ticker_id" type="text" value="" hidden>
       </div>
       <div class="modal-footer">
-        <button id="remove-stock-in-modal" type="button" class="btn btn-success" form="remove-stock-modal-form"  onclick="remove_ajax_call()">Remove</button>
-      	<button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
+          <input type="hidden" id="tickerToBeRemoved" value="">
+          <input type="hidden" id="urlToRemove" value="">
+          <button id="remove-stock-in-modal" type="button" class="btn btn-success" onclick="confirmRemove()">Remove</button>
+          <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
       </div>
     </div>
   </div>
