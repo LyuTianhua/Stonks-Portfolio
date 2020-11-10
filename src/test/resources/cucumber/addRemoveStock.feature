@@ -95,11 +95,10 @@ Feature: add stock to portfolio
       	 | '1'      | '01/15/2020'     |
       	 | '10'     | '08/20/2020'     |
 
-  # Removed since purchase date is not shown in the home.jsp
-  #Scenario: Using calendar picker to select dates
-  #    Given I am signed in
-  #    And I click on add stock modal
-  #    And I enter 'AAPL' into 'ticker'
-  #    And I enter '1' into 'quantity'
-  #    And I select 1 week ago from the calendar picker for date purchased
-  #    Then date purchased should equal 1 week ago
+  Scenario: Using calendar picker to select dates
+      Given I am signed in
+      And I click on add stock modal
+      And I enter 'AAPL' into 'ticker'
+      And I enter '1' into 'quantity'
+      And I select 1 week ago from the calendar picker for date purchased
+      Then date purchased should equal 1 week ago
