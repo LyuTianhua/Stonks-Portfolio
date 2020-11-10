@@ -156,13 +156,13 @@
 	var start
 	var end
 	const loadGraph = () =>
-			// checkUpOrDown(); // Updating portfolio value
 			$.ajax({
 				url: "LoadGraph",
 				success: (res) => {
 					var data = JSON.parse(res)
 				    var labels = data.timestamps.map( d => new Date( d * 1000 ).getTime())
 					var datasets = data.datasets
+					var pValue = 0, lValue = 0;
 
 					var from = new Date( $("#fromGraph").val() ).getTime()
 					var to =  new Date( $("#toGraph").val() ).getTime()
@@ -173,15 +173,20 @@
 				    end = labels.length - 1;
 				    while (to <= labels[end]) end--
 
-					labels = labels.map( l => new Date(l).toDateString().substr(3, 12))
+					labels = labels.map(l => new Date(l).toDateString().substr(3, 12))
 
 					myChart.data.labels = labels.slice(start, end)
+										
+					if (datasets[0].length > 1) pValue = datasets[0].data[end - 1];
+				    if (datasets[0].length > 0) lValue = datasets[0].data[end];
 
 					for (var i = 0; i < datasets.length; i++)
 						datasets[i].data = datasets[i].data.slice(start, end)
 
 					myChart.data.datasets = datasets
 					myChart.update()
+					
+					checkUpOrDown(pValue, lValue); // Updating portfolio value
 				}
 			})
 
@@ -440,17 +445,17 @@
 
 	// Checks if portfolio is up or down for the day and changes
 	// portfolio value color and up/down arrow based on each
-	function checkUpOrDown() {
-		// WILBUR: INSERT PORTFOLIO VALUE
-		// document.getElementById("portfolio-value-number").textContent = ;
+	function checkUpOrDown(pValue, lValue) {
+		document.getElementById("portfolio-value-number").textContent = " $" + lValue.toString();
 		
-		// WILBUR: Change true to the value of the session variable for portfolio up or down
-		if(true) {
+		// Change true to the value of the session variable for portfolio up or down
+		if(lValue > pValue) {
 			document.getElementById("portfolio-value").style.color = "green";
 			document.getElementById("up-arrow").style.display = "inline";
-		} else {
+		} else if (lValue < pValue) {
 			document.getElementById("portfolio-value").style.color = "red";
 			document.getElementById("down-arrow").style.display = "inline";
+		} else {
 		}
 		
 	}
