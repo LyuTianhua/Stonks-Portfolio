@@ -167,15 +167,16 @@
 	var start
 	var end
 	const loadGraph = () =>
-			$.ajax({
-				url: "LoadGraph",
-				success: (res) => {
-					var data = JSON.parse(res)
-					myChart.data.labels = data.timestamps.map( d => new Date( d * 1000 ).getTime())
-					myChart.data.datasets = data.datasets
-					myChart.update()
-				}
-			})
+		// checkUpOrDown(); // Updating portfolio value
+		$.ajax({
+			url: "LoadGraph",
+			success: (res) => {
+				var data = JSON.parse(res)
+				myChart.data.labels = data.timestamps.map( d => new Date( d * 1000 ).getTime())
+				myChart.data.datasets = data.datasets
+				myChart.update()
+			}
+		})
 
 	const changeDates = () => {
 		myChart.options.scales.xAxes[0].ticks.min = $("#fromGraph").val()
@@ -425,8 +426,7 @@
 				document.getElementById("empty-to").style.display = "none";
 			}
 		}
-
-		loadGraph();
+		changeDates(); // Potentially change to loadGraph() if issues arise
 	}
 
 	// Checks valid form inputs before submitting add-stock-form
@@ -506,6 +506,7 @@
 			document.getElementById("down-arrow").style.display = "inline";
 		}
 		
+
 	}
 	
 	var today = new Date();
@@ -516,6 +517,7 @@
 	    '-' + oneWeekAgo.getDate().toString().padStart(2, 0);
 		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
 	    '-' + today.getDate().toString().padStart(2, 0);
+		checkGraphDates();
 	}
 	
 	function threeMonths() {
@@ -525,6 +527,7 @@
 	    '-' + earlier.getDate().toString().padStart(2, 0);
 		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
 	    '-' + today.getDate().toString().padStart(2, 0);
+		checkGraphDates();
 	}
 	
 	function oneYear() {
@@ -534,7 +537,82 @@
 	    '-' + earlier.getDate().toString().padStart(2, 0);
 		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
 	    '-' + today.getDate().toString().padStart(2, 0);
+		checkGraphDates();
 	}
+	
+	function checkGraphDates() {
+		var datePurchased = new Date(document.getElementById("fromGraph").value);
+		var dateSold = new Date(document.getElementById("toGraph").value);
+		var rightNow = new Date();
+		var oneYearAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
+		var tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
+		// Adjusting one year ago time for UTC offset
+		oneYearAgo.setDate(rightNow.getDate()-1);
+		oneYearAgo.setHours(23);
+		oneYearAgo.setMinutes(59);
+		oneYearAgo.setSeconds(59);
+		oneYearAgo.setMilliseconds(999);
+		// Adjusting tomorrow's date for UTC offset and making it midnight
+		tomorrow.setHours(0);
+		tomorrow.setMinutes(0);
+		tomorrow.setSeconds(0);
+		tomorrow.setMilliseconds(1);
+		// Adjusting datePurchased for UTC offset
+		datePurchased.setDate(datePurchased.getDate()+1);
+		if(datePurchased < oneYearAgo || dateSold >= tomorrow){
+			document.getElementById("invalid-dates").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("invalid-dates").style.display = "none";
+		}
+		if(document.getElementById("fromGraph").value.length === 0) {
+			document.getElementById("empty-from").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("empty-from").style.display = "none";
+		}
+		if(document.getElementById("toGraph").value.length > 0){
+			if((dateSold - datePurchased) < 0) {
+				document.getElementById("empty-to").style.display = "inline";
+				return false;
+			} else {
+				document.getElementById("empty-to").style.display = "none";
+			}
+		}
+		loadGraph();
+	}
+	
+	var today = new Date();
+	
+	function oneWeek() {
+		var oneWeekAgo = new Date(today.getTime() - 7*86400000);
+		document.getElementById("fromGraph").value = oneWeekAgo.getFullYear().toString() + '-' + (oneWeekAgo.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + oneWeekAgo.getDate().toString().padStart(2, 0);
+		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + today.getDate().toString().padStart(2, 0);
+		changeDates();
+	}
+	
+	function threeMonths() {
+		var earlier = new Date(today);
+		earlier.setMonth(earlier.getMonth()-3);
+		document.getElementById("fromGraph").value = earlier.getFullYear().toString() + '-' + (earlier.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + earlier.getDate().toString().padStart(2, 0);
+		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + today.getDate().toString().padStart(2, 0);
+		changeDates();
+	}
+	
+	function oneYear() {
+		var earlier = new Date(today);
+		earlier.setFullYear(earlier.getFullYear()-1);
+		document.getElementById("fromGraph").value = earlier.getFullYear().toString() + '-' + (earlier.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + earlier.getDate().toString().padStart(2, 0);
+		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + today.getDate().toString().padStart(2, 0);
+		changeDates();
+	}
+
 
 </script>
 <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
