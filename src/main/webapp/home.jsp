@@ -214,6 +214,9 @@
 				type: "Get",
 				data : {
 					ticker   : $("#ticker-view").val(),
+					purchased: $("#date-purchased-view").val(),
+					sold	 : $("#date-sold-view").val(),
+					quantity : $("#quantity-view").val()
 				},
 				success : () => location.reload()
 			})
@@ -515,8 +518,6 @@
 			document.getElementById("down-arrow").style.display = "inline";
 		} else {
 		}
-		
-
 	}
 	
 	var today = new Date();
