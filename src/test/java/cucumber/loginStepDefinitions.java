@@ -30,6 +30,11 @@ public class loginStepDefinitions {
 		driver.get(ROOT_URL + "home.jsp");
 	}
 
+	@When("I do nothing")
+	public void I_do_noting() {
+		driver.navigate().to(ROOT_URL + "index.jsp");
+	}
+  
 	@When("I click the Register tab")
 	public void iClickTheRegisterTab() {
 		driver.findElement(By.linkText("Register")).click();
