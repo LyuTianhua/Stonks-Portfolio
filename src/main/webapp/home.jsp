@@ -19,7 +19,7 @@
 <body>
 <%@include file="partials/nav.jsp"%>
 
-<div class="container">
+<div class="container" onload="checkUpOrDown()">
 	<div class="row justify-content-center">
 		<div class="btn-group col-12 col-md-6 col-lg-6 mt-3" role="group">
 			<button type="button" class="btn btn-dark" data-toggle="modal"
@@ -40,6 +40,22 @@
 		<div class="col-12 col-md-9 mt-3">
 			<%@include file="partials/graph.jsp"%>
 		</div>
+	</div>
+	<div class="row justify-content-center">
+		<div class="btn-group btn-group-toggle" data-toggle="buttons">
+  			<label class="btn btn-secondary active">
+    		<input type="radio" name="options" id="week" autocomplete="off" onclick="oneWeek()">1 Week
+ 			</label>
+  			<label class="btn btn-secondary">
+    		<input type="radio" name="options" id="month" autocomplete="off" onclick="threeMonths()" checked>3 Months
+  			</label>
+  			<label class="btn btn-secondary">
+  			<input type="radio" name="options" id="year" autocomplete="off" onclick="oneYear()">1 Year
+  			</label>
+		</div>
+	</div>
+	<div class="text-center">
+		<%@include file="partials/portfolioValue.jsp"%>
 	</div>
 	<div class="row justify-content-center">
 		<div class="col-12 col-md-8 mt-3 overflow-auto">
@@ -361,6 +377,57 @@
 
 		return true;
 	}
+	
+	//Check date sold before date purchased
+	// Todo: add check for date only 1 year in the past
+	function checkGraphDates() {
+		var datePurchased = new Date(document.getElementById("fromGraph").value);
+		var dateSold = new Date(document.getElementById("toGraph").value);
+		var rightNow = new Date();
+		var oneYearAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
+		var tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
+
+		// Adjusting one year ago time for UTC offset
+		oneYearAgo.setDate(rightNow.getDate()-1);
+		oneYearAgo.setHours(23);
+		oneYearAgo.setMinutes(59);
+		oneYearAgo.setSeconds(59);
+		oneYearAgo.setMilliseconds(999);
+
+		// Adjusting tomorrow's date for UTC offset and making it midnight
+		tomorrow.setHours(0);
+		tomorrow.setMinutes(0);
+		tomorrow.setSeconds(0);
+		tomorrow.setMilliseconds(1);
+
+		// Adjusting datePurchased for UTC offset
+		datePurchased.setDate(datePurchased.getDate()+1);
+
+		if(datePurchased < oneYearAgo || dateSold >= tomorrow){
+			document.getElementById("invalid-dates").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("invalid-dates").style.display = "none";
+		}
+
+		if(document.getElementById("fromGraph").value.length === 0) {
+			document.getElementById("empty-from").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("empty-from").style.display = "none";
+		}
+
+		if(document.getElementById("toGraph").value.length > 0){
+			if((dateSold - datePurchased) < 0) {
+				document.getElementById("empty-to").style.display = "inline";
+				return false;
+			} else {
+				document.getElementById("empty-to").style.display = "none";
+			}
+		}
+
+		loadGraph();
+	}
 
 	// Checks valid form inputs before submitting add-stock-form
 	function checkAddStockForm() {
@@ -423,18 +490,50 @@
 		}
 		return true;
 	}
-
+		
 	// Checks if portfolio is up or down for the day and changes
 	// portfolio value color and up/down arrow based on each
 	function checkUpOrDown() {
-		var isUp = <%= session.getAttribute("isUp") %>
-		if(isUp){
+		// WILBUR: INSERT PORTFOLIO VALUE
+		// document.getElementById("portfolio-value-number").textContent = ;
+		
+		// WILBUR: Change true to the value of the session variable for portfolio up or down
+		if(true) {
 			document.getElementById("portfolio-value").style.color = "green";
-			document.getElementById("up-arrow").style.visibility = "visible";
+			document.getElementById("up-arrow").style.display = "inline";
 		} else {
 			document.getElementById("portfolio-value").style.color = "red";
-			document.getElementById("down-arrow").style.visibility = "visible";
+			document.getElementById("down-arrow").style.display = "inline";
 		}
+		
+	}
+	
+	var today = new Date();
+	
+	function oneWeek() {
+		var oneWeekAgo = new Date(today.getTime() - 7*86400000);
+		document.getElementById("fromGraph").value = oneWeekAgo.getFullYear().toString() + '-' + (oneWeekAgo.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + oneWeekAgo.getDate().toString().padStart(2, 0);
+		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + today.getDate().toString().padStart(2, 0);
+	}
+	
+	function threeMonths() {
+		var earlier = new Date(today);
+		earlier.setMonth(earlier.getMonth()-3);
+		document.getElementById("fromGraph").value = earlier.getFullYear().toString() + '-' + (earlier.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + earlier.getDate().toString().padStart(2, 0);
+		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + today.getDate().toString().padStart(2, 0);
+	}
+	
+	function oneYear() {
+		var earlier = new Date(today);
+		earlier.setFullYear(earlier.getFullYear()-1);
+		document.getElementById("fromGraph").value = earlier.getFullYear().toString() + '-' + (earlier.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + earlier.getDate().toString().padStart(2, 0);
+		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + today.getDate().toString().padStart(2, 0);
 	}
 
 </script>
