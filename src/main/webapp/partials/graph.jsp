@@ -27,14 +27,25 @@
 
 <div>
     <canvas id="myChart"  width="400" height="200"></canvas>
-    <form class="d-flex justify-content-center" id="formGraph" onchange="loadGraph()">
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="date" name="fromGraph" id="fromGraph" value=<%= threeMonthsAgo %>>
-            <label class="form-check-label" for="fromGraph">From</label>
-        </div>
-        <div class="form-check form-check-inline">
-            <input class="form-check-input" type="date" name="toGraph" id="toGraph" value=<%= now %>>
-            <label class="form-check-label" for="toGraph">To</label>
-        </div>
-    </form>
+    <div class="row d-flex justify-content-center">
+            <form class="d-flex justify-content-center d-inline" id="formGraph" onchange="changeDates()">
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="date" name="fromGraph" id="fromGraph" value=<%= threeMonthsAgo %>>
+                    <label class="form-check-label" for="fromGraph">From</label>
+                </div>
+                <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="date" name="toGraph" id="toGraph" value=<%= now %>>
+                    <label class="form-check-label" for="toGraph">To</label>
+                </div>
+            </form>
+            <div class="dropdown d-inline">
+                <select id="interval" class="form-control" id="exampleFormControlSelect1" onchange="interval()">
+                    <option value="day">Day</option>
+                    <option value="week" selected>Week</option>
+                    <option value="month">Month</option>
+                </select>
+            </div>
+    </div>
+
+
 </div>

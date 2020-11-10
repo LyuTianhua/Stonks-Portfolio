@@ -9,7 +9,7 @@ Feature: Register for siteFeature: Register for site
     Then I should be on <url>
     Examples:
       | email    | password  | confirm   | url            |
-      | 'tu3'    | 'tu3pass' | 'tu3pass' | 'index.jsp'    |
+      | 'tu3'    | 'tu3pass' | 'tu3pass' | ''             |
       | 'tu3'    | 'tu3pass' | ''        | 'register.jsp' |
       | 'tu3'    | 'tu3pass' | 'wrong'   | 'register.jsp' |
 
