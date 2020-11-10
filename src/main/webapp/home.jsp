@@ -505,6 +505,7 @@
 	    '-' + oneWeekAgo.getDate().toString().padStart(2, 0);
 		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
 	    '-' + today.getDate().toString().padStart(2, 0);
+		checkGraphDates();
 	}
 	
 	function threeMonths() {
@@ -514,6 +515,7 @@
 	    '-' + earlier.getDate().toString().padStart(2, 0);
 		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
 	    '-' + today.getDate().toString().padStart(2, 0);
+		checkGraphDates();
 	}
 	
 	function oneYear() {
@@ -523,6 +525,7 @@
 	    '-' + earlier.getDate().toString().padStart(2, 0);
 		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
 	    '-' + today.getDate().toString().padStart(2, 0);
+		checkGraphDates();
 	}
 
 
