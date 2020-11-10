@@ -38,3 +38,8 @@
         </div>
     </form>
 </div>
+<div class="text-center m-3">
+	<span class="text-danger" id="invalid-dates">Please enter a pair of valid dates. (Max 1 year ago from today)</span>
+	<span class="text-danger" id="empty-from">Invalid "From" date. Date "To" must be after date "From".</span>
+	<span class="text-danger" id="empty-to">Invalid "To" date. Date "From" must be before date "To".</span>
+</div>
