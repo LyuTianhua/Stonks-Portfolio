@@ -509,7 +509,9 @@
 	// Checks if portfolio is up or down for the day and changes
 	// portfolio value color and up/down arrow based on each
 	function checkUpOrDown(pValue, lValue) {
-		document.getElementById("portfolio-value-number").textContent = " $" + lValue.toString();
+		var percentage = 0;
+		if (lValue != 0 && pValue != 0) percentage = ((lValue - pValue) / pValue).toPrecision(2);
+		document.getElementById("portfolio-value-number").innerHTML = " $" + lValue.toString() + " " + percentage.toString() + "%";
 		// Change true to the value of the session variable for portfolio up or down
 		if(lValue > pValue) {
 			document.getElementById("portfolio-value").style.color = "green";
