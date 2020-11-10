@@ -303,8 +303,24 @@
 			$.ajax({
 				url: "CSV",
 				data: {
+					path: document.getElementById("csv-file").files[0]?.name,
 					path: document.getElementById("csv-file").files[0].name,
 			},
+				success: (response) => location.reload(),
+				error: (error) => {
+					const invalidTickerName = error.getResponseHeader("error");
+					if(error.status === 404) {
+						document.getElementById("uploadCSVError").textContent = "Malformed csv: Invalid ticker name " + invalidTickerName;
+					} else if(error.status === 405) {
+						document.getElementById("uploadCSVError").textContent = "Malformed csv: Sold date before buy date for " + invalidTickerName;
+					}
+					else if(error.status === 406) {
+						document.getElementById("uploadCSVError").textContent = "Malformed csv: Negative quantity for " + invalidTickerName;
+					}
+					else {
+						document.getElementById("uploadCSVError").textContent = error.statusText;
+					}
+				}
 				success: () => location.reload()
 			})
 
