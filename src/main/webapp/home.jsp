@@ -426,7 +426,8 @@
 				document.getElementById("empty-to").style.display = "none";
 			}
 		}
-		changeDates(); // Potentially change to loadGraph() if issues arise
+		loadGraph(); // Potentially change to loadGraph() if issues arise
+		return true;
 	}
 
 	// Checks valid form inputs before submitting add-stock-form
@@ -511,13 +512,19 @@
 	
 	var today = new Date();
 	
+	function changeGraphDates() {
+		if(checkGraphDates()) {
+			changeDates();
+		}
+	}
+	
 	function oneWeek() {
 		var oneWeekAgo = new Date(today.getTime() - 7*86400000);
 		document.getElementById("fromGraph").value = oneWeekAgo.getFullYear().toString() + '-' + (oneWeekAgo.getMonth() + 1).toString().padStart(2, 0) +
 	    '-' + oneWeekAgo.getDate().toString().padStart(2, 0);
 		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
 	    '-' + today.getDate().toString().padStart(2, 0);
-		checkGraphDates();
+		changeGraphDates();
 	}
 	
 	function threeMonths() {
@@ -527,7 +534,7 @@
 	    '-' + earlier.getDate().toString().padStart(2, 0);
 		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
 	    '-' + today.getDate().toString().padStart(2, 0);
-		checkGraphDates();
+		changeGraphDates();
 	}
 	
 	function oneYear() {
@@ -537,10 +544,10 @@
 	    '-' + earlier.getDate().toString().padStart(2, 0);
 		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
 	    '-' + today.getDate().toString().padStart(2, 0);
-		checkGraphDates();
+		changeGraphDates();
 	}
 	
-	function checkGraphDates() {
+	/* function checkGraphDates() {
 		var datePurchased = new Date(document.getElementById("fromGraph").value);
 		var dateSold = new Date(document.getElementById("toGraph").value);
 		var rightNow = new Date();
@@ -579,8 +586,8 @@
 				document.getElementById("empty-to").style.display = "none";
 			}
 		}
-		loadGraph();
-	}
+		return true;
+	} */
 	
 	var today = new Date();
 	

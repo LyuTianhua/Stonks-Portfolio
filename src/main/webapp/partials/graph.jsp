@@ -28,7 +28,7 @@
 <div>
     <canvas id="myChart"  width="400" height="200"></canvas>
     <!-- Changed the onchange attribute to checkGraphDates() from loadGraph() -->
-    <form class="d-flex justify-content-center" id="formGraph" onchange="changeDates()">
+    <form class="d-flex justify-content-center" id="formGraph" onchange="changeGraphDates()">
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="date" name="fromGraph" id="fromGraph" value=<%= threeMonthsAgo %>>
             <label class="form-check-label" for="fromGraph">From</label>
@@ -38,7 +38,7 @@
             <label class="form-check-label" for="toGraph">To</label>
         </div>
     </form>
-    <div class="dropdown d-inline">
+    <div class="dropdown d-inline m-3">
         <select id="interval" class="form-control" id="exampleFormControlSelect1" onchange="interval()">
             <option value="day">Day</option>
             <option value="week" selected>Week</option>
