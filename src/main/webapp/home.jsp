@@ -619,7 +619,31 @@
 	    '-' + today.getDate().toString().padStart(2, 0);
 		changeDates();
 	}
-
+	
+	var zoomInClicks = 0;
+	var zoomOutClicks = 0;
+	
+	function zoomIn() {
+		if(zoomInClicks % 2 == 0) {
+			oneWeek();
+		}
+		else {
+			threeMonths();
+			zoomOutClicks++;
+			zoomInClicks++;
+		}
+	}
+	
+	function zoomOut() {
+		if(zoomOutClicks % 2 == 0) {
+			zoomOutClicks++;
+			zoomInClicks++;
+			threeMonths();
+		}
+		else {
+			oneYear();
+		}
+	}
 
 </script>
 <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
