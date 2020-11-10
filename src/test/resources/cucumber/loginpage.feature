@@ -19,3 +19,8 @@ Feature: login functionality
     And I click the Sign In button
     Then an error message "Password and Email don't match" should show up
 
+	Scenario: Redirect to login page from home page without login
+    Given I am on the home page without login
+    When I do nothing
+    Then I should be on page 'index.jsp'
+    
