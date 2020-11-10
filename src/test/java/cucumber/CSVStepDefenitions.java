@@ -37,9 +37,12 @@ public class CSVStepDefenitions {
         assertTrue(driver.findElement(By.id(ticker)).isDisplayed());
     }
 
-    @Then("I should see an upload error {string}`")
+    @Then("I should see an upload error {string}")
     public void iShouldSeeAnUploadError(String uploadError) {
-        assertEquals(driver.findElement(By.id("csvError")), uploadError);
+        try {
+            Thread.sleep(5000);
+        } catch(Exception ie) {}
+        assertTrue(driver.findElement(By.id("uploadCSVError")).getAttribute("innerHTML").contains(uploadError));
     }
 
 }
