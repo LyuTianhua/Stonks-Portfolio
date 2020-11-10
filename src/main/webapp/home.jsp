@@ -12,6 +12,8 @@
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
 	<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7"></script>
+	<script src="https://cdn.jsdelivr.net/npm/moment@2.27.0"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.1"></script>
 
 </head>
 <body>
@@ -88,6 +90,16 @@
 		},
 		options: {
 			scales: {
+				xAxes: [ {
+					display: true,
+					type: 'time',
+					distribution: 'linear',
+					time: {
+						unit: 'week',
+						isoWeekday: true
+					}
+				}
+				],
 				yAxes: [{
 					ticks: {
 						beginAtZero: true
@@ -147,26 +159,17 @@
 				    var labels = data.timestamps.map( d => new Date( d * 1000 ).getTime())
 					var datasets = data.datasets
 
-					var from = new Date( $("#fromGraph").val() ).getTime()
-					var to =  new Date( $("#toGraph").val() ).getTime()
-
-					start = 0;
-				    while (labels[start] < from) start++;
-
-				    end = labels.length - 1;
-				    while (to <= labels[end]) end--
-
-					labels = labels.map( l => new Date(l).toDateString().substr(3, 12))
-
-					myChart.data.labels = labels.slice(start, end)
-
-					for (var i = 0; i < datasets.length; i++)
-						datasets[i].data = datasets[i].data.slice(start, end)
-
+					myChart.data.labels = labels
 					myChart.data.datasets = datasets
 					myChart.update()
 				}
 			})
+
+	const changeDates = () => {
+		myChart.options.scales.xAxes[0].ticks.min = $("#fromGraph").val()
+		myChart.options.scales.xAxes[0].ticks.max = $("#toGraph").val()
+		myChart.update()
+	}
 
 	const add = () =>
 			$.ajax({
@@ -224,7 +227,6 @@
 				},
 				success: (res) => {
 					var data = JSON.parse(res)
-					var sliced = data.slice(start, end+1)
 					var sign = checked ? 1 : -1
 
 					var oldPortfolio = myChart.data.datasets[0].data
@@ -232,8 +234,8 @@
 					console.log("before", oldPortfolio)
 					for (var i = 0; i < oldPortfolio.length; i++) {
 						if (isNaN(oldPortfolio[i])) oldPortfolio[i] = 0
-						oldPortfolio[i] += sign * sliced[i]
-						if (oldPortfolio[i] < 0) oldPortfolio[i] = 0
+						oldPortfolio[i] += sign * data[i]
+						if (oldPortfolio[i] < 1) oldPortfolio[i] = 0
 					}
 					console.log("after", oldPortfolio)
 
@@ -279,6 +281,7 @@
 		loadPortfolio()
 		loadHistorical()
 		loadGraph()
+		changeDates()
 		idleTimer()
 	})
 

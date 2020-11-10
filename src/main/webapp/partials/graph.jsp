@@ -27,7 +27,7 @@
 
 <div>
     <canvas id="myChart"  width="400" height="200"></canvas>
-    <form class="d-flex justify-content-center" id="formGraph" onchange="loadGraph()">
+    <form class="d-flex justify-content-center" id="formGraph" onchange="changeDates()">
         <div class="form-check form-check-inline">
             <input class="form-check-input" type="date" name="fromGraph" id="fromGraph" value=<%= threeMonthsAgo %>>
             <label class="form-check-label" for="fromGraph">From</label>
