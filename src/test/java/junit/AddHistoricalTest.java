@@ -44,6 +44,9 @@ public class AddHistoricalTest {
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
         mocReq.addParameter("ticker", ticker);
+        mocReq.addParameter("quantity", quantity);
+        mocReq.addParameter("purchased", "2020-08-04");
+        mocReq.addParameter("sold", "2020-11-04");
 
         ah.doGet(mocReq, mocRes);
 
