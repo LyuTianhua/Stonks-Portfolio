@@ -30,7 +30,8 @@ h3 {
 
 #invalid-ticker, #invalid-quantity, #invalid-date-sold,
 #one-year-error, #purchased-empty, #ticker-empty,
-#view-empty {
+#view-empty, #invalid-dates, #empty-from, #empty-to,
+#up-arrow, #down-arrow {
 	display: none;
 }
 
