@@ -98,8 +98,7 @@
 						unit: 'week',
 						isoWeekday: true
 					}
-				}
-				],
+				}],
 				yAxes: [{
 					ticks: {
 						beginAtZero: true
@@ -156,11 +155,8 @@
 				url: "LoadGraph",
 				success: (res) => {
 					var data = JSON.parse(res)
-				    var labels = data.timestamps.map( d => new Date( d * 1000 ).getTime())
-					var datasets = data.datasets
-
-					myChart.data.labels = labels
-					myChart.data.datasets = datasets
+					myChart.data.labels = data.timestamps.map( d => new Date( d * 1000 ).getTime())
+					myChart.data.datasets = data.datasets
 					myChart.update()
 				}
 			})
@@ -239,12 +235,16 @@
 					}
 					console.log("after", oldPortfolio)
 
-					myChart.data.datasets[0].data.pop()
 					myChart.data.datasets[0].data = oldPortfolio
 					myChart.update()
 				}
 			})
 		}
+	}
+
+	const interval = () => {
+		myChart.options.scales.xAxes[0].time.unit = $("#interval").val()
+		myChart.update()
 	}
 
 	const logout = () =>

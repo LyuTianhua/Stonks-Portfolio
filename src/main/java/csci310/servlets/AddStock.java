@@ -12,7 +12,10 @@ import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.PrintWriter;
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Date;
@@ -28,7 +31,6 @@ public class AddStock extends HttpServlet {
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
         try {
-
             // get parameters from single add stock or get attributes from upload CSV servlet
             int userId = (int) req.getSession().getAttribute("id");
             String ticker = req.getParameter("ticker") == null ? (String) req.getAttribute("ticker") : req.getParameter("ticker").toUpperCase();
