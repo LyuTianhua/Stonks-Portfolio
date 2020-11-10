@@ -32,7 +32,7 @@ public class CSV extends HttpServlet {
 
             while ((line = br.readLine()) != null) {
                 data = line.split(",");
-                req.setAttribute("ticker", data[0]);
+                req.setAttribute("ticker", data[0].toUpperCase());
                 req.setAttribute("quantity", data[1]);
                 req.setAttribute("purchased", data[2]);
                 req.setAttribute("sold", data[3]);

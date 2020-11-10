@@ -11,7 +11,7 @@
       <div class="modal-footer">
           <input type="hidden" id="tickerToBeRemoved" value="">
           <input type="hidden" id="urlToRemove" value="">
-          <button id="remove-stock-in-modal" type="button" class="btn btn-success" onclick="confirmRemove()">Remove</button>
+          <button id="remove-stock-in-modal" type="button" class="btn btn-success" onclick="confirmRemove()">Delete Stock</button>
           <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
       </div>
     </div>
