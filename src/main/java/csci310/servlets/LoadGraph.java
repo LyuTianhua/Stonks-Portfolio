@@ -1,6 +1,8 @@
 package csci310.servlets;
 
 import com.google.gson.Gson;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,7 +42,7 @@ public class LoadGraph extends HttpServlet {
 
             req.setAttribute("loaded", true);
 
-        } catch (IOException ignored) { }
+        } catch (IOException | UnirestException ignored) { }
     }
 
     public static long timestamp(String date) throws ParseException {
@@ -49,7 +51,7 @@ public class LoadGraph extends HttpServlet {
         return newDate.getTime() / 1000;
     }
 
-    public static String graph(int id) {
+    public static String graph(int id) throws UnirestException {
 
         String strValues = "";
         String strTimestamps = "";
@@ -89,6 +91,15 @@ public class LoadGraph extends HttpServlet {
         ArrayList<DataSet> datasets = new ArrayList<>();
 
         datasets.add(new DataSet("portfolio", values, false, "rgba(130, 195, 100, 1)"));
+
+        JSONObject SPY = AddStock.getGraphData("SPY");
+        String strSPY = AddStock.parseGraphResponse(SPY.toString());
+        String[] splitSPY = strSPY.split(" ", -1);
+        double[] dSPY = new double[splitSPY.length];
+        for (int i = 0; i < splitSPY.length; i++)
+            dSPY[i] = Double.parseDouble(splitSPY[i]);
+
+        datasets.add(new DataSet("SPY", dSPY, false, "rgba(0, 0, 255, 1"));
 
         db = new Database();
         con = db.getConn();
