@@ -63,6 +63,9 @@ public class LoadGraphTest {
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
         mocReq.addParameter("ticker", ticker);
+        mocReq.addParameter("quantity", quantity);
+        mocReq.addParameter("purchased", purchased);
+        mocReq.addParameter("sold", sold);
         AddHistorical ah = new AddHistorical();
         ah.doGet(mocReq, mocRes);
 

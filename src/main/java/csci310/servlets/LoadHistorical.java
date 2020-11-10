@@ -26,27 +26,30 @@ public class LoadHistorical extends HttpServlet {
         try {
             int id = (int) req.getSession().getAttribute("id");
 
-            ps = con.prepareStatement("select company.ticker as ticker from historicalStock left join company on historicalStock.company_id=company.id where user_id=?");
+            ps = con.prepareStatement("select company.ticker as ticker, shares, purchased from historicalStock left join company on historicalStock.company_id=company.id where user_id=?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
-            String ticker, checkbox, remove;
+            String ticker, checkbox, shares, remove;
 
             pw = res.getWriter();
             pw.println("<tr>\n" +
                     "<th>Graph</th>\n" +
                     "<th>Stonk</th>\n" +
+                    "<th>Shares</th>\n" +
                     "<th>Remove</th>\n" +
                     "</tr>");
 
             while (rs.next()) {
                 ticker = rs.getString("ticker");
+                shares = ticker + "Shares";
                 checkbox = ticker + "Historical";
                 remove = ticker + "RemoveHistorical";
 
                 pw.format("<tr>");
                 pw.format("<td> <input id=%s type=checkbox onclick=\"modifyGraph('%s', 'Historical')\" > </td>\n", checkbox, ticker);
                 pw.format("<td id=%s > %s </td>\n", ticker, ticker);
+                pw.format("<td id=%s> %d </td>\n", shares, rs.getInt("shares"));
                 pw.format("<td>\n" +
                         "<button id=%s class='btn btn-danger' type='button'" +
                         "data-toggle='modal'" +

@@ -37,9 +37,12 @@ public class Helper extends Mockito {
         db = new Database();
         con = db.getConn();
         try {
-            ps = con.prepareStatement("insert into historicalStock (company_id, user_id) values (?, ?)");
+            ps = con.prepareStatement("insert into historicalStock (company_id, user_id, shares, purchased, sold) values (?, ?, ?, ?, ?)");
             ps.setInt(1, company_id);
             ps.setInt(2, user_id);
+            ps.setDouble(3, 10d);
+            ps.setLong(4, 1592400600L);
+            ps.setLong(5, 1603978200L);  
             ps.execute();
         } catch (SQLException ignored) {}
         db.closeCon();
