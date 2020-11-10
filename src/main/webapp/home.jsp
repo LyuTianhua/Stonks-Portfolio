@@ -304,7 +304,6 @@
 				url: "CSV",
 				data: {
 					path: document.getElementById("csv-file").files[0]?.name,
-					path: document.getElementById("csv-file").files[0].name,
 			},
 				success: (response) => location.reload(),
 				error: (error) => {
@@ -321,7 +320,6 @@
 						document.getElementById("uploadCSVError").textContent = error.statusText;
 					}
 				}
-				success: () => location.reload()
 			})
 
 	window.addEventListener( "load", () => {
