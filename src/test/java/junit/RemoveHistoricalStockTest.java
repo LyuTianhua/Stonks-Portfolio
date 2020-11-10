@@ -30,14 +30,14 @@ public class RemoveHistoricalStockTest {
 
         int user_id = 89;
         int company_id = 50;
+        String ticker = "historical";
 
-        Helper.insert_user_id_name_password(user_id, "RemoveHistoricalStock", "RemoveHistoricalStockPassword");
-        Helper.insert_company_id_ticker(company_id, "TEST");
-        Helper.insert_historical_stock_company_user_shares(company_id, user_id);
+       Helper.insert_company_id_ticker(company_id, ticker);
+       Helper.insert_historical_stock_company_user_shares(company_id, user_id);
 
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
-        mocReq.addParameter("ticker", "TEST");
+        mocReq.addParameter("ticker", ticker);
 
 
         rhs.doGet(mocReq, mocRes);
@@ -48,26 +48,12 @@ public class RemoveHistoricalStockTest {
         ps.setInt(1, user_id);
         ps.setInt(2, company_id);
         rs = ps.executeQuery();
-
-        rs.next();
-        int id = rs.getInt("user_id");
-
-        System.out.println(id);
-        assertFalse(false);
-
+        assertFalse(rs.next());
         db.closeCon();
 
-        Helper.delete_from_historical_stock_user_company(user_id, company_id);
+        Helper.delete_from_historical_stock_user(user_id);
         Helper.delete_company_where_id(company_id);
-        Helper.delete_user_where_id(user_id);
-
     }
-
-    @Test
-    public void TestGetCompanyId() throws SQLException { }
-
-    @Test
-    public void TestUpdateStock() throws SQLException { }
 
     public void make_new_mock_objects() {
         mocReq = new MockHttpServletRequest();

@@ -17,7 +17,7 @@ import java.util.logging.Level;
  */
 @RunWith(Cucumber.class)
 @CucumberOptions()
-//@CucumberOptions(features = {"src/test/resources/cucumber/removeHistoricalStock.feature"})
+//@CucumberOptions(features = {"src/test/resources/cucumber/addRemoveStock.feature"})
 
 public class RunCucumberTests {
 

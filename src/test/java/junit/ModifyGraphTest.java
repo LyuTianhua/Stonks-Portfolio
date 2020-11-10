@@ -13,18 +13,19 @@ import java.sql.SQLException;
 
 import static org.junit.Assert.assertTrue;
 
-public class LoadGraphTest {
+
+public class ModifyGraphTest {
 
     public static MockHttpServletRequest mocReq;
     public static MockHttpServletResponse mocRes;
     @Test
     public void testDoGet() throws IOException {
 
-        String email = "LoadGraphTestUser";
-        String password = "LoadGraphTestPassword";
+        String email = "ModifyGraphTestUser";
+        String password = "ModifyGraphTestPassword";
         int user_id = 0;
-        int company_id = 88;
-        String ticker = "GPRO";
+        int company_id = 1234;
+        String ticker = "GE";
         String quantity = "10";
         String purchased = "2020-10-10";
         String sold = "2020-10-20";
@@ -49,7 +50,6 @@ public class LoadGraphTest {
         } catch (SQLException ignored) {}
         db.closeCon();
 
-        System.out.println(user_id);
 
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
@@ -63,25 +63,15 @@ public class LoadGraphTest {
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
         mocReq.addParameter("ticker", ticker);
-        AddHistorical ah = new AddHistorical();
-        ah.doGet(mocReq, mocRes);
+        ModifyGraph mg = new ModifyGraph();
+        mg.doGet(mocReq, mocRes);
 
-        make_new_mock_objects();
-        mocReq.getSession(true).setAttribute("id", user_id);
-        LoadGraph lp = new LoadGraph();
-        lp.doGet(mocReq, mocRes);
-        assertTrue((boolean) mocReq.getAttribute("loaded"));
+        assertTrue((boolean) mocReq.getAttribute("modified"));
 
         Helper.delete_user_where_id(user_id);
         Helper.delete_company_where_ticker(ticker);
         Helper.delete_from_historical_stock_user(user_id);
     }
-
-    @Test
-    public void testTimestamp() { }
-
-    @Test
-    public void testGraph() { }
 
     public void make_new_mock_objects() {
         mocReq = new MockHttpServletRequest();

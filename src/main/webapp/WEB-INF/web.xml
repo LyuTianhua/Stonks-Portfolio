@@ -21,8 +21,8 @@
         <servlet-class>csci310.servlets.RemoveStock</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>LoadProfile</servlet-name>
-        <servlet-class>csci310.servlets.LoadProfile</servlet-class>
+        <servlet-name>LoadPortfolio</servlet-name>
+        <servlet-class>csci310.servlets.LoadPortfolio</servlet-class>
     </servlet>
     <servlet>
         <servlet-name>Logout</servlet-name>
@@ -49,12 +49,12 @@
         <servlet-class>csci310.servlets.LoadHistorical</servlet-class>
     </servlet>
     <servlet>
-        <servlet-name>GraphHistorical</servlet-name>
-        <servlet-class>csci310.servlets.GraphHistorical</servlet-class>
-    </servlet>
-    <servlet>
         <servlet-name>RemoveHistoricalStock</servlet-name>
         <servlet-class>csci310.servlets.RemoveHistoricalStock</servlet-class>
+    </servlet>
+    <servlet>
+        <servlet-name>ModifyGraph</servlet-name>
+        <servlet-class>csci310.servlets.ModifyGraph</servlet-class>
     </servlet>
     <servlet-mapping>
         <servlet-name>Login</servlet-name>
@@ -77,8 +77,8 @@
         <url-pattern>/Logout</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>LoadProfile</servlet-name>
-        <url-pattern>/LoadProfile</url-pattern>
+        <servlet-name>LoadPortfolio</servlet-name>
+        <url-pattern>/LoadPortfolio</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
         <servlet-name>TickerChecking</servlet-name>
@@ -101,11 +101,11 @@
         <url-pattern>/LoadHistorical</url-pattern>
     </servlet-mapping>
     <servlet-mapping>
-        <servlet-name>GraphHistorical</servlet-name>
-        <url-pattern>/GraphHistorical</url-pattern>
-    </servlet-mapping>
-    <servlet-mapping>
         <servlet-name>RemoveHistoricalStock</servlet-name>
         <url-pattern>/RemoveHistoricalStock</url-pattern>
+    </servlet-mapping>
+    <servlet-mapping>
+        <servlet-name>ModifyGraph</servlet-name>
+        <url-pattern>/ModifyGraph</url-pattern>
     </servlet-mapping>
 </web-app>
