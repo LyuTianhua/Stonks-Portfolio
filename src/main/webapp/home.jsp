@@ -172,21 +172,19 @@
 			url: "LoadGraph",
 			success: (res) => {
 				var data = JSON.parse(res)
-				var pValue = 0, lValue = 0;
-				
-				start = 0;
-			    while (labels[start] < from) start++;
-
-			    end = labels.length - 1;
-			    while (to <= labels[end]) end--;
-				
-				if (datasets[0].length > 1) pValue = datasets[0].data[end - 1];
-			    if (datasets[0].length > 0) lValue = datasets[0].data[end];
-				
 				myChart.data.labels = data.timestamps.map( d => new Date( d * 1000 ).getTime())
 				myChart.data.datasets = data.datasets
 				myChart.update()
 				
+				var pValue = 0, lValue = 0;
+			    var end = data.datasets[0].data.length - 2;
+				
+				pValue = data.datasets[0].data[end - 1]["y"];
+			    lValue = data.datasets[0].data[end]["y"];
+			    
+			    console.log("pValue: " + pValue);
+			    console.log("lValue: " + lValue);
+			    
 				checkUpOrDown(pValue, lValue); // Updating portfolio value
 			}
 		})
@@ -508,7 +506,6 @@
 	// portfolio value color and up/down arrow based on each
 	function checkUpOrDown(pValue, lValue) {
 		document.getElementById("portfolio-value-number").textContent = " $" + lValue.toString();
-		
 		// Change true to the value of the session variable for portfolio up or down
 		if(lValue > pValue) {
 			document.getElementById("portfolio-value").style.color = "green";
