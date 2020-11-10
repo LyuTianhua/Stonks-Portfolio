@@ -440,7 +440,8 @@
 				document.getElementById("empty-to").style.display = "none";
 			}
 		}
-		changeDates(); // Potentially change to loadGraph() if issues arise
+		loadGraph(); // Potentially change to loadGraph() if issues arise
+		return true;
 	}
 
 	// Checks valid form inputs before submitting add-stock-form
@@ -551,49 +552,13 @@
 		checkGraphDates();
 	}
 	
-	function checkGraphDates() {
-		var datePurchased = new Date(document.getElementById("fromGraph").value);
-		var dateSold = new Date(document.getElementById("toGraph").value);
-		var rightNow = new Date();
-		var oneYearAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
-		var tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
-		// Adjusting one year ago time for UTC offset
-		oneYearAgo.setDate(rightNow.getDate()-1);
-		oneYearAgo.setHours(23);
-		oneYearAgo.setMinutes(59);
-		oneYearAgo.setSeconds(59);
-		oneYearAgo.setMilliseconds(999);
-		// Adjusting tomorrow's date for UTC offset and making it midnight
-		tomorrow.setHours(0);
-		tomorrow.setMinutes(0);
-		tomorrow.setSeconds(0);
-		tomorrow.setMilliseconds(1);
-		// Adjusting datePurchased for UTC offset
-		datePurchased.setDate(datePurchased.getDate()+1);
-		if(datePurchased < oneYearAgo || dateSold >= tomorrow){
-			document.getElementById("invalid-dates").style.display = "inline";
-			return false;
-		} else {
-			document.getElementById("invalid-dates").style.display = "none";
-		}
-		if(document.getElementById("fromGraph").value.length === 0) {
-			document.getElementById("empty-from").style.display = "inline";
-			return false;
-		} else {
-			document.getElementById("empty-from").style.display = "none";
-		}
-		if(document.getElementById("toGraph").value.length > 0){
-			if((dateSold - datePurchased) < 0) {
-				document.getElementById("empty-to").style.display = "inline";
-				return false;
-			} else {
-				document.getElementById("empty-to").style.display = "none";
-			}
-		}
-		loadGraph();
-	}
-	
 	var today = new Date();
+	
+	function changeGraphDates() {
+		if(checkGraphDates()) {
+			changeDates();
+		}
+	}
 	
 	function oneWeek() {
 		var oneWeekAgo = new Date(today.getTime() - 7*86400000);
@@ -623,7 +588,31 @@
 	    '-' + today.getDate().toString().padStart(2, 0);
 		changeDates();
 	}
-
+	
+	var zoomInClicks = 0;
+	var zoomOutClicks = 0;
+	
+	function zoomIn() {
+		if(zoomInClicks % 2 == 0) {
+			oneWeek();
+		}
+		else {
+			threeMonths();
+			zoomOutClicks++;
+			zoomInClicks++;
+		}
+	}
+	
+	function zoomOut() {
+		if(zoomOutClicks % 2 == 0) {
+			zoomOutClicks++;
+			zoomInClicks++;
+			threeMonths();
+		}
+		else {
+			oneYear();
+		}
+	}
 
 </script>
 <script src="https://apis.google.com/js/platform.js?onload=renderButton" async defer></script>
