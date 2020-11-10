@@ -12,12 +12,14 @@
 	<script src="https://cdn.jsdelivr.net/npm/chart.js@2.9.3"></script>
 	<script src="https://cdn.jsdelivr.net/npm/hammerjs@2.0.8"></script>
 	<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-zoom@0.7.7"></script>
+	<script src="https://cdn.jsdelivr.net/npm/moment@2.27.0"></script>
+	<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-moment@0.1.1"></script>
 
 </head>
 <body>
 <%@include file="partials/nav.jsp"%>
 
-<div class="container">
+<div class="container" onload="checkUpOrDown()">
 	<div class="row justify-content-center">
 		<div class="btn-group col-12 col-md-6 col-lg-6 mt-3" role="group">
 			<button type="button" class="btn btn-dark" data-toggle="modal"
@@ -104,6 +106,15 @@
 		},
 		options: {
 			scales: {
+				xAxes: [ {
+					display: true,
+					type: 'time',
+					distribution: 'linear',
+					time: {
+						unit: 'week',
+						isoWeekday: true
+					}
+				}],
 				yAxes: [{
 					ticks: {
 						beginAtZero: true
@@ -156,40 +167,36 @@
 	var start
 	var end
 	const loadGraph = () =>
-			$.ajax({
-				url: "LoadGraph",
-				success: (res) => {
-					var data = JSON.parse(res)
-				    var labels = data.timestamps.map( d => new Date( d * 1000 ).getTime())
-					var datasets = data.datasets
-					var pValue = 0, lValue = 0;
+		// checkUpOrDown(); // Updating portfolio value
+		$.ajax({
+			url: "LoadGraph",
+			success: (res) => {
+				var data = JSON.parse(res)
+				var pValue = 0, lValue = 0;
+				
+				start = 0;
+			    while (labels[start] < from) start++;
 
-					var from = new Date( $("#fromGraph").val() ).getTime()
-					var to =  new Date( $("#toGraph").val() ).getTime()
+			    end = labels.length - 1;
+			    while (to <= labels[end]) end--;
+				
+				if (datasets[0].length > 1) pValue = datasets[0].data[end - 1];
+			    if (datasets[0].length > 0) lValue = datasets[0].data[end];
+				
+				myChart.data.labels = data.timestamps.map( d => new Date( d * 1000 ).getTime())
+				myChart.data.datasets = data.datasets
+				myChart.update()
+				
+				checkUpOrDown(pValue, lValue); // Updating portfolio value
+			}
+		})
 
-					start = 0;
-				    while (labels[start] < from) start++;
-
-				    end = labels.length - 1;
-				    while (to <= labels[end]) end--
-
-					labels = labels.map(l => new Date(l).toDateString().substr(3, 12))
-
-					myChart.data.labels = labels.slice(start, end)
-										
-					if (datasets[0].length > 1) pValue = datasets[0].data[end - 1];
-				    if (datasets[0].length > 0) lValue = datasets[0].data[end];
-
-					for (var i = 0; i < datasets.length; i++)
-						datasets[i].data = datasets[i].data.slice(start, end)
-
-					myChart.data.datasets = datasets
-					myChart.update()
-					
-					checkUpOrDown(pValue, lValue); // Updating portfolio value
-				}
-			})
-
+	const changeDates = () => {
+		myChart.options.scales.xAxes[0].ticks.min = $("#fromGraph").val()
+		myChart.options.scales.xAxes[0].ticks.max = $("#toGraph").val()
+		myChart.update()
+	}
+	
 	const add = () =>
 			$.ajax({
 				url : "AddStock",
@@ -246,7 +253,6 @@
 				},
 				success: (res) => {
 					var data = JSON.parse(res)
-					var sliced = data.slice(start, end+1)
 					var sign = checked ? 1 : -1
 
 					var oldPortfolio = myChart.data.datasets[0].data
@@ -254,17 +260,21 @@
 					console.log("before", oldPortfolio)
 					for (var i = 0; i < oldPortfolio.length; i++) {
 						if (isNaN(oldPortfolio[i])) oldPortfolio[i] = 0
-						oldPortfolio[i] += sign * sliced[i]
-						if (oldPortfolio[i] < 0) oldPortfolio[i] = 0
+						oldPortfolio[i] += sign * data[i]
+						if (oldPortfolio[i] < 1) oldPortfolio[i] = 0
 					}
 					console.log("after", oldPortfolio)
 
-					myChart.data.datasets[0].data.pop()
 					myChart.data.datasets[0].data = oldPortfolio
 					myChart.update()
 				}
 			})
 		}
+	}
+
+	const interval = () => {
+		myChart.options.scales.xAxes[0].time.unit = $("#interval").val()
+		myChart.update()
 	}
 
 	const logout = () =>
@@ -301,6 +311,7 @@
 		loadPortfolio()
 		loadHistorical()
 		loadGraph()
+		changeDates()
 		idleTimer()
 	})
 
@@ -380,6 +391,56 @@
 
 		return true;
 	}
+	
+	//Check date sold before date purchased
+	// Todo: add check for date only 1 year in the past
+	function checkGraphDates() {
+		var datePurchased = new Date(document.getElementById("fromGraph").value);
+		var dateSold = new Date(document.getElementById("toGraph").value);
+		var rightNow = new Date();
+		var oneYearAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
+		var tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
+
+		// Adjusting one year ago time for UTC offset
+		oneYearAgo.setDate(rightNow.getDate()-1);
+		oneYearAgo.setHours(23);
+		oneYearAgo.setMinutes(59);
+		oneYearAgo.setSeconds(59);
+		oneYearAgo.setMilliseconds(999);
+
+		// Adjusting tomorrow's date for UTC offset and making it midnight
+		tomorrow.setHours(0);
+		tomorrow.setMinutes(0);
+		tomorrow.setSeconds(0);
+		tomorrow.setMilliseconds(1);
+
+		// Adjusting datePurchased for UTC offset
+		datePurchased.setDate(datePurchased.getDate()+1);
+
+		if(datePurchased < oneYearAgo || dateSold >= tomorrow){
+			document.getElementById("invalid-dates").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("invalid-dates").style.display = "none";
+		}
+
+		if(document.getElementById("fromGraph").value.length === 0) {
+			document.getElementById("empty-from").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("empty-from").style.display = "none";
+		}
+
+		if(document.getElementById("toGraph").value.length > 0){
+			if((dateSold - datePurchased) < 0) {
+				document.getElementById("empty-to").style.display = "inline";
+				return false;
+			} else {
+				document.getElementById("empty-to").style.display = "none";
+			}
+		}
+		changeDates(); // Potentially change to loadGraph() if issues arise
+	}
 
 	// Checks valid form inputs before submitting add-stock-form
 	function checkAddStockForm() {
@@ -442,7 +503,7 @@
 		}
 		return true;
 	}
-
+		
 	// Checks if portfolio is up or down for the day and changes
 	// portfolio value color and up/down arrow based on each
 	function checkUpOrDown(pValue, lValue) {
@@ -458,6 +519,38 @@
 		} else {
 		}
 		
+
+	}
+	
+	var today = new Date();
+	
+	function oneWeek() {
+		var oneWeekAgo = new Date(today.getTime() - 7*86400000);
+		document.getElementById("fromGraph").value = oneWeekAgo.getFullYear().toString() + '-' + (oneWeekAgo.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + oneWeekAgo.getDate().toString().padStart(2, 0);
+		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + today.getDate().toString().padStart(2, 0);
+		checkGraphDates();
+	}
+	
+	function threeMonths() {
+		var earlier = new Date(today);
+		earlier.setMonth(earlier.getMonth()-3);
+		document.getElementById("fromGraph").value = earlier.getFullYear().toString() + '-' + (earlier.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + earlier.getDate().toString().padStart(2, 0);
+		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + today.getDate().toString().padStart(2, 0);
+		checkGraphDates();
+	}
+	
+	function oneYear() {
+		var earlier = new Date(today);
+		earlier.setFullYear(earlier.getFullYear()-1);
+		document.getElementById("fromGraph").value = earlier.getFullYear().toString() + '-' + (earlier.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + earlier.getDate().toString().padStart(2, 0);
+		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
+	    '-' + today.getDate().toString().padStart(2, 0);
+		checkGraphDates();
 	}
 	
 	function checkGraphDates() {
@@ -510,7 +603,7 @@
 	    '-' + oneWeekAgo.getDate().toString().padStart(2, 0);
 		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
 	    '-' + today.getDate().toString().padStart(2, 0);
-		checkGraphDates();
+		changeDates();
 	}
 	
 	function threeMonths() {
@@ -520,7 +613,7 @@
 	    '-' + earlier.getDate().toString().padStart(2, 0);
 		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
 	    '-' + today.getDate().toString().padStart(2, 0);
-		checkGraphDates();
+		changeDates();
 	}
 	
 	function oneYear() {
@@ -530,7 +623,7 @@
 	    '-' + earlier.getDate().toString().padStart(2, 0);
 		document.getElementById("toGraph").value = today.getFullYear().toString() + '-' + (today.getMonth() + 1).toString().padStart(2, 0) +
 	    '-' + today.getDate().toString().padStart(2, 0);
-		checkGraphDates();
+		changeDates();
 	}
 
 

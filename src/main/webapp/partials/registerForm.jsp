@@ -11,4 +11,3 @@
         <button id="cancel" class="btn btn-primary" type="button" onclick="cancl()">Cancel</button>
     </div>
 </form>
-
