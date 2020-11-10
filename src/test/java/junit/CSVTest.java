@@ -41,19 +41,27 @@ public class CSVTest {
         csv.doGet(mocReq, mocRes);
 
         assertTrue(true);
-//
-//        db = new Database();
-//        con = db.getConn();
-//        ps = con.prepareStatement("select company.ticker as ticker from stock left join company on stock.company_id=company.id where user_id=?");
-//        ps.setInt(1, user_id);
-//        rs = ps.executeQuery();
-//        rs.next();
-//        assertEquals(rs.getString("ticker"), "asa");
-//        db.closeCon();
-//
-//        Helper.delete_from_stock_where_id(user_id);
-//        Helper.delete_user_where_id(user_id);
 
+        //Test getting malformed ticker
+        make_new_mock_objects();
+        mocReq.getSession(true).setAttribute("id", user_id);
+        mocReq.addParameter("path", "malformedCsvTicker.csv");
+        csv.doGet(mocReq, mocRes);
+        assertTrue(mocRes.getStatus()  == 404);
+
+        //Test getting malformed date
+        make_new_mock_objects();
+        mocReq.getSession(true).setAttribute("id", user_id);
+        mocReq.addParameter("path", "malformedCsvDate.csv");
+        csv.doGet(mocReq, mocRes);
+        assertTrue(mocRes.getStatus()  == 405);
+
+        //Test getting malformed quantity
+        make_new_mock_objects();
+        mocReq.getSession(true).setAttribute("id", user_id);
+        mocReq.addParameter("path", "malformedCsvNegativeQuantity.csv");
+        csv.doGet(mocReq, mocRes);
+        assertTrue(mocRes.getStatus()  == 406);
     }
 
     public void make_new_mock_objects() {
