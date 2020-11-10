@@ -14,7 +14,7 @@
                 </form>
             </div>
             <div class="modal-footer">
-                <button type="button" class="btn btn-success" form="upload-form" id="CSV_add_button" onclick="uploadCSV()">Upload CSV</button>
+                <button type="button" class="btn btn-success" form="upload-form" id="CSV_add_button" onclick="uploadCSV()">Upload File</button>
                 <button type="button" class="btn btn-danger" data-dismiss="modal">Cancel</button>
             </div>
         </div>

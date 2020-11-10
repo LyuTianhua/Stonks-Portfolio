@@ -1,6 +1,8 @@
 package csci310.servlets;
 
 import com.google.gson.Gson;
+import com.mashape.unirest.http.exceptions.UnirestException;
+import org.json.JSONObject;
 
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -40,7 +42,7 @@ public class LoadGraph extends HttpServlet {
 
             req.setAttribute("loaded", true);
 
-        } catch (IOException ignored) { }
+        } catch (IOException | UnirestException ignored) { }
     }
 
     public static long timestamp(String date) throws ParseException {
@@ -49,7 +51,7 @@ public class LoadGraph extends HttpServlet {
         return newDate.getTime() / 1000;
     }
 
-    public static String graph(int id) {
+    public static String graph(int id) throws UnirestException {
 
         String strValues = "";
         String strTimestamps = "";
@@ -88,7 +90,16 @@ public class LoadGraph extends HttpServlet {
 
         ArrayList<DataSet> datasets = new ArrayList<>();
 
-        datasets.add(new DataSet("portfolio", values, false, "rgba(130, 195, 100, 1)"));
+        datasets.add(new DataSet("portfolio", values, false, "rgba(130, 195, 100, 1)", timestamps));
+
+        JSONObject SPY = AddStock.getGraphData("SPY");
+        String strSPY = AddStock.parseGraphResponse(SPY.toString());
+        String[] splitSPY = strSPY.split(" ", -1);
+        double[] dSPY = new double[splitSPY.length];
+        for (int i = 0; i < splitSPY.length; i++)
+            dSPY[i] = Double.parseDouble(splitSPY[i]);
+
+        datasets.add(new DataSet("SPY", dSPY, false, "rgba(0, 0, 255, 1", timestamps));
 
         db = new Database();
         con = db.getConn();
@@ -117,7 +128,7 @@ public class LoadGraph extends HttpServlet {
                 for (int i = 0; i < splitHistoricalData.length - 1; i++)
                     historicalData[i] = Double.parseDouble(splitHistoricalData[i]);
 
-                datasets.add(new DataSet(ticker, historicalData, true, String.format("rgba(%d, 0, %d, 1)\n", r, b)));
+                datasets.add(new DataSet(ticker, historicalData, true, String.format("rgba(%d, 0, %d, 1)\n", r, b), timestamps));
             }
 
         } catch (SQLException ignored) {}
@@ -140,17 +151,30 @@ public class LoadGraph extends HttpServlet {
 
     private static class DataSet {
         public String label;
-        public double[] data;
+        public DataPoint[] data;
         public int borderWidth = 2;
         public boolean hidden;
         public String borderColor = "";
         public String backgroundColor = "rgba(0, 0, 0, 0)";
-        public DataSet(String ticker, double[] values, boolean h, String bc) {
+        public DataSet(String ticker, double[] values, boolean h, String bc, long[] timestamps) {
             borderColor = bc;
             hidden = h;
             label = ticker;
-            data = new double[values.length];
-            System.arraycopy(values, 0, data, 0, data.length);
+            data = new DataPoint[values.length];
+
+            for (int i = 0; i < data.length-1; i++)
+                data[i] = new DataPoint(timestamps[i], values[i]);
+
+//            System.arraycopy(values, 0, data, 0, data.length);
+        }
+    }
+
+    private static class DataPoint {
+        Date x;
+        double y;
+        public DataPoint(long timestamp, double value) {
+           x = new Date(timestamp * 1000);
+           y = value;
         }
     }
 }
