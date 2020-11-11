@@ -237,33 +237,45 @@
 			})
 
 	const modifyGraph = (ticker, label) => {
-		var checked = $("#" + ticker + label).is(":checked")
-		if (label === 'SPY')
-			myChart.data.datasets.forEach( ds => { if (ds.label === label) ds.hidden = !ds.hidden })
-		else if (label === 'Historical')
-			myChart.data.datasets.forEach((ds, i) => { if (ds[i].label === ticker) ds[i].hidden = !checked })
-		else {
-			$.ajax({
-				url: 'ModifyGraph',
-				data: {ticker},
-				async: false,
-				success: (res) => {
-					var data = JSON.parse(res)
-					myChart.data.datasets[0].data.forEach((d, i) => {
-						if (d === null) return
-						if (isNaN(d.y) || d.y < 1) d.y = 0
-						d.y += (data[i] * (checked ? 1 : -1))
-					})
-				}
+		if (label === 'SPY') {
+			myChart.data.datasets.forEach( ds => {
+				if (ds.label === label) ds.hidden = !ds.hidden
 			})
+			myChart.update()
+		} else {
+			var checked = $("#" + ticker + label).is(":checked")
+			if (label === 'Historical') {
+				for (var i = 0; i < myChart.data.datasets.length; i++)
+					if (myChart.data.datasets[i].label === ticker) {
+						myChart.data.datasets[i].hidden = !checked
+						myChart.update()
+						return
+					}
+			} else {
+				$.ajax({
+					url: 'ModifyGraph',
+					data: {ticker},
+					async: false,
+					success: (res) => {
+						var data = JSON.parse(res)
+						var sign = checked ? 1 : -1
+						myChart.data.datasets[0].data.forEach((d, i) => {
+							if (d === null) return
+							if (isNaN(d.y) || d.y < 1) d.y = 0
+							d.y += (sign * data[i])
+						})
+						myChart.update()
+					}
+				})
+			}
 		}
-		myChart.update()
 	}
 
 	const checkAll = () => {
+		var checked = $("#checkAll").is(":checked")
 		var portfolioTable = document.getElementById("portfolio-stocks")
 		for (var i = 1; i < portfolioTable.rows.length; i++) {
-			portfolioTable.rows[i].cells[0].children[0].checked = $("#checkAll").is(":checked")
+			portfolioTable.rows[i].cells[0].children[0].checked = checked;
 			modifyGraph(portfolioTable.rows[i].cells[1].children[0].innerText, "portfolio");
 		}
 	}
