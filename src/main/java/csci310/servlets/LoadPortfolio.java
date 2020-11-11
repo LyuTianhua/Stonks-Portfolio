@@ -23,15 +23,15 @@ public class LoadPortfolio extends HttpServlet {
         try {
             int id = (int) req.getSession().getAttribute("id");
 
-            ps = con.prepareStatement("select company.id as compId, company.ticker, shares, purchased from stock left join company on stock.company_id = company.id where user_id=?");
+            ps = con.prepareStatement("select company.id as compId, company.ticker, shares, stock.id as stockId, purchased from stock left join company on stock.company_id = company.id where user_id=?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
-            String checkbox, ticker, shares, remove;
+            String checkbox, ticker, shares, remove, stockId;
 
             pw = res.getWriter();
             pw.format("<tr>\n" +
-                    "<th>Include</th>\n" +
+                    "<th> <input id='checkAll' type=checkbox checked onclick=\"checkAll()\"> Include (All)</th>\n" +
                     "<th>Stonk</th>\n" +
                     "<th>Shares</th>\n" +
                     "<th>Remove</th>\n" +
@@ -39,6 +39,7 @@ public class LoadPortfolio extends HttpServlet {
 
             while (rs.next()) {
                 ticker = rs.getString("ticker");
+                stockId = rs.getString("stockID");
                 shares = ticker + "Shares";
                 remove = ticker + "Remove";
                 checkbox = ticker + "portfolio";
@@ -48,20 +49,20 @@ public class LoadPortfolio extends HttpServlet {
                 pw.format("<td id=%s > <p> %s </p> </td>\n", ticker, ticker);
                 pw.format("<td id=%s> %d </td>\n", shares, rs.getInt("shares"));
                 pw.format("<td>\n" +
-                        "<button id=%s class='btn btn-danger' type='button'" +
+                        "<button id=%s class='btn btn-danger btn-sm' type='button'" +
                         "data-toggle='modal'" +
                         "data-target='#remove-stock-modal'" +
                         "data-ticker='ticker'" +
                         "onclick=\"remove('%s', 'RemoveStock')\">" +
                         "Remove" +
                         "</button>" +
-                        "</td>\n", remove, ticker);
+                        "</td>\n", remove, stockId);
                 pw.format("</tr>\n");
             }
             pw.flush();
             pw.close();
 
-        } catch (SQLException | IOException ignored) { }
+        } catch (SQLException | IOException ignored) { ignored.printStackTrace();}
         db.closeCon();
         req.setAttribute("loaded", true);
     }

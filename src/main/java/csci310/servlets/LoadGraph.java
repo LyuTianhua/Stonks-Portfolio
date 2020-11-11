@@ -105,7 +105,7 @@ public class LoadGraph extends HttpServlet {
         con = db.getConn();
         try {
 
-            ps = con.prepareStatement("select Company.ticker as ticker, Company.data as data from historicalStock left join Company on historicalStock.company_id=Company.id where user_id=?");
+            ps = con.prepareStatement("select Company.ticker as ticker, historicalStock.data as data from historicalStock left join Company on historicalStock.company_id=Company.id where user_id=?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
@@ -122,7 +122,7 @@ public class LoadGraph extends HttpServlet {
                 ticker = rs.getString("ticker");
                 strHistoricalData = rs.getString("data");
 
-                splitHistoricalData = strHistoricalData.split(" ", -1);
+                splitHistoricalData = strHistoricalData.split(", ", -1);
                 historicalData = new double[splitHistoricalData.length - 1];
 
                 for (int i = 0; i < splitHistoricalData.length - 1; i++)

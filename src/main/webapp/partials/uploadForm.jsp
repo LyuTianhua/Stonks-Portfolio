@@ -8,8 +8,9 @@
                 <form action="/home.jsp" id="upload-form">
                     <div class="form-group">
                         <label for="csv-file">Choose a File  <a class="text-info small-text" href="../resources/example.csv" download>Download an Example File</a></label>
-                        <input type="file" class="form-control" id="csv-file" accept=".csv,text/csv">
+                        <input type="file" class="form-control" id="csv-file" accept=".csv,text/csv" required>
                     </div>
+                    <div id="uploadCSVError" style="color:red;"/>
                 </form>
             </div>
             <div class="modal-footer">

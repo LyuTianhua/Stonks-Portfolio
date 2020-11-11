@@ -47,4 +47,18 @@ public class LoadGraphStepDefenitions {
         assertTrue(driver.findElement(By.id("myChart")).isDisplayed());
     }
 
+    @Then("I should see SPY graphed")
+    public void i_should_see_spy_graphed() {
+        assertTrue(wait.until(ExpectedConditions.presenceOfElementLocated(By.id("SPY"))).isDisplayed());
+    }
+
+    @Then("I click {string} button")
+    public void i_click_button(String spy) {
+        wait.until(ExpectedConditions.elementToBeClickable(By.id(spy))).click();
+    }
+
+    @Then("I shouldn't see SPY graph")
+    public void i_should_not_see_spy_graphed() {
+        assertTrue(wait.until(ExpectedConditions.presenceOfElementLocated(By.id("SPY"))).isDisplayed());
+    }
 }

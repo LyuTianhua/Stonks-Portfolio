@@ -20,7 +20,7 @@ public class RemoveStock extends HttpServlet {
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
 
-        String ticker = req.getParameter("ticker");
+        int stockId = Integer.parseInt(req.getParameter("ticker"));
         int user_id = (int) req.getSession().getAttribute("id");
         int company_id = 0;
 
@@ -33,6 +33,7 @@ public class RemoveStock extends HttpServlet {
         String[] splitTimestamps;
 
         Double[] data;
+        double shares = 0;
 
         long purchased = 0;
         long sold = 0;
@@ -46,27 +47,26 @@ public class RemoveStock extends HttpServlet {
             rs.next();
             strData = rs.getString("data");
 
-            ps = con.prepareStatement("select * from company where ticker=?");
-            ps.setString(1, ticker);
+            ps = con.prepareStatement("select * from stock where id=?");
+            ps.setInt(1, stockId);
+            rs = ps.executeQuery();
+            rs.next();
+            purchased = rs.getLong("purchased");
+            sold = rs.getLong("sold");
+            int companyId = rs.getInt("company_id");
+            shares = rs.getDouble("shares");
+
+            ps = con.prepareStatement("select * from company where id=?");
+            ps.setInt(1, companyId);
             rs = ps.executeQuery();
             rs.next();
             company_id = rs.getInt("id");
             strCmpData = rs.getString("data");
             strTimestamps = rs.getString("timestamps");
 
-            ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
-            ps.setInt(1, user_id);
-            ps.setInt(2, company_id);
-            rs = ps.executeQuery();
-            rs.next();
-            purchased = rs.getLong("purchased");
-            sold = rs.getLong("sold");
-
-            ps = con.prepareStatement("delete from Stock where company_id=? and user_id=?");
-            ps.setInt(1, company_id);
-            ps.setInt(2, user_id);
+            ps = con.prepareStatement("delete from Stock where id=?");
+            ps.setInt(1, stockId);
             ps.execute();
-
         } catch (SQLException ignored) {}
         db.closeCon();
 
@@ -77,14 +77,12 @@ public class RemoveStock extends HttpServlet {
         data = new Double[splitData.length];
         Arrays.fill(data, 0d);
 
-        for (int i = 0; i < splitData.length - 1; i++)
-            data[i] = Double.parseDouble(splitData[i]);
-
         long ts;
         for (int i = 0; i < splitCmpData.length - 1; i++) {
             ts = Long.parseLong(splitTimestamps[i]);
+            data[i] = Double.parseDouble(splitData[i]);
             if (purchased < ts && ts <= sold)
-                data[i] -= Double.parseDouble(splitCmpData[i]);
+                data[i] -= shares * Double.parseDouble(splitCmpData[i]);
         }
 
         db = new Database();

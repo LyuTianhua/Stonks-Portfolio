@@ -1,6 +1,6 @@
 Feature: add stock to portfolio
 
-  Scenario Outline: adding stock
+  Scenario Outline: adding stock to portfolio
     Given I am signed in
     And I click on add stock modal
     And I enter 'TSLA' into 'ticker'

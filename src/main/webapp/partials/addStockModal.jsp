@@ -20,7 +20,7 @@
 		    <input type="date" class="form-control" id="date-purchased" placeholder="ex. 12/24/2019" required>
 		  </div>
 		  <div class="form-group">
-		    <label for="date-purchased">Date Sold  <span class="text-warning">(optional)</span>   <span class="text-danger" id="invalid-date-sold">Please enter a date sold after the date purchased.</span></label>
+		    <label for="date-sold">Date Sold  <span class="text-warning">(optional)</span>   <span class="text-danger" id="invalid-date-sold">Please enter a date sold after the date purchased.</span></label>
 		    <input type="date" class="form-control" id="date-sold" placeholder="ex. 1/1/2020">
 		  </div>
 		</form>

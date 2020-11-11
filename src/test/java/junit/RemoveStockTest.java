@@ -29,7 +29,7 @@ public class RemoveStockTest {
         //using admin user
         int user_id = 1;
         int company_id = 921;
-        String ticker = "F";
+        String  ticker = "F";
         String quantity = "10";
         String purchased = "2020-10-10";
         String sold = "2020-10-20";
@@ -45,7 +45,7 @@ public class RemoveStockTest {
 
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
-        mocReq.addParameter("ticker", ticker);
+        mocReq.addParameter("ticker", "5");
         RemoveStock rs = new RemoveStock();
         rs.doGet(mocReq, mocRes);
         assertTrue((boolean) mocReq.getAttribute("removed"));
