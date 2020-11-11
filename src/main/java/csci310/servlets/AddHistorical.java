@@ -59,7 +59,7 @@ public class AddHistorical extends HttpServlet {
 
             for (int i = 0; i < splitData.length; i++) {
                 stockData[i] = 0d;
-                values[i] = Double.parseDouble(splitData[i]);
+                values[i] = quantity * Double.parseDouble(splitData[i]);
                 times[i] = Long.parseLong(splitTimestamps[i]);
             }
 

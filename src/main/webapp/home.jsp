@@ -91,8 +91,7 @@
 	<%if (request.getSession(false).getAttribute("id") == null) {%>
 	window.location.replace("index.jsp");
 	<%}%>
-	var fullDatasets = [{}]
-	var fullLabels = []
+
 	var ctx = document.getElementById('myChart');
 	var myChart = new Chart(ctx, {
 		type: 'line',
@@ -156,13 +155,13 @@
 				url: "LoadPortfolio",
 				success: (res) => $("#portfolio-stocks").html(res)
 			})
+
 	const loadHistorical = () =>
 			$.ajax({
 				url: "LoadHistorical",
 				success: (res) => $("#historical-stocks").html(res)
 			})
-	var start
-	var end
+
 	const loadGraph = () =>
 			// checkUpOrDown(); // Updating portfolio value
 			$.ajax({
@@ -187,6 +186,7 @@
 					checkUpOrDown(pValue, lValue); // Updating portfolio value
 				}
 			})
+
 	const changeDates = () => {
 		myChart.options.scales.xAxes[0].ticks.min = $("#fromGraph").val()
 		myChart.options.scales.xAxes[0].ticks.max = $("#toGraph").val()
@@ -205,6 +205,7 @@
 				},
 				success : () => location.reload()
 			})
+
 	const view = () =>
 			$.ajax({
 				url : "AddHistorical",
@@ -217,11 +218,13 @@
 				},
 				success : () => location.reload()
 			})
+
 	const remove = (ticker, url) =>
 	{
 		$("#tickerToBeRemoved").val(ticker)
 		$("#urlToRemove").val(url);
 	}
+
 	const confirmRemove = () =>
 			$.ajax({
 				url: $("#urlToRemove").val(),
@@ -232,49 +235,39 @@
 					location.reload()
 				}
 			})
+
 	const modifyGraph = (ticker, label) => {
-		console.log(ticker, label)
-		if (label === 'SPY') {
-			myChart.data.datasets.forEach( ds => {
-				if (ds.label === label) ds.hidden = !ds.hidden
+		var checked = $("#" + ticker + label).is(":checked")
+		if (label === 'SPY')
+			myChart.data.datasets.forEach( ds => { if (ds.label === label) ds.hidden = !ds.hidden })
+		else if (label === 'Historical')
+			myChart.data.datasets.forEach((ds, i) => { if (ds[i].label === ticker) ds[i].hidden = !checked })
+		else {
+			$.ajax({
+				url: 'ModifyGraph',
+				data: {ticker},
+				async: false,
+				success: (res) => {
+					var data = JSON.parse(res)
+					myChart.data.datasets[0].data.forEach((d, i) => {
+						if (d === null) return
+						if (isNaN(d.y) || d.y < 1) d.y = 0
+						d.y += (data[i] * (checked ? 1 : -1))
+					})
+				}
 			})
-			myChart.update()
-		} else {
-			var checked = $("#" + ticker + label).is(":checked")
-			if (label === 'Historical') {
-				for (var i = 0; i < myChart.data.datasets.length; i++)
-					if (myChart.data.datasets[i].label === ticker) {
-						myChart.data.datasets[i].hidden = !checked
-						myChart.update()
-						return
-					}
-			} else {
-				$.ajax({
-					url: 'ModifyGraph',
-					data: {ticker},
-					async: false,
-					success: (res) => {
-						var data = JSON.parse(res)
-						var sign = checked ? 1 : -1
-						myChart.data.datasets[0].data.forEach((d, i) => {
-							if (d === null) return
-							if (isNaN(d.y) || d.y < 1) d.y = 0
-							d.y += (sign * data[i])
-						})
-						myChart.update()
-					}
-				})
-			}
 		}
+		myChart.update()
 	}
+
 	const checkAll = () => {
-		var checked = $("#checkAll").is(":checked")
 		var portfolioTable = document.getElementById("portfolio-stocks")
 		for (var i = 1; i < portfolioTable.rows.length; i++) {
-			portfolioTable.rows[i].cells[0].children[0].checked = checked;
+			portfolioTable.rows[i].cells[0].children[0].checked = $("#checkAll").is(":checked")
 			modifyGraph(portfolioTable.rows[i].cells[1].children[0].innerText, "portfolio");
 		}
 	}
+
 	const checkAllHistorical = () => {
 		var checked = $("#checkAllHistorical").is(":checked")
 		var portfolioTable = document.getElementById("historical-stocks")
@@ -283,16 +276,18 @@
 			modifyGraph(portfolioTable.rows[i].cells[1].innerText, "Historical");
 		}
 	}
+
 	const interval = () => {
 		myChart.options.scales.xAxes[0].time.unit = $("#interval").val()
 		myChart.update()
 	}
+
 	const logout = () =>
 			$.ajax({
 				url : "Logout",
-				type : "Get",
 				success : () => window.location.href = "index.jsp"
 			})
+
 	const idleTimer = () => {
 		let t;
 		window.onload = resetTimer;
@@ -306,6 +301,7 @@
 			t = setTimeout(logout, 120000);  // time is in milliseconds (1000 is 1 second)
 		}
 	}
+
 	const uploadCSV = () =>
 			$.ajax({
 				url: "CSV",
@@ -328,6 +324,7 @@
 					}
 				}
 			})
+
 	window.addEventListener( "load", () => {
 		loadPortfolio()
 		loadHistorical()
@@ -335,6 +332,7 @@
 		changeDates()
 		idleTimer()
 	})
+
 </script>
 <script>
 	// Check for valid NYSE or NASDAQ ticker for portfolio

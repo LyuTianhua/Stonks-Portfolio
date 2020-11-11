@@ -70,9 +70,8 @@ public class AddStock extends HttpServlet {
             }
 
             for (int i = 0; i < splitData.length; i++)
-                if (purchasedDate <= times[i] && times[i] <= soldDate) {
+                if (purchasedDate <= times[i] && times[i] <= soldDate)
                     stockData[i] = values[i];
-                }
 
 
             addStockToPortfolio(userId, companyId, quantity, purchasedDate, soldDate, stockData);
@@ -80,7 +79,7 @@ public class AddStock extends HttpServlet {
             updateUserPortfolio(userId, purchasedDate, soldDate, timestamp.split(" ", -1), data.split(" ", -1), quantity);
 
             req.setAttribute("loaded", true);
-        } catch (Exception ignored) {ignored.printStackTrace();}
+        } catch (Exception ignored) {}
     }
 
     public static int getCompanyId(String ticker, String data, String timestamp)  {
