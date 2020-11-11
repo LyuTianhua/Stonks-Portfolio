@@ -561,7 +561,7 @@
 	// portfolio value color and up/down arrow based on each
 	function checkUpOrDown(pValue, lValue) {
 		var percentage = 0;
-		if (lValue != 0 && pValue != 0) percentage = ((lValue - pValue) / pValue).toPrecision(2);
+		if (lValue != 0 && pValue != 0) percentage = ((lValue - pValue) * 100 / pValue).toPrecision(2);
 		document.getElementById("portfolio-value-number").innerHTML = " $" + lValue.toString() + " " + percentage.toString() + "%";
 		// Change true to the value of the session variable for portfolio up or down
 		if(lValue > pValue) {

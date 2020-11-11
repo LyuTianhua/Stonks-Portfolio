@@ -200,4 +200,14 @@ public class graphDateStepDefinitions {
     	assertTrue(!driver.findElement(By.xpath("//*[@id=\"fromGraph\"]")).getAttribute("value").isEmpty());
     }
     
+    @Then("I should see a percentage change in my portfolio value")
+    public void i_should_see_percentage() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+		}
+    	
+    	assertTrue(driver.findElements(By.xpath("//*[@id=\"portfolio-value\"]")).size() != 0);
+    }
+    
 }
