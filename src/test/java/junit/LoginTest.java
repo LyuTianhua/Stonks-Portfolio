@@ -21,9 +21,7 @@ public class LoginTest extends Mockito {
     public void testDoPost() throws IOException {
 
         login = new Login();
-
-        int id = 888;
-        String name = "loginDoPostTestUser";
+        String name = "admin";
         String password = "force_allow";
 
         Helper.insert_user_name_password(name, password);

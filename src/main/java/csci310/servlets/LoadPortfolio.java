@@ -62,7 +62,7 @@ public class LoadPortfolio extends HttpServlet {
             pw.flush();
             pw.close();
 
-        } catch (SQLException | IOException ignored) { ignored.printStackTrace();}
+        } catch (SQLException | IOException ignored) {}
         db.closeCon();
         req.setAttribute("loaded", true);
     }
