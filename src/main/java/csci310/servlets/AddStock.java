@@ -64,7 +64,7 @@ public class AddStock extends HttpServlet {
 
             for (int i = 0; i < splitData.length; i++) {
                 stockData[i] = 0d;
-                values[i] = Double.parseDouble(splitData[i]);
+                values[i] = quantity * Double.parseDouble(splitData[i]);
                 times[i] = Long.parseLong(splitTimestamps[i]);
             }
 
@@ -75,7 +75,7 @@ public class AddStock extends HttpServlet {
 
             addStockToPortfolio(userId, companyId, quantity, purchasedDate, soldDate, stockData);
 
-            updateUserPortfolio(userId, purchasedDate, soldDate, timestamp.split(" ", -1), data.split(" ", -1));
+            updateUserPortfolio(userId, purchasedDate, soldDate, timestamp.split(" ", -1), data.split(" ", -1), quantity);
 
             req.setAttribute("loaded", true);
         } catch (Exception ignored) {}
@@ -161,7 +161,7 @@ public class AddStock extends HttpServlet {
         db.closeCon();
     }
 
-    private void updateUserPortfolio(int userId, long purchasedDate, long soldDate, String[] strTimestamp, String[] strData) {
+    private void updateUserPortfolio(int userId, long purchasedDate, long soldDate, String[] strTimestamp, String[] strData, double quantity) {
 
         int N = strTimestamp.length - 1;
 
@@ -178,7 +178,7 @@ public class AddStock extends HttpServlet {
         for (int i = 0; i < N; i++) {
             ts = Long.parseLong(strTimestamp[i]);
             if (purchasedDate < ts && ts <= soldDate)
-                data[i] += Double.parseDouble(strData[i]);
+                data[i] += quantity * Double.parseDouble(strData[i]);
         }
 
         db = new Database();

@@ -33,6 +33,7 @@ public class RemoveStock extends HttpServlet {
         String[] splitTimestamps;
 
         Double[] data;
+        double shares = 0;
 
         long purchased = 0;
         long sold = 0;
@@ -53,6 +54,7 @@ public class RemoveStock extends HttpServlet {
             purchased = rs.getLong("purchased");
             sold = rs.getLong("sold");
             int companyId = rs.getInt("company_id");
+            shares = rs.getDouble("shares");
 
             ps = con.prepareStatement("select * from company where id=?");
             ps.setInt(1, companyId);
@@ -75,14 +77,12 @@ public class RemoveStock extends HttpServlet {
         data = new Double[splitData.length];
         Arrays.fill(data, 0d);
 
-        for (int i = 0; i < splitData.length - 1; i++)
-            data[i] = Double.parseDouble(splitData[i]);
-
         long ts;
         for (int i = 0; i < splitCmpData.length - 1; i++) {
             ts = Long.parseLong(splitTimestamps[i]);
+            data[i] = Double.parseDouble(splitData[i]);
             if (purchased < ts && ts <= sold)
-                data[i] -= Double.parseDouble(splitCmpData[i]);
+                data[i] -= shares * Double.parseDouble(splitCmpData[i]);
         }
 
         db = new Database();

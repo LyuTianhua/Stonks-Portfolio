@@ -34,7 +34,7 @@ public class LoadHistorical extends HttpServlet {
 
             pw = res.getWriter();
             pw.println("<tr>\n" +
-                    "<th>Graph</th>\n" +
+                    "<th> <input id='checkAllHistorical' type=checkbox checked onclick=\"checkAllHistorical()\"> Graph</th>\n" +
                     "<th>Stonk</th>\n" +
                     "<th>Shares</th>\n" +
                     "<th>Remove</th>\n" +

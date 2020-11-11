@@ -243,6 +243,8 @@
 
 	const modifyGraph = (ticker, label) => {
 
+		console.log(ticker, label)
+
 		if (label === 'SPY') {
 			myChart.data.datasets.forEach( ds => {
 				if (ds.label === label) ds.hidden = !ds.hidden
@@ -260,9 +262,11 @@
 						return
 					}
 			} else {
+
 				$.ajax({
 					url: 'ModifyGraph',
 					data: {ticker},
+					async: false,
 					success: (res) => {
 						var data = JSON.parse(res)
 						var sign = checked ? 1 : -1
@@ -276,6 +280,32 @@
 				})
 			}
 		}
+	}
+
+	const checkAll = () => {
+		var checked = $("#checkAll").is(":checked")
+
+        var portfolioTable = document.getElementById("portfolio-stocks")
+
+		for (var i = 1; i < portfolioTable.rows.length; i++) {
+			portfolioTable.rows[i].cells[0].children[0].checked = checked
+			modifyGraph(portfolioTable.rows[i].cells[1].children[0].innerText, "portfolio")
+		}
+
+
+	}
+
+	const checkAllHistorical = () => {
+		var checked = $("#checkAll").is(":checkAllHistorical")
+
+		var portfolioTable = document.getElementById("historical-stocks")
+
+		for (var i = 1; i < portfolioTable.rows.length; i++) {
+			portfolioTable.rows[i].cells[0].children[0].checked = checked
+			modifyGraph(portfolioTable.rows[i].cells[1].children[0].innerText, "Historical")
+		}
+
+
 	}
 
 	const interval = () => {
