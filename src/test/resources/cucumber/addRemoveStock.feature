@@ -102,4 +102,3 @@ Feature: add stock to portfolio
       And I enter '1' into 'quantity'
       And I select 1 week ago from the calendar picker for date purchased
       Then date purchased should equal 1 week ago
-      

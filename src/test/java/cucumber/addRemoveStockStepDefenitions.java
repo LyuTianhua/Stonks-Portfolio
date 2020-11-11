@@ -228,7 +228,3 @@ public class addRemoveStockStepDefenitions {
     	assertTrue(true);
     }
 
-//    @After
-//    public void tearDown() { driver.quit(); }
-
-}
