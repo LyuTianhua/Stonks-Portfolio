@@ -126,7 +126,7 @@ public class Login extends HttpServlet {
         try {
 
             // testing purposes
-            if (email.equalsIgnoreCase("admin") || email.equalsIgnoreCase("loginDoPostTestUser"))
+            if (email.equalsIgnoreCase("admin"))
                 hashPass = "force_allow";
 
 //            if (email.equalsIgnoreCase("bad connection"))

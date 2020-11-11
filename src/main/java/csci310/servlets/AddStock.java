@@ -125,7 +125,7 @@ public class AddStock extends HttpServlet {
         JSONObject chart = json.getJSONObject("chart");
         JSONArray result = chart.getJSONArray("result");
 
-        return response.getStatus() == 200 ? (JSONObject) result.get(0) : null;
+        return (JSONObject) result.get(0);
     }
 
     public static String parseGraphResponse(String res) {
