@@ -31,7 +31,7 @@ public class LoadPortfolio extends HttpServlet {
 
             pw = res.getWriter();
             pw.format("<tr>\n" +
-                    "<th> <input id='checkAll' type=checkbox checked onclick=\"checkAll()\"> Include (All)</th>\n" +
+                    "<th> <input id='checkAll' type=checkbox checked onclick=\"checkAll()\" style=\"z-index: 909\"> Include (All)</th>\n" +
                     "<th>Stonk</th>\n" +
                     "<th>Shares</th>\n" +
                     "<th>Remove</th>\n" +
