@@ -182,8 +182,8 @@
 				var pValue = 0, lValue = 0;
 			    var end = data.datasets[0].data.length - 2;
 				
-				pValue = data.datasets[0].data[end - 1]["y"];
-			    lValue = data.datasets[0].data[end]["y"];
+				pValue = data.datasets[0].data[end - 1]["y"].toFixed(2);
+			    lValue = data.datasets[0].data[end]["y"].toFixed(2);
 			    
 			    console.log("pValue: " + pValue);
 			    console.log("lValue: " + lValue);

@@ -20,7 +20,7 @@ public class RemoveStock extends HttpServlet {
 
     public void doGet(HttpServletRequest req, HttpServletResponse res) {
 
-        String ticker = req.getParameter("ticker");
+        int stockId = Integer.parseInt(req.getParameter("ticker"));
         int user_id = (int) req.getSession().getAttribute("id");
         int company_id = 0;
 
@@ -46,27 +46,25 @@ public class RemoveStock extends HttpServlet {
             rs.next();
             strData = rs.getString("data");
 
-            ps = con.prepareStatement("select * from company where ticker=?");
-            ps.setString(1, ticker);
+            ps = con.prepareStatement("select * from stock where id=?");
+            ps.setInt(1, stockId);
+            rs = ps.executeQuery();
+            rs.next();
+            purchased = rs.getLong("purchased");
+            sold = rs.getLong("sold");
+            int companyId = rs.getInt("company_id");
+
+            ps = con.prepareStatement("select * from company where id=?");
+            ps.setInt(1, companyId);
             rs = ps.executeQuery();
             rs.next();
             company_id = rs.getInt("id");
             strCmpData = rs.getString("data");
             strTimestamps = rs.getString("timestamps");
 
-            ps = con.prepareStatement("select * from stock where user_id=? and company_id=?");
-            ps.setInt(1, user_id);
-            ps.setInt(2, company_id);
-            rs = ps.executeQuery();
-            rs.next();
-            purchased = rs.getLong("purchased");
-            sold = rs.getLong("sold");
-
-            ps = con.prepareStatement("delete from Stock where company_id=? and user_id=?");
-            ps.setInt(1, company_id);
-            ps.setInt(2, user_id);
+            ps = con.prepareStatement("delete from Stock where id=?");
+            ps.setInt(1, stockId);
             ps.execute();
-
         } catch (SQLException ignored) {}
         db.closeCon();
 
