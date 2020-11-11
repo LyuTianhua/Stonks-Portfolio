@@ -48,7 +48,7 @@ public class LoadPortfolio extends HttpServlet {
                 pw.format("<td id=%s > <p> %s </p> </td>\n", ticker, ticker);
                 pw.format("<td id=%s> %d </td>\n", shares, rs.getInt("shares"));
                 pw.format("<td>\n" +
-                        "<button id=%s class='btn btn-danger' type='button'" +
+                        "<button id=%s class='btn btn-danger btn-sm' type='button'" +
                         "data-toggle='modal'" +
                         "data-target='#remove-stock-modal'" +
                         "data-ticker='ticker'" +

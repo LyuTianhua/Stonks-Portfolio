@@ -31,6 +31,9 @@ public class ModifyGraph extends HttpServlet {
 
             int id = (int) req.getSession().getAttribute("id");
             String ticker = req.getParameter("ticker");
+            String portfolio = req.getParameter("portfolio");
+
+            System.out.println("portfolio: " + portfolio);
 
             int company_id = 0;
 
