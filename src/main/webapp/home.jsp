@@ -60,7 +60,10 @@
 	<div class="row justify-content-center">
 		<div class="col-12 col-md-8 mt-3 overflow-auto">
 			<div class="table-responsive">
-				<h3> Portfolio Stocks </h3>
+				<div class="d-flex">
+					<h3 class="pr-5"> Portfolio Stocks </h3>
+					<a id="SPY" href="#" style="color: blue" onclick="modifyGraph('SPY', 'SPY')"> SPY </a>
+				</div>
 				<table id="portfolio-stocks" class="table table-hover">
 					<%--filled dynamically--%>
 				</table>
@@ -239,30 +242,39 @@
 			})
 
 	const modifyGraph = (ticker, label) => {
-		var checked = $("#" + ticker + label).is(":checked")
 
-		if (label === 'Historical') {
-			for (var i = 0; i < myChart.data.datasets.length; i++)
-				if (myChart.data.datasets[i].label === ticker) {
-					myChart.data.datasets[i].hidden = !checked
-					myChart.update()
-					return
-				}
-		} else {
-			$.ajax({
-				url: 'ModifyGraph',
-				data: { ticker },
-				success: (res) => {
-					var data = JSON.parse(res)
-					var sign = checked ? 1 : -1
-					myChart.data.datasets[0].data.forEach((d, i) => {
-						if (d === null) return
-						if (isNaN(d.y) || d.y < 1) d.y = 0
-						d.y += (sign * data[i])
-					})
-					myChart.update()
-				}
+		if (label === 'SPY') {
+			myChart.data.datasets.forEach( ds => {
+				if (ds.label === label) ds.hidden = !ds.hidden
 			})
+			myChart.update()
+		} else {
+
+			var checked = $("#" + ticker + label).is(":checked")
+
+			if (label === 'Historical') {
+				for (var i = 0; i < myChart.data.datasets.length; i++)
+					if (myChart.data.datasets[i].label === ticker) {
+						myChart.data.datasets[i].hidden = !checked
+						myChart.update()
+						return
+					}
+			} else {
+				$.ajax({
+					url: 'ModifyGraph',
+					data: {ticker},
+					success: (res) => {
+						var data = JSON.parse(res)
+						var sign = checked ? 1 : -1
+						myChart.data.datasets[0].data.forEach((d, i) => {
+							if (d === null) return
+							if (isNaN(d.y) || d.y < 1) d.y = 0
+							d.y += (sign * data[i])
+						})
+						myChart.update()
+					}
+				})
+			}
 		}
 	}
 

@@ -16,8 +16,8 @@ import java.util.logging.Level;
  * Run all the cucumber tests in the current package.
  */
 @RunWith(Cucumber.class)
-@CucumberOptions()
-//@CucumberOptions(features = {"src/test/resources/cucumber/csv.feature"})
+//@CucumberOptions()
+@CucumberOptions(features = {"src/test/resources/cucumber/LoadGraph.feature"})
 
 public class RunCucumberTests {
 
@@ -30,7 +30,7 @@ public class RunCucumberTests {
 		WebDriverManager.chromedriver().setup();
 		options = new ChromeOptions();
 		options.setAcceptInsecureCerts(true);
-		options.setHeadless(true);
+//		options.setHeadless(true);
 		//for the mobile acceptance tests
 		if(System.getProperty("mobile") != null && System.getProperty("mobile").equals("true")) {
 			System.out.println("Running with mobile resolution");
