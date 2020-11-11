@@ -47,7 +47,7 @@ create table historicalStock (
 	purchased long not null ,
 	sold long ,
 	data varchar(65535),
-	foreign key (company_id) references historicalCompany(id) ,
+	foreign key (company_id) references Company(id),
 	foreign key (user_id) references Base_User(id)
 );
 

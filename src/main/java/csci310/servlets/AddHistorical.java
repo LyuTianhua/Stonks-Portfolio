@@ -89,7 +89,7 @@ public class AddHistorical extends HttpServlet {
             ps.setString(6, Arrays.toString(stockData).replace("[", "").replace("]", ""));
 
             ps.execute();
-        } catch (SQLException ignored) {}
+        } catch (SQLException ignored) {ignored.printStackTrace();}
 
         db.closeCon();
     }
