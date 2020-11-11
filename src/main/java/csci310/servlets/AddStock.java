@@ -70,8 +70,9 @@ public class AddStock extends HttpServlet {
             }
 
             for (int i = 0; i < splitData.length; i++)
-                if (purchasedDate <= times[i] && times[i] <= soldDate)
+                if (purchasedDate <= times[i] && times[i] <= soldDate) {
                     stockData[i] = values[i];
+                }
 
 
             addStockToPortfolio(userId, companyId, quantity, purchasedDate, soldDate, stockData);
@@ -79,7 +80,7 @@ public class AddStock extends HttpServlet {
             updateUserPortfolio(userId, purchasedDate, soldDate, timestamp.split(" ", -1), data.split(" ", -1), quantity);
 
             req.setAttribute("loaded", true);
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {ignored.printStackTrace();}
     }
 
     public static int getCompanyId(String ticker, String data, String timestamp)  {
@@ -178,8 +179,9 @@ public class AddStock extends HttpServlet {
         long ts;
         for (int i = 0; i < N; i++) {
             ts = Long.parseLong(strTimestamp[i]);
-            if (purchasedDate < ts && ts <= soldDate)
+            if (purchasedDate < ts && ts <= soldDate) {
                 data[i] += quantity * Double.parseDouble(strData[i]);
+            }
         }
 
         db = new Database();
@@ -192,7 +194,7 @@ public class AddStock extends HttpServlet {
             if (rs.next())
                 userData = rs.getString("data");
 
-        } catch (SQLException ignored) {}
+        } catch (SQLException ignored) {ignored.printStackTrace();}
         db.closeCon();
 
         if (userData == null)
@@ -201,7 +203,7 @@ public class AddStock extends HttpServlet {
             splitUserData = userData.split(", ", -1);
 
 
-        for (int i = 0; i < N; i++)
+        for (int i = 0; i < splitUserData.length; i++)
             data[i] += Double.parseDouble(splitUserData[i]);;
 
         db = new Database();
@@ -211,7 +213,7 @@ public class AddStock extends HttpServlet {
             ps.setString(1, Arrays.toString(data).replace("[", "").replace("]", ""));
             ps.setInt(2, userId);
             ps.executeUpdate();
-        } catch (SQLException ignored) {}
+        } catch (SQLException ignored) {ignored.printStackTrace();}
         db.closeCon();
     }
 }

@@ -173,6 +173,8 @@
 					myChart.data.datasets = data.datasets
 					myChart.update()
 
+					console.log(data);
+
 					var pValue = 0, lValue = 0;
 					var end = data.datasets[0].data.length - 2;
 

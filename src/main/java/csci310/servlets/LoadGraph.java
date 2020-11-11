@@ -78,7 +78,7 @@ public class LoadGraph extends HttpServlet {
 
         String[] splitTimestamps = strTimestamps.split(" ", -1);
 
-        int N = splitTimestamps.length - 1;
+        int N = splitTimestamps.length < splitValues.length - 1 ? splitTimestamps.length : splitValues.length - 1;
 
         double[] values = new double[N];
         long[] timestamps = new long[N];
@@ -160,10 +160,13 @@ public class LoadGraph extends HttpServlet {
             borderColor = bc;
             hidden = h;
             label = ticker;
-            data = new DataPoint[values.length];
+            int length = timestamps.length < values.length ? timestamps.length - 1 : values.length - 1;
 
-            for (int i = 0; i < data.length-1; i++)
+            data = new DataPoint[length];
+
+            for (int i = 0; i < length; i++) {
                 data[i] = new DataPoint(timestamps[i], (double) Math.round(values[i] * 100) / 100);
+            }
 
 //            System.arraycopy(values, 0, data, 0, data.length);
         }
