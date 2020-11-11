@@ -208,7 +208,7 @@
 				url : "AddHistorical",
 				type: "Get",
 				data : {
-					ticker   : $("#ticker-view").val(),
+					ticker   : $("#ticker-view").val().toUpperCase(),
 					purchased: $("#date-purchased-view").val(),
 					sold	 : $("#date-sold-view").val(),
 					quantity : $("#quantity-view").val()
