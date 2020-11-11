@@ -48,7 +48,7 @@ public class LoadHistorical extends HttpServlet {
 
                 pw.format("<tr>");
                 pw.format("<td> <input id=%s type=checkbox onclick=\"modifyGraph('%s', 'Historical')\" > </td>\n", checkbox, ticker);
-                pw.format("<td id=%s > %s </td>\n", ticker, ticker);
+                pw.format("<td id=%s > %s </td>\n", ticker + "View", ticker);
                 pw.format("<td id=%s> %d </td>\n", shares, rs.getInt("shares"));
                 pw.format("<td>\n" +
                         "<button id=%s class='btn btn-danger' type='button'" +
