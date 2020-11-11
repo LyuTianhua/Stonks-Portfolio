@@ -243,30 +243,23 @@
 
 		if (label === 'Historical') {
 			for (var i = 0; i < myChart.data.datasets.length; i++)
-				if (myChart.data.datasets[i].label === ticker)
+				if (myChart.data.datasets[i].label === ticker) {
 					myChart.data.datasets[i].hidden = !checked
-			myChart.update()
+					myChart.update()
+					return
+				}
 		} else {
 			$.ajax({
 				url: 'ModifyGraph',
-				data: {
-					ticker
-				},
+				data: { ticker },
 				success: (res) => {
 					var data = JSON.parse(res)
 					var sign = checked ? 1 : -1
-
-					var oldPortfolio = myChart.data.datasets[0].data
-
-					console.log("before", oldPortfolio)
-					for (var i = 0; i < oldPortfolio.length; i++) {
-						if (isNaN(oldPortfolio[i])) oldPortfolio[i] = 0
-						oldPortfolio[i] += sign * data[i]
-						if (oldPortfolio[i] < 1) oldPortfolio[i] = 0
-					}
-					console.log("after", oldPortfolio)
-
-					myChart.data.datasets[0].data = oldPortfolio
+					myChart.data.datasets[0].data.forEach((d, i) => {
+						if (d === null) return
+						if (isNaN(d.y) || d.y < 1) d.y = 0
+						d.y += (sign * data[i])
+					})
 					myChart.update()
 				}
 			})
