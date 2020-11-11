@@ -163,7 +163,7 @@ public class LoadGraph extends HttpServlet {
             data = new DataPoint[values.length];
 
             for (int i = 0; i < data.length-1; i++)
-                data[i] = new DataPoint(timestamps[i], values[i]);
+                data[i] = new DataPoint(timestamps[i], (double) Math.round(values[i] * 100) / 100);
 
 //            System.arraycopy(values, 0, data, 0, data.length);
         }
