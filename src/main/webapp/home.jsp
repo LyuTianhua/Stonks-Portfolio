@@ -332,8 +332,7 @@
 
 </script>
 <script>
-	// Check for valid NYSE or NASDAQ ticker
-	// Todo: Accept API data to actually check valid ticker
+	// Check for valid NYSE or NASDAQ ticker for portfolio
 	function checkTicker() {
 		if(document.getElementById("ticker").value.length === 0) {
 			document.getElementById("ticker-empty").style.display = "inline";
@@ -342,9 +341,19 @@
 			document.getElementById("ticker-empty").style.display = "none";
 		}
 		return true;
+	}	
+	// Check for valid NYSE or NASDAQ ticker for view
+	function checkTickerView() {
+		if(document.getElementById("ticker-view").value.length === 0) {
+			document.getElementById("ticker-empty-view").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("ticker-empty-view").style.display = "none";
+		}
+		return true;
 	}
 
-	// Check valid quantity
+	// Check valid quantity for portfolio
 	function checkQuantity() {
 		var quantity = document.getElementById("quantity");
 		if(isNaN(quantity.value) || quantity.value.length === 0 || quantity.value < 1) {
@@ -355,9 +364,20 @@
 		}
 		return true;
 	}
+	
+	// Check valid quantity for view
+	function checkQuantityView() {
+		var quantity = document.getElementById("quantity-view");
+		if(isNaN(quantity.value) || quantity.value.length === 0 || quantity.value < 1) {
+			document.getElementById("invalid-quantity-view").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("invalid-quantity-view").style.display = "none";
+		}
+		return true;
+	}
 
-	// Check date sold before date purchased
-	// Todo: add check for date only 1 year in the past
+	// Check date sold before date purchased for portfolio
 	function checkDates() {
 		var datePurchased = new Date(document.getElementById("date-purchased").value);
 		var dateSold = new Date(document.getElementById("date-sold").value);
@@ -406,9 +426,58 @@
 
 		return true;
 	}
+
+	// Check date sold before date purchased for view
+	function checkDatesView() {
+		var datePurchased = new Date(document.getElementById("date-purchased-view").value);
+		var dateSold = new Date(document.getElementById("date-sold-view").value);
+		var rightNow = new Date();
+		var oneYearAgo = new Date(new Date().setFullYear(new Date().getFullYear() - 1));
+		var tomorrow = new Date(new Date().setDate(new Date().getDate() + 1));
+
+		// Adjusting one year ago time for UTC offset
+		oneYearAgo.setDate(rightNow.getDate()-1);
+		oneYearAgo.setHours(23);
+		oneYearAgo.setMinutes(59);
+		oneYearAgo.setSeconds(59);
+		oneYearAgo.setMilliseconds(999);
+
+		// Adjusting tomorrow's date for UTC offset and making it midnight
+		tomorrow.setHours(0);
+		tomorrow.setMinutes(0);
+		tomorrow.setSeconds(0);
+		tomorrow.setMilliseconds(1);
+
+		// Adjusting datePurchased for UTC offset
+		datePurchased.setDate(datePurchased.getDate()+1);
+
+		if(datePurchased < oneYearAgo || datePurchased >= tomorrow){
+			document.getElementById("one-year-error-view").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("one-year-error-view").style.display = "none";
+		}
+
+		if(document.getElementById("date-purchased-view").value.length === 0) {
+			document.getElementById("purchased-empty-view").style.display = "inline";
+			return false;
+		} else {
+			document.getElementById("purchased-empty-view").style.display = "none";
+		}
+
+		if(document.getElementById("date-sold-view").value.length > 0){
+			if((dateSold - datePurchased) < 0) {
+				document.getElementById("invalid-date-sold-view").style.display = "inline";
+				return false;
+			} else {
+				document.getElementById("invalid-date-sold-view").style.display = "none";
+			}
+		}
+
+		return true;
+	}
 	
-	//Check date sold before date purchased
-	// Todo: add check for date only 1 year in the past
+	//Check date sold before date purchased for portfolio
 	function checkGraphDates() {
 		var datePurchased = new Date(document.getElementById("fromGraph").value);
 		var dateSold = new Date(document.getElementById("toGraph").value);
@@ -457,6 +526,7 @@
 		loadGraph(); // Potentially change to loadGraph() if issues arise
 		return true;
 	}
+	
 
 	// Checks valid form inputs before submitting add-stock-form
 	function checkAddStockForm() {
@@ -482,42 +552,29 @@
 			}
 		})
 	}
-
-	// Performs ticker check before submitting view stock form
-	// TODO: Check valid ticker before adding to view stock
+	
+	// Checks valid form inputs before submitting view-stock-form
 	function checkViewStockForm() {
-		// Insert AJAX call for checking valid ticker from API
-
-		// Checking if ticker is empty
-		if(document.getElementById("ticker").value.length === 0) {
-			console.log("View ticker empty.");
-			document.getElementById("view-empty").style.display = "inline";
-			return false;
-		} else {
-			document.getElementById("view-empty").style.display = "none";
-			$.ajax({
-				url : "TickerChecking",
-				type: "Get",
-				data : {
-					ticker: $("#ticker-view").val()
-				},
-				success : (res) => {
-					var qtyCheck = checkQuantity();
-					var dateCheck = checkDates();
-					var tickerEmpty = checkTicker();
-					if (res.trim() === "1") {
-						document.getElementById("invalid-ticker").style.display = "none";
-						if(qtyCheck && dateCheck) {
-							addHistorical($("#ticker-view").val());
-						}
-					} else {
-						document.getElementById("invalid-ticker").style.display = "inline";
-
+		$.ajax({
+			url : "TickerChecking",
+			type: "Get",
+			data : {
+				ticker: $("#ticker-view").val()
+			},
+			success : (res) => {
+				var qtyCheck = checkQuantityView();
+				var dateCheck = checkDatesView();
+				var tickerEmpty = checkTickerView();
+				if (res.trim() === "1") {
+					document.getElementById("invalid-ticker-view").style.display = "none";
+					if(qtyCheck && dateCheck) {
+						view();
 					}
+				} else {
+					document.getElementById("invalid-ticker-view").style.display = "inline";
 				}
-			})
-		}
-		return true;
+			}
+		})
 	}
 		
 	// Checks if portfolio is up or down for the day and changes

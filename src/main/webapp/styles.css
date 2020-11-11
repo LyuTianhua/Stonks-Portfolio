@@ -35,6 +35,11 @@ h3 {
 	display: none;
 }
 
+#invalid-ticker-view, #invalid-quantity-view, #invalid-date-sold-view,
+#one-year-error-view, #purchased-empty-view, #ticker-empty-view {
+	display: none;
+}
+
 #form-outer {
     height: auto;
     padding: 40px 60px;

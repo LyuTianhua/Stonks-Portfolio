@@ -1,6 +1,6 @@
 Feature: add stock to portfolio
 
-  Scenario Outline: adding stock
+  Scenario Outline: adding stock to portfolio
     Given I am signed in
     And I click on add stock modal
     And I enter 'TSLA' into 'ticker'
@@ -102,3 +102,4 @@ Feature: add stock to portfolio
       And I enter '1' into 'quantity'
       And I select 1 week ago from the calendar picker for date purchased
       Then date purchased should equal 1 week ago
+      
