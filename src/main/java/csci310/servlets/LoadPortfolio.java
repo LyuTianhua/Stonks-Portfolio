@@ -23,11 +23,11 @@ public class LoadPortfolio extends HttpServlet {
         try {
             int id = (int) req.getSession().getAttribute("id");
 
-            ps = con.prepareStatement("select company.id as compId, company.ticker, shares, purchased from stock left join company on stock.company_id = company.id where user_id=?");
+            ps = con.prepareStatement("select company.id as compId, company.ticker, shares, stock.id as stockId, purchased from stock left join company on stock.company_id = company.id where user_id=?");
             ps.setInt(1, id);
             rs = ps.executeQuery();
 
-            String checkbox, ticker, shares, remove;
+            String checkbox, ticker, shares, remove, stockId;
 
             pw = res.getWriter();
             pw.format("<tr>\n" +
@@ -39,6 +39,7 @@ public class LoadPortfolio extends HttpServlet {
 
             while (rs.next()) {
                 ticker = rs.getString("ticker");
+                stockId = rs.getString("stockID");
                 shares = ticker + "Shares";
                 remove = ticker + "Remove";
                 checkbox = ticker + "portfolio";
@@ -55,13 +56,13 @@ public class LoadPortfolio extends HttpServlet {
                         "onclick=\"remove('%s', 'RemoveStock')\">" +
                         "Remove" +
                         "</button>" +
-                        "</td>\n", remove, ticker);
+                        "</td>\n", remove, stockId);
                 pw.format("</tr>\n");
             }
             pw.flush();
             pw.close();
 
-        } catch (SQLException | IOException ignored) { }
+        } catch (SQLException | IOException ignored) { ignored.printStackTrace();}
         db.closeCon();
         req.setAttribute("loaded", true);
     }
