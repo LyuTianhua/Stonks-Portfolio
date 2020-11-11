@@ -111,6 +111,21 @@ public class graphDateStepDefinitions {
         assertTrue(checkIfElementPresent);
     }
     
+    @And("I see my portfolio value")
+    public void i_see_my_portfolio_value_displayed() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+		}
+    	
+    	Boolean checkIfElementPresent= false;
+        //Checks if the invalid dates error message is present
+        if(driver.findElements(By.xpath("//*[@id=\"portfolio-value\"]")).size()!= 0) {
+            checkIfElementPresent = true;
+        }
+        assertTrue(checkIfElementPresent);
+    }
+    
     @And("I see my portfolio value is down")
     public void i_see_my_portfolio_value_is_down() {
     	try {
