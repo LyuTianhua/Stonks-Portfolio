@@ -66,3 +66,15 @@ Feature: Graph dates and portfolio value
 	  Scenario: Default time displayed is 3 months
 	  	Given I am signed in
 	  	Then I should see graph dates for the past 3 months
+
+	  Scenario: Portfolio value shows percentage change
+	  	Given I am signed in
+	  	And I click on add stock modal
+    	And I enter 'TSLA' into 'ticker'
+    	And I enter '10' into 'quantity'
+    	And I enter '10/11/2020' into 'date-purchased'
+    	And I enter '10/21/2020' into 'date-sold'
+    	And I click on add stock
+	  	And I see my portfolio value
+	  	Then I should see a percentage change in my portfolio value
+

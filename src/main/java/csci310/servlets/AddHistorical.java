@@ -27,9 +27,9 @@ public class AddHistorical extends HttpServlet {
         try {
             int userId = (int) req.getSession().getAttribute("id");
             String ticker = req.getParameter("ticker");
-            double quantity = req.getParameter("quantity") == null ? Double.parseDouble((String) req.getAttribute("quantity")) : Double.parseDouble(req.getParameter("quantity"));
-            String purchased = req.getParameter("purchased") == null ? (String) req.getAttribute("purchased") : req.getParameter("purchased");
-            String sold = req.getParameter("sold") == null ? (String) req.getAttribute("sold") : req.getParameter("sold");
+            double quantity = Double.parseDouble(req.getParameter("quantity"));
+            String purchased = req.getParameter("purchased");
+            String sold = req.getParameter("sold");
             
             SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
             if (sold.length() < 1) sold = sdf.format(new Date());
@@ -59,7 +59,7 @@ public class AddHistorical extends HttpServlet {
 
             for (int i = 0; i < splitData.length; i++) {
                 stockData[i] = 0d;
-                values[i] = Double.parseDouble(splitData[i]);
+                values[i] = quantity * Double.parseDouble(splitData[i]);
                 times[i] = Long.parseLong(splitTimestamps[i]);
             }
 

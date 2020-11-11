@@ -91,8 +91,7 @@
 	<%if (request.getSession(false).getAttribute("id") == null) {%>
 	window.location.replace("index.jsp");
 	<%}%>
-	var fullDatasets = [{}]
-	var fullLabels = []
+
 	var ctx = document.getElementById('myChart');
 	var myChart = new Chart(ctx, {
 		type: 'line',
@@ -156,13 +155,13 @@
 				url: "LoadPortfolio",
 				success: (res) => $("#portfolio-stocks").html(res)
 			})
+
 	const loadHistorical = () =>
 			$.ajax({
 				url: "LoadHistorical",
 				success: (res) => $("#historical-stocks").html(res)
 			})
-	var start
-	var end
+
 	const loadGraph = () =>
 			// checkUpOrDown(); // Updating portfolio value
 			$.ajax({
@@ -187,6 +186,7 @@
 					checkUpOrDown(pValue, lValue); // Updating portfolio value
 				}
 			})
+
 	const changeDates = () => {
 		myChart.options.scales.xAxes[0].ticks.min = $("#fromGraph").val()
 		myChart.options.scales.xAxes[0].ticks.max = $("#toGraph").val()
@@ -205,6 +205,7 @@
 				},
 				success : () => location.reload()
 			})
+
 	const view = () =>
 			$.ajax({
 				url : "AddHistorical",
@@ -217,11 +218,13 @@
 				},
 				success : () => location.reload()
 			})
+
 	const remove = (ticker, url) =>
 	{
 		$("#tickerToBeRemoved").val(ticker)
 		$("#urlToRemove").val(url);
 	}
+
 	const confirmRemove = () =>
 			$.ajax({
 				url: $("#urlToRemove").val(),
@@ -232,8 +235,8 @@
 					location.reload()
 				}
 			})
+
 	const modifyGraph = (ticker, label) => {
-		console.log(ticker, label)
 		if (label === 'SPY') {
 			myChart.data.datasets.forEach( ds => {
 				if (ds.label === label) ds.hidden = !ds.hidden
@@ -267,32 +270,36 @@
 			}
 		}
 	}
+
 	const checkAll = () => {
 		var checked = $("#checkAll").is(":checked")
 		var portfolioTable = document.getElementById("portfolio-stocks")
 		for (var i = 1; i < portfolioTable.rows.length; i++) {
-			portfolioTable.rows[i].cells[0].children[0].checked = checked
-			modifyGraph(portfolioTable.rows[i].cells[1].children[0].innerText, "portfolio")
+			portfolioTable.rows[i].cells[0].children[0].checked = checked;
+			modifyGraph(portfolioTable.rows[i].cells[1].children[0].innerText, "portfolio");
 		}
 	}
+
 	const checkAllHistorical = () => {
-		var checked = $("#checkAll").is(":checkAllHistorical")
+		var checked = $("#checkAllHistorical").is(":checked")
 		var portfolioTable = document.getElementById("historical-stocks")
 		for (var i = 1; i < portfolioTable.rows.length; i++) {
-			portfolioTable.rows[i].cells[0].children[0].checked = checked
-			modifyGraph(portfolioTable.rows[i].cells[1].children[0].innerText, "Historical")
+			portfolioTable.rows[i].cells[0].children[0].checked = checked;
+			modifyGraph(portfolioTable.rows[i].cells[1].innerText, "Historical");
 		}
 	}
+
 	const interval = () => {
 		myChart.options.scales.xAxes[0].time.unit = $("#interval").val()
 		myChart.update()
 	}
+
 	const logout = () =>
 			$.ajax({
 				url : "Logout",
-				type : "Get",
 				success : () => window.location.href = "index.jsp"
 			})
+
 	const idleTimer = () => {
 		let t;
 		window.onload = resetTimer;
@@ -306,6 +313,7 @@
 			t = setTimeout(logout, 120000);  // time is in milliseconds (1000 is 1 second)
 		}
 	}
+
 	const uploadCSV = () =>
 			$.ajax({
 				url: "CSV",
@@ -328,6 +336,7 @@
 					}
 				}
 			})
+
 	window.addEventListener( "load", () => {
 		loadPortfolio()
 		loadHistorical()
@@ -335,6 +344,7 @@
 		changeDates()
 		idleTimer()
 	})
+
 </script>
 <script>
 	// Check for valid NYSE or NASDAQ ticker for portfolio
@@ -561,7 +571,7 @@
 	// portfolio value color and up/down arrow based on each
 	function checkUpOrDown(pValue, lValue) {
 		var percentage = 0;
-		if (lValue != 0 && pValue != 0) percentage = ((lValue - pValue) / pValue).toPrecision(2);
+		if (lValue != 0 && pValue != 0) percentage = ((lValue - pValue) * 100 / pValue).toPrecision(2);
 		document.getElementById("portfolio-value-number").innerHTML = " $" + lValue.toString() + " " + percentage.toString() + "%";
 		// Change true to the value of the session variable for portfolio up or down
 		if(lValue > pValue) {

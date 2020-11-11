@@ -78,7 +78,7 @@ public class LoadGraph extends HttpServlet {
 
         String[] splitTimestamps = strTimestamps.split("\\s+", -1);
 
-        int N = splitTimestamps.length < splitValues.length - 1 ? splitTimestamps.length : splitValues.length - 1;
+        int N = Math.min(splitTimestamps.length, splitValues.length);
 
         double[] values = new double[N];
         long[] timestamps = new long[N];

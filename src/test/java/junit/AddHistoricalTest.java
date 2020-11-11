@@ -63,6 +63,28 @@ public class AddHistoricalTest {
 
         assertTrue((boolean) mocReq.getAttribute("loaded"));
 
+        make_new_mock_objects();
+        mocReq.getSession(true).setAttribute("id", user_id);
+        mocReq.addParameter("ticker", ticker);
+        mocReq.addParameter("quantity", quantity);
+        mocReq.addParameter("purchased", "2020-08-04");
+        mocReq.addParameter("sold", "");
+
+        ah.doGet(mocReq, mocRes);
+
+        db = new Database();
+        con = db.getConn();
+        try {
+            ps = con.prepareStatement("select * from company where ticker=?");
+            ps.setString(1, ticker);
+            rs = ps.executeQuery();
+            rs.next();
+            newCompanyId = rs.getInt("id");
+        } catch (SQLException ignored) {}
+        db.closeCon();
+
+        assertTrue((boolean) mocReq.getAttribute("loaded"));
+
         Helper.delete_company_where_id(company_id);
         Helper.delete_user_where_id(user_id);
     }
