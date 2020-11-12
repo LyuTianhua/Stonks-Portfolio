@@ -38,10 +38,15 @@ Feature: Graph dates and portfolio value
 	      And I select 1 week ago from the calendar picker for date to
 	      Then date to should equal 1 week ago
 	      
-	  Scenario: Portfolio value is red or green with an arrow signaling gains or losses
+	  Scenario: Portfolio value is red with an arrow signaling losses
 	  	Given I am signed in
-	  	And I see my portfolio value
-	  	Then the portfolio value should be green or red with an up or down arrow by it
+	  	And I see my portfolio value is down
+	  	Then the portfolio value should be red with a down arrow by it
+	  	
+	  Scenario: Portfolio value is green with an arrow signaling gains or losses
+	  	Given I am signed in
+	  	And I see my portfolio value is up
+	  	Then the portfolio value should be green with an up arrow by it
 	  	
 	  Scenario: Click one week predetermined date range
 	  	Given I am signed in
@@ -58,6 +63,10 @@ Feature: Graph dates and portfolio value
 	  	And I click one year below the graph
 	  	Then the graph should display a one year date range from today
 	  
+	  Scenario: Default time displayed is 3 months
+	  	Given I am signed in
+	  	Then I should see graph dates for the past 3 months
+
 	  Scenario: Portfolio value shows percentage change
 	  	Given I am signed in
 	  	And I click on add stock modal
@@ -68,3 +77,4 @@ Feature: Graph dates and portfolio value
     	And I click on add stock
 	  	And I see my portfolio value
 	  	Then I should see a percentage change in my portfolio value
+
