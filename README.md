@@ -1,4 +1,4 @@
-Stonk-Portfolio
+*Stonk-Portfolio*
 get track of your stonks
 
 **To host the web application:**
