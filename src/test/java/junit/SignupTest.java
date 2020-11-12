@@ -28,18 +28,22 @@ public class SignupTest {
         signup.doPost(mocReq, mocRes);
         assertTrue((boolean) mocReq.getAttribute("authenticated"));
 
-        Helper.delete_user_where_name("signupTestNewUser");
-
-
-        Helper.insert_user_name_password("existingUser", "password");
-
         make_new_mock_objects();
-        add_name_password_confirm("existingUser", "password", "password");
+        add_name_password_confirm("signupTestNewUser", "password", "password");
         signup.doPost(mocReq, mocRes);
         assertFalse((boolean) mocReq.getAttribute("authenticated"));
 
-        Helper.delete_user_where_name("existingUser");
+        Helper.delete_user_where_name("signupTestNewUser");
 
+        make_new_mock_objects();
+        add_name_password_confirm("", "password", "password");
+        signup.doPost(mocReq, mocRes);
+        assertFalse((boolean) mocReq.getAttribute("authenticated"));
+
+        make_new_mock_objects();
+        add_name_password_confirm("missingPassword", "", "confirm");
+        signup.doPost(mocReq, mocRes);
+        assertFalse((boolean) mocReq.getAttribute("authenticated"));
 
         make_new_mock_objects();
         add_name_password_confirm("missingConfirm", "password", "");

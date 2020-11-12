@@ -27,3 +27,8 @@ Feature: Bulk upload stock with CSV file
     And I choose 'malformedCsvNegativeQuantity.csv'
     And I click upload csv
     Then I should see an upload error 'Malformed csv: Negative quantity for PLAY'
+  
+  Scenario: I click upload file to see the modal
+    Given I am signed in
+    And I click on upload csv modal
+    Then I should see a button that says upload file

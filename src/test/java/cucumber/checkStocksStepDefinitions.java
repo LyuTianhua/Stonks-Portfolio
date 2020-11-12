@@ -53,4 +53,10 @@ public class checkStocksStepDefinitions {
         String checked = driver.findElement(By.id(ticker+"Historical")).getAttribute("checked");
         assertTrue(checked.equals("true"));
     }
+    
+    @Then("{string} should not be rendered on the graph for view stock")
+    public void shouldNotBeRenderedOnTheGraphForViewStock(String ticker) {
+        String checked = driver.findElement(By.id(ticker+"Historical")).getAttribute("checked");
+        assertTrue(checked == null);
+    }
 }

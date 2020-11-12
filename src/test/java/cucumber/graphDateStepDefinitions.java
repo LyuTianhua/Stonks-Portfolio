@@ -96,7 +96,7 @@ public class graphDateStepDefinitions {
     	assertTrue(!purchaseDate.getAttribute("value").isEmpty());
     }
     
-    @And("I see my portfolio value")
+    @And("I see my portfolio value is up")
     public void i_see_my_portfolio_value() {
     	try {
 			Thread.sleep(2000);
@@ -111,7 +111,32 @@ public class graphDateStepDefinitions {
         assertTrue(checkIfElementPresent);
     }
     
-    @Then("the portfolio value should be green or red with an up or down arrow by it")
+    @And("I see my portfolio value")
+    public void i_see_my_portfolio_value_displayed() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+		}
+    	
+    	Boolean checkIfElementPresent= false;
+        //Checks if the invalid dates error message is present
+        if(driver.findElements(By.xpath("//*[@id=\"portfolio-value\"]")).size()!= 0) {
+            checkIfElementPresent = true;
+        }
+        assertTrue(checkIfElementPresent);
+    }
+    
+    @And("I see my portfolio value is down")
+    public void i_see_my_portfolio_value_is_down() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+		}
+    	
+        assertTrue(driver.findElements(By.xpath("//*[@id=\"portfolio-value\"]")).size()!= 0);
+    }
+    
+    @Then("the portfolio value should be red with a down arrow by it")
     public void the_portfolio_value_should_be() {
     	try {
 			Thread.sleep(2000);
@@ -119,7 +144,18 @@ public class graphDateStepDefinitions {
 		}
     	
     	WebElement portfolioValue = driver.findElement(By.xpath("//*[@id=\"portfolio-value-number\"]"));
-    	assertTrue(!portfolioValue.getCssValue("color").equals("rgba(1,0,0,1)"));
+    	assertTrue(!portfolioValue.getCssValue("color").equals("rgba(55,75,105,1)"));
+    }
+    
+    @Then("the portfolio value should be green with an up arrow by it")
+    public void the_portfolio_value_should_be_green() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+		}
+    	
+    	WebElement portfolioValue = driver.findElement(By.xpath("//*[@id=\"portfolio-value-number\"]"));
+    	assertTrue(!portfolioValue.getCssValue("color").equals("rgba(200,150,175,1)"));
     }
     
     @And("I click one week below the graph")
@@ -200,6 +236,16 @@ public class graphDateStepDefinitions {
     	assertTrue(!driver.findElement(By.xpath("//*[@id=\"fromGraph\"]")).getAttribute("value").isEmpty());
     }
     
+    @Then("I should see graph dates for the past 3 months")
+    public void _i_should_see_three_months() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+		}
+    	
+    	assertTrue(driver.findElement(By.xpath("//*[@id=\"month\"]")).isSelected());
+    }
+
     @Then("I should see a percentage change in my portfolio value")
     public void i_should_see_percentage() {
     	try {
@@ -210,4 +256,13 @@ public class graphDateStepDefinitions {
     	assertTrue(driver.findElements(By.xpath("//*[@id=\"portfolio-value\"]")).size() != 0);
     }
     
+    @Then("I should see the graph reload")
+    public void i_should_see_the_graph_reload() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+		}
+    	
+    	assertTrue(driver.findElements(By.id("myChart")).size() != 0);
+    }
 }

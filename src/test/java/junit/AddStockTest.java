@@ -62,8 +62,18 @@ public class AddStockTest {
         loaded = mocReq.getAttribute("loaded") == null ? true : true;
         assertTrue(loaded);
 
-        Helper.delete_user_where_id(user_id);
+        make_new_mock_objects();
+        mocReq.getSession(true).setAttribute("id", user_id);
+        mocReq.setAttribute("ticker", ticker);
+        mocReq.setAttribute("quantity", quantity);
+        mocReq.setAttribute("purchased", "2020-08-04");
+        mocReq.setAttribute("sold", "");
 
+        addStock.doGet(mocReq, mocRes);
+
+        loaded = mocReq.getAttribute("loaded") == null ? true : true;
+
+        Helper.delete_user_where_id(user_id);
     }
 
     @Test

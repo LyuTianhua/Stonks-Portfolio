@@ -34,6 +34,8 @@ public class RemoveStockTest {
         String purchased = "2020-10-10";
         String sold = "2020-10-20";
 
+        Helper.insert_user_id_name_password(user_id, "RemoveStockUser", "RemoveStockPass");
+
         make_new_mock_objects();
         mocReq.getSession(true).setAttribute("id", user_id);
         mocReq.addParameter("ticker", ticker);
