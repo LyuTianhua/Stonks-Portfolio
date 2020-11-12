@@ -1,5 +1,14 @@
 Feature: Graph dates and portfolio value
 
+	Scenario Outline: Change date from and date to
+	  	Given I am signed in
+	  	And I enter <from> into 'fromGraph'
+	    And I enter <to> into 'toGraph'
+	    Then I should see the graph reload
+	    Examples:
+	      | from             | to             |
+	      | '01/15/2020'     | '09/15/2020'   |
+
 	Scenario Outline: Adding date from after date to
 	  	Given I am signed in
 	  	And I enter <from> into 'fromGraph'

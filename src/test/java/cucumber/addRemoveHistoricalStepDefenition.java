@@ -217,5 +217,16 @@ public class addRemoveHistoricalStepDefenition {
     	
     	assertTrue(true);
     }
-
+    
+    @Then("I should see view stock button")
+    public void I_should_see_view_stock_sutton() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+			System.out.println("Exception in invalid 1 year date test.");
+		}
+    	
+    	WebElement viewStockButton = driver.findElement(By.id("view-stock-in-modal"));
+    	assertTrue(viewStockButton.getText().equals("View Stock"));
+    }
 }
