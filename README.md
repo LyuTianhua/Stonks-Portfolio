@@ -1,3 +1,5 @@
+[![Contributors][contributors-shield]][contributors-url]
+[![Forks][forks-shield]][forks-url]
 *Stonk-Portfolio*
 get track of your stonks
 
