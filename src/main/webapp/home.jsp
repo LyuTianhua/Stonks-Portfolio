@@ -64,11 +64,11 @@
 					<h3 class="pr-5"> Portfolio Stocks </h3>
 					<a id="SPY" href="#" style="color: blue" onclick="modifyGraph('SPY', 'SPY')"> SPY </a>
 				</div>
-				<table id="portfolio-stocks" class="table table-hover">
+				<table id="portfolio-stocks" class="table table-hover portfolio-items">
 					<%--filled dynamically--%>
 				</table>
 				<h3>Historical Stocks</h3>
-				<table id="historical-stocks" class="table table-hover">
+				<table id="historical-stocks" class="table table-hover view-items">
 					<%-- filled dynamically --%>
 				</table>
 			</div>

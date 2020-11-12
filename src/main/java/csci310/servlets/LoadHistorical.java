@@ -33,7 +33,7 @@ public class LoadHistorical extends HttpServlet {
             String ticker, checkbox, shares, remove;
 
             pw = res.getWriter();
-            pw.println("<tr>\n" +
+            pw.println("<tr class=\"view-item\">\n" +
                     "<th> <input id='checkAllHistorical' type=checkbox onclick=\"checkAllHistorical()\"> Graph</th>\n" +
                     "<th>Stonk</th>\n" +
                     "<th>Shares</th>\n" +
@@ -46,7 +46,7 @@ public class LoadHistorical extends HttpServlet {
                 checkbox = ticker + "Historical";
                 remove = ticker + "RemoveHistorical";
 
-                pw.format("<tr>");
+                pw.format("<tr class=\"view-item\">");
                 pw.format("<td> <input id=%s type=checkbox onclick=\"modifyGraph('%s', 'Historical')\"> </td>\n", checkbox, ticker);
                 pw.format("<td id=%s > %s </td>\n", ticker + "View", ticker);
                 pw.format("<td id=%s> %d </td>\n", shares, rs.getInt("shares"));
