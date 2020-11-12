@@ -53,6 +53,9 @@ public class addRemoveStockStepDefenitions {
 
     @When("I click confirm on the pop up modal")
     public void i_click_confirm_on_the_pop_up_modal() throws InterruptedException {
+        try {
+            Thread.sleep(2000);
+        } catch (Exception e) {}
         driver.switchTo().activeElement();
 //        System.out.println("\n\n\n\n\n\n\n\n here \n\n\n\n\n\n\n");
 ////        Thread.sleep(10000);
