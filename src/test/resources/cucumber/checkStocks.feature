@@ -41,6 +41,7 @@ Feature: Check Stocks
     And I click the historical checker for 'AAPL'
     And I click the historical checker for 'AAPL'
     Then 'AAPL' should not be rendered on the graph for view stock
+
     Examples:
       | quantity | shares |
       | '10'     | '10'   |
