@@ -256,4 +256,13 @@ public class graphDateStepDefinitions {
     	assertTrue(driver.findElements(By.xpath("//*[@id=\"portfolio-value\"]")).size() != 0);
     }
     
+    @Then("I should see the graph reload")
+    public void i_should_see_the_graph_reload() {
+    	try {
+			Thread.sleep(2000);
+		} catch(Exception ie) {
+		}
+    	
+    	assertTrue(driver.findElements(By.id("myChart")).size() != 0);
+    }
 }

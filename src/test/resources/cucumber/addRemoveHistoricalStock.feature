@@ -11,7 +11,12 @@ Feature: Add and remove Historical Stock
     Then I should see <shares> 'TSLA' stock on the view
     Examples:
       | quantity | shares |
-      | '10'     | '10'   |      
+      | '10'     | '10'   |  
+      
+  Scenario: check add view stock confirm
+    Given I am signed in view
+    And I click on add view modal
+    Then I should see view stock button
       
   Scenario: zRemove stock from home page
     Given I am signed in view

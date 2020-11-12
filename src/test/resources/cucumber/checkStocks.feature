@@ -30,7 +30,7 @@ Feature: Check Stocks
       | quantity | shares |
       | '10'     | '10'   |
 
-  Scenario Outline: I can select a historical stock and it should appear on graph
+  Scenario Outline: I can deselect a historical stock and it should appear on graph
     Given I am signed in
     And I click on add view modal
     And I enter 'AAPL' into 'ticker-view'
@@ -38,8 +38,9 @@ Feature: Check Stocks
     And I enter '10/11/2020' into 'date-purchased-view'
     And I enter '10/21/2020' into 'date-sold-view'
     And I click on view stock
-    And I click the checker called 'checkAllHistorical'
-    Then 'AAPL' should be rendered on the graph for view stock
+    And I click the historical checker for 'AAPL'
+    And I click the historical checker for 'AAPL'
+    Then 'AAPL' should not be rendered on the graph for view stock
     Examples:
       | quantity | shares |
       | '10'     | '10'   |
